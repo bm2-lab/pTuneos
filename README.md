@@ -37,6 +37,11 @@ ITUNES currently test on x86_64 on ubuntu 16.04.
 
 #### Required software:
 * [yaml]()
+* [XGboost]()
+* [Bio]()
+* [sklearn]()
+* [pandas]()
+* [numpy]()
 
 ## Installation
 
