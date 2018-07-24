@@ -52,7 +52,12 @@ iTuNEs currently test on x86_64 on ubuntu 16.04.
 #### Python modules:
     multiprocessing
     pyper
+    yaml
+    XGBoost
+    Bio
     sklearn
+    pandas
+    numpy
    
 ## Installation via Docker
 1.Install Docker on your computer and make sure it works.
