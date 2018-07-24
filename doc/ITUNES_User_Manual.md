@@ -281,4 +281,5 @@ Shanghai, China.
 http://bm2.runyoo.com/
 
 ## Algorithmic Flow Chart
-![](https://github.com/bm2-lab/ITUNES/blob/master/doc/ITUNES_flow_chart.pdf)
+
+![](ITUNES_flow_chart.pdf)
