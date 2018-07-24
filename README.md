@@ -4,16 +4,13 @@ Given matched tumor-normal whole exome sequencing and tumor RNA-seq sequencing d
 as input, ITUNES infers HLA sub-types, mutated peptides (neo-peptide), variant allele
 frequency, expression profile etc feature information. Based on these feature, a model-based
 refined ranking-score scheme could identify which of the neo-peptides have strong 
-immunogecity.
+immunogecity. Detailed information please refer to citation.
 
 #### Authors and Email:
 Chi Zhou 
 
-#### License:
-To be determined, but certainly free for academic use.
-
 #### Citation:
-TBD
+ITUNES:Identification of personalized Tu-mor NEoantigens from next-generation Se-quencing data, Submitted, 2018.
 
 #### Web sever:
 TBD
