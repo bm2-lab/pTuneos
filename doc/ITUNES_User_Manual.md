@@ -282,4 +282,4 @@ http://bm2.runyoo.com/
 
 ## Algorithmic Flow Chart
 
-![](./ITUNES_flow_chart.pdf)
+![](https://github.com/bm2-lab/ITUNES/blob/master/doc/ITUNES_flow_chart.pdf)
