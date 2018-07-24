@@ -1,4 +1,4 @@
-# iTuNES User Manual 
+# ITUNES User Manual 
 
 
 ## Table of Contents
@@ -282,4 +282,4 @@ http://bm2.runyoo.com/
 
 ## Algorithmic Flow Chart
 
-![](iTuNES_flow_chart.png)
+![](ITUNES_flow_chart.pdf)
