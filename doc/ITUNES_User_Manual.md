@@ -276,15 +276,12 @@ To run the provided test files with iTuNES the following command can be run:
         path/to/iTuNES.py -i config.yaml
 
 ## Contact   
-
-Chi Zhou  
-1410782Chiz@tongji.edu.cn  
+ 
+1410782Chiz@tongji.edu.cn or qiliu@tongji.edu.cn
 
 Biological and Medical Big data Mining Lab  
 Tongji University    
-Shanghai, China. 
-http://bm2.runyoo.com/
 
 ## Algorithmic Flow Chart
 
-![](ITUNES_flow_chart.pdf)
+![](ITUNES_flow_chart.png)
