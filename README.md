@@ -1,7 +1,7 @@
-# iTuNES: identification of TUmor NEantigens pipeline from HTS #
+# ITUNES: Identification of TUmor NEantigens pipeline from next-generation Se-quencing data #
 
 Given matched tumor-normal whole exome sequencing and tumor RNA-seq sequencing data 
-as input, iTuNes infers HLA sub-types, mutated peptides (neo-peptide), variant allele
+as input, ITUNES infers HLA sub-types, mutated peptides (neo-peptide), variant allele
 frequency, expression profile etc feature information. Based on these feature, a model-based
 refined ranking-score scheme could identify which of the neo-peptides have strong 
 immunogecity.
@@ -21,7 +21,7 @@ TBD
 ## Dependencies
 
 #### Hardware:
-iTuNes currently test on x86_64 on ubuntu 16.04.
+ITUNES currently test on x86_64 on ubuntu 16.04.
 
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
@@ -45,12 +45,12 @@ iTuNes currently test on x86_64 on ubuntu 16.04.
 
 1. Install all software listed above.
 
-2. Download or clone the iTuNES repository to your local system
+2. Download or clone the ITUNES repository to your local system
 
-        git clone https://github.com/ChiLoveChuan/iTuNES-dev.git
+        git clone https://github.com/bm2-lab/ITUNES.git
 
 3. Obtain the reference files from GRCh38. These include cDNA, peptide and COSMIC
-files; see the References section in the [user manual](/doc/iTuNES_User_Manual.md)
+files; see the References section in the [user manual](/doc/ITUNES_User_Manual.md)
 for a detailed description.
 
 4. Fill in the config.yaml file  
@@ -70,7 +70,7 @@ All options can be displayed using the usage information with the `-h` option:
 
 ## User Manual 
 For detailed information about usage, input and output files, test examples and data
-preparation read the [iTuNES User Manual](/doc/iTuNES_User_Manual.md)
+preparation read the [ITUNES User Manual](/doc/ITUNES_User_Manual.md)
 
 
 ## Contact   
