@@ -78,13 +78,3 @@ preparation read the [ITUNES User Manual](/doc/ITUNES_User_Manual.md)
 ## Contact   
 
 1410782Chiz@tongji.edu.cn or qiliu@tongji.edu.cn
-
-
-Biological and Medical Big data Mining Lab  
-Tongji University  
- 
-
-
-
-
-
