@@ -32,7 +32,6 @@ netMHCpan_path: /home/zhouchi/bin/netMHCpan
 pyclone_path: /usr/local/bin/PyClone
 coverage_cutoff: 10
 strelka_path: /usr/local/bin
-cancer_type: Skin
 tumor_rna_fastq_1: /home/zhouchi/raw_data/phs001005/fastq/SRR2672889/SRR2672889_1.fastq
 tumor_rna_fastq_2: /home/zhouchi/raw_data/phs001005/fastq/SRR2672889/SRR2672889_2.fastq
 kallisto_path: /home/zhouchi/bin/kallisto
