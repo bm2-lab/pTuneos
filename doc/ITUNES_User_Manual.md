@@ -284,4 +284,4 @@ Tongji University
 
 ## Algorithmic Flow Chart
 
-![](ITUNES_flow_chart.png)
+![](ITUNES_flow_chart.jpg)
