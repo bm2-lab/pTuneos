@@ -60,11 +60,11 @@ iTuNEs currently test on x86_64 on ubuntu 16.04.
     numpy
    
 ## Installation via Docker
-1.Install Docker on your computer and make sure it works.
+1. Install Docker on your computer and make sure it works.
 
-2.Call docker `pull chizhou/itunes` which will download the Docker image.
+2. Call docker `pull chizhou/itunes` which will download the Docker image.
 
-3.You can use the image as followes:
+3. You can use the image as followes:
 
     docker run -v /path/to/data/folder:/data/ -t chizhou/itunes -i config.yaml
 
