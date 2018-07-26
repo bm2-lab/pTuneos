@@ -10,7 +10,7 @@ immunogecity. Detailed information please refer to citation.
 Chi Zhou 
 
 #### Citation:
-ITUNES:Identification of personalized Tu-mor NEoantigens from next-generation Sequencing data, Submitted, 2018.
+ITUNES: Identification of personalized Tu-mor NEoantigens from next-generation Sequencing data, Submitted, 2018.
 
 #### Web sever:
 TBD
