@@ -1,4 +1,4 @@
-# ITUNES: Identification of TUmor NEantigens pipeline from next-generation Se-quencing data #
+# ITUNES: Identification of TUmor NEantigens pipeline from next-generation Sequencing data #
 
 Given matched tumor-normal whole exome sequencing and tumor RNA-seq sequencing data 
 as input, ITUNES infers HLA sub-types, mutated peptides (neo-peptide), variant allele
@@ -10,7 +10,7 @@ immunogecity. Detailed information please refer to citation.
 Chi Zhou 
 
 #### Citation:
-ITUNES:Identification of personalized Tu-mor NEoantigens from next-generation Se-quencing data, Submitted, 2018.
+ITUNES:Identification of personalized Tu-mor NEoantigens from next-generation Sequencing data, Submitted, 2018.
 
 #### Web sever:
 TBD
