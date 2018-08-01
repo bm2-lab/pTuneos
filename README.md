@@ -1,4 +1,4 @@
-# ITUNES: Identification of TUmor NEantigens pipeline from next-generation Sequencing data #
+# iTunes: identification of Tumor neoantigens pipeline from next-generation sequencing data #
 
 Given matched tumor-normal whole exome sequencing and tumor RNA-seq sequencing data 
 as input, ITUNES infers HLA sub-types, mutated peptides (neo-peptide), variant allele
