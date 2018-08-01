@@ -1,4 +1,4 @@
-# ITUNES User Manual 
+# iTunes User Manual 
 
 
 ## Table of Contents
@@ -22,12 +22,12 @@
 
 ## General Description
 
-Given matched tumor-normal whole exome sequencing and tumor RNA-seq sequencing data as input, iTuNes infers HLA sub-types, mutated peptides (neo-peptide), variant allele frequency, expression profile etc feature information. Based on these feature, a model- based refined ranking-score scheme could identify which of the neo-peptides have strong immunogecity.
+Given matched tumor-normal whole exome sequencing and tumor RNA-seq sequencing data as input, iTunes infers HLA sub-types, mutated peptides (neo-peptide), variant allele frequency, expression profile etc feature information. Based on these feature, a model- based refined ranking-score scheme could identify which of the neo-peptides have strong immunogecity.
 
 ## Dependencies  
 
 #### Hardware:
-iTuNEs currently test on x86_64 on ubuntu 16.04.
+iTunes currently test on x86_64 on ubuntu 16.04.
 
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
@@ -80,7 +80,7 @@ iTuNEs currently test on x86_64 on ubuntu 16.04.
 
 3. Download or clone the iTuNEs repository to your local system:
 
-        git clone https://github.com/XIAOCHIZI/iTuNES-dev.git
+        git clone https://github.com/bm2-lab/iTunes.git
 
 4. Reference data includes genome fasta, cDNA, peptide, cosmic reference(GRCh38 build) could be downloaded through:
 
@@ -134,10 +134,10 @@ reference data.You should be aware that the version of VEP library you use shoul
 
 ## Usage
 
-After installation iTuNES is called as follows.The user should  
+After installation iTunes is called as follows.The user should  
 The config file is specified using the `-c` option
 
-    path/to/iTuNES.py -c path/to/config.yaml
+    path/to/iTunes.py -c path/to/config.yaml
 
 a detailed explaination is in example `config.yaml` file, you should replace the path of required software and reference file in your system.
 
@@ -147,7 +147,7 @@ profile file or raw RNA sequnencing file is optional if you want to get expresse
 
 ### Input Files (required) 
 
-iTuNES accepts pair-end matched tumor-normal whole exome sequencing as input,it could be in `.fastq.gz` or `.fastq` format 
+iTunes accepts pair-end matched tumor-normal whole exome sequencing as input,it could be in `.fastq.gz` or `.fastq` format 
 You should specify the right path to the sequencing file in `config.yaml` like:
 
     #your path to first tumor fastq file
@@ -176,7 +176,7 @@ A full example of an expression file can be found in example
 [here](exmple/abundance.tsv).
 
 ### References 
-The following references are required for iTuNES to run:
+The following references are required for iTunes to run:
 * Snp: These files are used in somatic variant calling process.
 
         [Genome reference]
@@ -212,11 +212,8 @@ The Catalogue of Somatic Mutations In Cancer (COSMIC) provides a variant file (V
 
 
 
-### Training dataset
-
-
 ## Output Files 
-iTuNES output four result files contains information of identified neoantigens corresponding to nonsynonymous point mutation and INDEL mutation.
+iTunes output four result files contains information of identified neoantigens corresponding to nonsynonymous point mutation and INDEL mutation.
 
 The output files are the following: 
 1.  snv.model.tsv 
@@ -271,9 +268,9 @@ The prediction output (.snv.model.tsv) for each peptide pair consists of the fol
 
 ## Test example 
 
-To run the provided test files with iTuNES the following command can be run: 
+To run the provided test files with iTunes the following command can be run: 
 
-        path/to/iTuNES.py -i config.yaml
+        path/to/iTunes.py -i config.yaml
 
 ## Contact   
  
@@ -284,4 +281,4 @@ Tongji University
 
 ## Algorithmic Flow Chart
 
-![](ITUNES_flow_chart.jpg)
+![](iTunes_flow_chart.jpg)
