@@ -10,7 +10,7 @@ immunogecity. Detailed information please refer to citation.
 Chi Zhou 
 
 #### Citation:
-ITUNES: Identification of personalized Tu-mor NEoantigens from next-generation Sequencing data, Submitted, 2018.
+iTunes: identification of personalized Tumor neoantigens from next-generation sequencing data, Submitted, 2018.
 
 #### Web sever:
 TBD
@@ -18,7 +18,7 @@ TBD
 ## Dependencies
 
 #### Hardware:
-ITUNES currently test on x86_64 on ubuntu 16.04.
+iTunes currently test on x86_64 on ubuntu 16.04.
 
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
@@ -47,12 +47,12 @@ ITUNES currently test on x86_64 on ubuntu 16.04.
 
 1. Install all software listed above.
 
-2. Download or clone the ITUNES repository to your local system
+2. Download or clone the iTunes repository to your local system
 
-        git clone https://github.com/bm2-lab/ITUNES.git
+        git clone https://github.com/bm2-lab/iTunes.git
 
 3. Obtain the reference files from GRCh38. These include cDNA, peptide and COSMIC
-files; see the References section in the [user manual](/doc/ITUNES_User_Manual.md)
+files; see the References section in the [user manual](/doc/iTunes_User_Manual.md)
 for a detailed description.
 
 4. Fill in the config.yaml file  
@@ -63,16 +63,16 @@ for a detailed description.
 Here is a simple example in which somatic mutation calls and gene expression data are
 provided, and MHC binding is predicted for HLA types HLA-A01:01 and HLA-B08:01. 
 
-    python path/to/iTuNES.py -i config.yaml
+    python path/to/iTunes.py -i config.yaml
 
 All options can be displayed using the usage information with the `-h` option:   
 
-    python path/to/iTuNES.py -h
+    python path/to/iTunes.py -h
 
 
 ## User Manual 
 For detailed information about usage, input and output files, test examples and data
-preparation read the [ITUNES User Manual](/doc/ITUNES_User_Manual.md)
+preparation read the [iTunes User Manual](/doc/iTunes_User_Manual.md)
 
 
 ## Contact   
