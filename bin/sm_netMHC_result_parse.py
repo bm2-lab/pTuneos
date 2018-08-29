@@ -165,6 +165,8 @@ for i in range(len(WB_SB_MT_record)):
         wt_binding_level_des = wt_record[-1]
     else:
         wt_binding_level_des = 'NB'
+    print wt_binding_rank
+    print mt_binding_rank
     fold_change = float(wt_binding_rank)/float(mt_binding_rank)
     #DAI = float(wt_binding_aff) - float(mt_binding_aff)
     out_line = '\t'.join((chrom_pos_rec,HLA_tp,gene,transcript_n,cdna_change,ani_change,mt_pep,wt_pep,mt_binding_rank,wt_binding_rank,mt_binding_level_des,wt_binding_level_des,str(fold_change)))
@@ -193,9 +195,7 @@ else:
 	sys.exit(2)
 #os.remove(out_dir+'/'+sample_id+"_tmp_neo_candidate.txt")
 #print final_filter_data
-final_filter_data_aa_change=final_filter_data[final_filter_data.MT_pep!=final_filter_data.WT_pep]
-final_filter_data_specific=final_filter_data_aa_change[(final_filter_data_aa_change.MT_Binding_Aff<=2) & (final_filter_data_aa_change.WT_Binding_Aff>2)]
-final_filter_data_specific.to_csv(out_dir+'/'+sample_id+"_final_neo_candidate.txt",header=1,sep='\t',index=0)
+final_filter_data.to_csv(out_dir+'/'+sample_id+"_final_neo_candidate.txt",header=1,sep='\t',index=0)
 
     
 

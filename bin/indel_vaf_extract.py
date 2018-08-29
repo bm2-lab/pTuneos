@@ -57,7 +57,11 @@ for line in open(strelka_indel_file):
 		if record[6]=="PASS":
 			pos=record[0]+":"+record[1]
 			tumor_info=record[10]
-			tumor_vaf=float(tumor_info.split(':')[3].split(',')[0])/float(tumor_info.split(':')[2].split(',')[0])
+			print record
+			if float(tumor_info.split(':')[2].split(',')[0]) != 0:
+				tumor_vaf=float(tumor_info.split(':')[3].split(',')[0])/float(tumor_info.split(':')[2].split(',')[0])
+			else:
+				tumor_vaf=0.10
 			indel_vaf_dic[pos]=tumor_vaf
 
 

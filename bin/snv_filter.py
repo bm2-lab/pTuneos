@@ -44,8 +44,6 @@ if (input_vcf_file =="" or out_dir =="" or sample_id==""):
 	sys.exit(2)
 
 
-
-
 f_filter=open(out_dir+'/'+sample_id+"_SNVs_filter.vcf",'w')
 
 for line in open(input_vcf_file):
@@ -58,7 +56,7 @@ for line in open(input_vcf_file):
 		tumor_depth=tumor_info.split(':')[1].split(',')[1]
 		tumor_vaf=tumor_info.split(':')[2]
 		normal_vaf=normal_info.split(':')[2]
-		if int(tumor_depth)>=tumor_depth_cutoff and float(tumor_vaf)>tumor_vaf_cutoff and float(normal_vaf)<normal_vaf_cutoff:
+		if int(tumor_depth)>=float(tumor_depth_cutoff) and float(tumor_vaf)>float(tumor_vaf_cutoff) and float(normal_vaf)<float(normal_vaf_cutoff):
 			f_filter.write(line)
 
 f_filter.close()

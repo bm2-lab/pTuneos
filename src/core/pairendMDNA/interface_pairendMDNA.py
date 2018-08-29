@@ -1,27 +1,3 @@
-#//
-#//                       _oo0oo_
-#//                      o8888888o
-#//                      88" . "88
-#//                      (| -_- |)
-#//                      0\  =  /0
-#//                    ___/`---'\___
-#//                  .' \\|     |// '.
-#//                 / \\|||  :  |||// \
-#//                / _||||| -:- |||||- \
-#//               |   | \\\  -  /// |   |
-#//               | \_|  ''\---/''  |_/ |
-#//               \  .-\__  '-'  ___/-. /
-#//             ___'. .'  /--.--\  `. .'___
-#//          ."" '<  `.___\_<|>_/___.' >' "".
-#//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-#/         \  \ `_.   \_ __\ /__ _/   .-` /  /
-#//     =====`-.____`.___ \_____/___.-`___.-'=====
-#//                       `=---='
-#//
-#//
-#//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#//
-#//
 import os
 from pairendMDNAprocessor import *
 import shutil
@@ -142,6 +118,7 @@ def PEMD(opts):
 	indel_netMHCpan_pep_tmp_file=netctl_out_fold + '/' + prefix + '_indel_netMHCpan_pep_tmp.txt'
 	indel_netMHCpan_ml_out_tmp_file=netctl_out_fold + '/' + prefix + '_indel_netMHCpan_ml_out_tmp.txt'
 	blast_db_path=config_list['blast_db_path']
+	summary_out=netctl_out_fold + '/' + prefix + '_neo_sum.txt'
 	print cancer_type
 	if os.path.exists(rna_fastq_1_path) and os.path.exists(rna_fastq_2_path):
 		exp_file=output_fold + '/' + "expression/abundance.tsv"
@@ -270,6 +247,7 @@ def PEMD(opts):
 	for p in processes_0:
 		p.join()
 
+	print "start stage 1"
 	processes_1=[]
 	if hla_str=="None":
 		d1=multiprocessing.Process(target=hlatyping,args=(tumor_fastq_path_first,tumor_fastq_path_second,opitype_fold,opitype_out_fold,opitype_ext,prefix,))
@@ -284,21 +262,32 @@ def PEMD(opts):
  	processes_1.append(d3)
  	if os.path.exists(rna_fastq_1_path):
  		d4=multiprocessing.Process(target=kallisto_expression,args=(rna_fastq_1_path,rna_fastq_2_path,kallisto_path,kallisto_out_fold,prefix,kallisto_cdna_path,logfile_out_fold,))
- 		processes_1.append(d4)
+ 		#processes_1.append(d4)
+ 		#q.put('tumor_qc')
  	else:
- 		print "RNA sequence not found, the kallisto will not be run!" 
- 	for p in processes_1:
-		p.daemon = True
-		p.start()
-	for p in processes_1:
-		p.join()
- 	processes_2=[]
- 	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,cosmic_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,))
-	#processes_2.append(h0)
+ 		print "RNA sequence not found, the kallisto will not be run!"
+ 	#for p in processes_1:
+	#	p.daemon = True
+	#	p.start()
+	#for p in processes_1:
+	#	p.join()
+	print 'stage 1 done.'
+	print exp_file
+	#if exp_file!="None" and os.path.exists(exp_file):
+	#	print "check expression file done."
+	#elif exp_file=="no_exp":
+	#	print "no expression file provided."
+	#else:
+	#	print "please check your expression file path!"
+	#	os._exit(1)
+	#print 'start stage 2'
+	processes_2=[]
+	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,cosmic_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,))
+	processes_2.append(h0)
 	h1=multiprocessing.Process(target=varscan_somatic_caling_drift,args=(somatic_mutation_fold,alignment_out_fold,prefix,REFERENCE,vep_cache,samtools_path,varscan_path,vep_path,netmhc_out_fold,logfile_out_fold,))
 	#processes_2.append(h1)
 	h2=multiprocessing.Process(target=indel_calling_drift,args=(strelka_out_fold,strelka_path,alignment_out_fold,prefix,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,))
-	processes_2.append(h2)
+	#processes_2.append(h2)
 	h3=multiprocessing.Process(target=varscan_copynumber_calling,args=(varscan_copynumber_fold,prefix,alignment_out_fold,REFERENCE,samtools_path,varscan_path,logfile_out_fold))
 	#processes_2.append(h3)
 	for p in processes_2:
@@ -306,30 +295,30 @@ def PEMD(opts):
 		p.start()
 	for p in processes_2:
 		p.join()
-	if hla_str=="None":
- 		hla_str=open(opitype_out_fold+'/'+prefix+"_optitype_hla_type").readlines()[0]
+	#if hla_str=="None":
+ 	#	hla_str=open(opitype_out_fold+'/'+prefix+"_optitype_hla_type").readlines()[0]
 	print 'start stage 3'
 	print exp_file
 	processes_3=[]
 	t2=multiprocessing.Process(target=varscan_neo,args=(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,))
 	processes_3.append(t2)
-	t3=multiprocessing.Process(target=indel_neo,args=(somatic_mutation_fold,prefix,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,strelka_out_fold,))
-	processes_3.append(t3)
-	for p in processes_3:
-		p.daemon = True
-		p.start()
-	for p in processes_3:
-		p.join()
+	#t3=multiprocessing.Process(target=indel_neo,args=(somatic_mutation_fold,prefix,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,))
+	#processes_3.append(t3)
+	#for p in processes_3:
+	#	p.daemon = True
+	#	p.start()
+	#for p in processes_3:
+	#	p.join()
 	print "stage 3 done."
 	print 'start stage 4.'
 	processes_4=[]
 	l1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_out_fold,coverage,pyclone_path,cancer_type,logfile_out_fold))
 	processes_4.append(l1)	
-	for p in processes_4:
-		p.daemon = True
-		p.start()
-	for p in processes_4:
-		p.join()
+	#for p in processes_4:
+	#	p.daemon = True
+	#	p.start()
+	#for p in processes_4:
+	#	p.join()
 	print 'stage 4 done.'
 	print 'start stage 5.'
 	#clf_mlp=Train_hydrophobicity_mpl(postive_pep_file,negative_pep_file)
@@ -340,31 +329,32 @@ def PEMD(opts):
 	r2=multiprocessing.Process(target=InVivoModelAndScoreSNV,args=(mhc_pos_file,mhc_neg_file,snv_final_neo_file,model_train_file,snv_neo_model_file,snv_blastp_tmp_file,snv_blastp_out_tmp_file,snv_netMHCpan_pep_tmp_file,snv_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,snv_immunogenicity_gmm_all_score_ranking,snv_immunogenicity_gmm_pos_score_ranking,snv_gmm_classification_file,snv_immunogenicity_bioactive_score_ranking,))
 	processes_5.append(r2)
 	r3=multiprocessing.Process(target=InVivoModelAndScoreINDEL,args=(mhc_pos_file,mhc_neg_file,indel_final_neo_file,model_train_file,indel_neo_model_file,indel_blastp_tmp_file,indel_blastp_out_tmp_file,indel_netMHCpan_pep_tmp_file,indel_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,indel_immunogenicity_gmm_all_score_ranking,indel_immunogenicity_gmm_pos_score_ranking,indel_gmm_classification_file,indel_immunogenicity_bioactive_score_ranking,))
-	processes_5.append(r3)
-	for p in processes_5:
-		p.daemon = True
-		p.start()
-	for p in processes_5:
-		p.join()		
+	#processes_5.append(r3)
+	#for p in processes_5:
+	#	p.daemon = True
+	#	p.start()
+	#for p in processes_5:
+	#	p.join()		
 	print 'stage 5 done.'
 	print 'Done!'
 	print 'fpkm_cutoff'
 	print fpkm_cutoff
+	#if os.path.exists(alignment_out_fold):
+	#	shutil.rmtree(alignment_out_fold)
+	#if os.path.exists(clean_fastq_fold):
+	#	shutil.rmtree(clean_fastq_fold)
+
+	#os.remove(snv_blastp_tmp_file)
+	#os.remove(snv_blastp_out_tmp_file)
+	#os.remove(snv_netMHCpan_pep_tmp_file)
+	#os.remove(snv_netMHCpan_ml_out_tmp_file)
+	#os.remove(indel_blastp_tmp_file)
+	#os.remove(indel_blastp_out_tmp_file)
+	#os.remove(indel_netMHCpan_pep_tmp_file)
+	#os.remove(indel_netMHCpan_ml_out_tmp_file)
+'''
 	if os.path.exists(alignment_out_fold):
 		shutil.rmtree(alignment_out_fold)
-	if os.path.exists(clean_fastq_fold):
-		shutil.rmtree(clean_fastq_fold)
-
-	os.remove(snv_blastp_tmp_file)
-	os.remove(snv_blastp_out_tmp_file)
-	os.remove(snv_netMHCpan_pep_tmp_file)
-	os.remove(snv_netMHCpan_ml_out_tmp_file)
-	os.remove(indel_blastp_tmp_file)
-	os.remove(indel_blastp_out_tmp_file)
-	os.remove(indel_netMHCpan_pep_tmp_file)
-	os.remove(indel_netMHCpan_ml_out_tmp_file)
-
-'''
 	if os.path.exists(somatic_mutation_fold):
 		shutil.rmtree(somatic_mutation_fold)
 	if os.path.exists(varscan_copynumber_fold):
