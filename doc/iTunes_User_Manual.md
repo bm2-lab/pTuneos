@@ -65,9 +65,20 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 
 2. Call docker `pull chizhou/itunes` which will download the Docker image.
 
-3. You can use the image as followes:
+3. Run the image with interactive mode with your dataset:
+docker run -it -v /your/path/to/data/:/home/bioworker chizhou/itunes /bin/bash
 
-    docker run -v /path/to/data/folder:/data/ -t chizhou/itunes -i config.yaml
+4. Change directory into /home/bioworker/project/iTunes:
+cd /home/bioworker/project/iTunes
+
+5. Download reference data:
+bash data_download.sh
+
+6. edit example.yaml and fill the exome and RNA sequencing data path with proper filepath:
+
+7. Run the program with follow command:
+python iTunes.py PairMatchDna -i example.yaml
+
 
 ## Installation from source
 
