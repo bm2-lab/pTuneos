@@ -97,7 +97,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
         human.fasta.ann	
         etc...
 	
-	[VCF_annotation] 
+        [VCF_annotation] 
 	
         This fold contains the vcf file and its index files used to run GATK best practice:
         dbsnp_138.hg38.vcf.gz
