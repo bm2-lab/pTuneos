@@ -91,22 +91,22 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 
         [Fasta] 
 	
-	This fold contains the reference fasta file, its bwa index and some other files result from `huamn.fasta`:
+        This fold contains the reference fasta file, its bwa index and some other files result from `huamn.fasta`:
         human.fasta	
-	human.fasta.amb	
-	human.fasta.ann	
-	etc...
+        human.fasta.amb	
+        human.fasta.ann	
+        etc...
 	
 	[VCF_annotation] 
 	
-	This fold contains the vcf file and its index files used to run GATK best practice:
+        This fold contains the vcf file and its index files used to run GATK best practice:
         dbsnp_138.hg38.vcf.gz
         1000G_phase1.snps.high_confidence.hg38.vcf.gz
         Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
      
         [Protein] 
 	
-	This fold contains the reference cDNA and protein sequence of human:
+        This fold contains the reference cDNA and protein sequence of human:
         human.cdna.all.fa
         human.pep.all.fa
 	
