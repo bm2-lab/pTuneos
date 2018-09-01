@@ -39,7 +39,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 * [strelka](https://github.com/Illumina/strelka)
 * [opitype](https://github.com/FRED-2/OptiType)
 * [pyclone](https://bitbucket.org/aroth85/pyclone/wiki/Tutorial)
-* [GATK 3.7](https://software.broadinstitute.org/gatk/best-practices/)
+* [GATK 3.8](https://software.broadinstitute.org/gatk/best-practices/)
 * [Picard tools](https://broadinstitute.github.io/picard/)
 * [Java 8](https://java.com/en/download/help/linux_x64rpm_install.xml)
 * [Varscan2](http://varscan.sourceforge.net/)
@@ -47,6 +47,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 * [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 * [vcftools](http://vcftools.sourceforge.net/)
 * [blast](http://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
+* [tabix](http://www.htslib.org/doc/tabix.html)
 
 
 #### Python modules:
@@ -86,22 +87,19 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 
         bash data_download.sh
         
-    a few reference data would be in the fold `database`, including:
+    a few reference data would be in the fold `database` and process by coustom script in order to run the pipeline, including:
 
-        [Genome reference]
-        Homo_sapiens_assembly38.fasta
-        dbsnp_138.hg38.vcf
-        1000G_phase1.snps.high_confidence.hg38.vcf
-        1000G_omni2.5.hg38.vcf
-        Mills_and_1000G_gold_standard.indels.hg38.vcf
-        CosmicCodingMuts_chr_M_sorted.vcf
-        
-        [EnsemblVEP]
-        homo_sapiens_vep_89_GRCh38.tar.gz
-        
-        [cDNA and protein]
-        Homo_sapiens.GRCh38.cdna.all.fa
-        Homo_sapiens.GRCh38.pep.all.fa
+        [Fasta] ##This fold contains the reference fasta file, its bwa index and some other files result from `huamn.fasta`
+        human.fasta	human.fasta.amb	human.fasta.ann	etc...
+	
+	[VCF_annotation] ##This fold contains the vcf file and its index files used to run GATK best practice.
+        dbsnp_138.hg38.vcf.gz
+        1000G_phase1.snps.high_confidence.hg38.vcf.gz
+        Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
+     
+        [Protein] ##This fold contains the reference cDNA and protein sequence of human.
+        human.cdna.all.fa
+        human.pep.all.fa
     Moreover,the Catalogue of Somatic Mutations In Cancer (COSMIC) provides a variant file (VCF) of all coding mutations in 
     COSMIC. This VCF file is called CosmicCodingMuts.vcf.gz and can be found under the "Download" tab on the COSMIC website 
     (click the "VCF files" dropdown menu after loading the Download tab). You will need to register before gaining access to 
@@ -113,20 +111,21 @@ iTunes currently test on x86_64 on ubuntu 16.04.
     4. Click the "Download" tab
     5. Click the "VCF files" dropdown menu
     6. Click the "CosmicCodingMuts.vcf.gz" file name ([direct link] (https://cancer.sanger.ac.uk/files/cosmic/current_release/VCF/CosmicCodingMuts.vcf.gz))
-    7. After you have downloaded the file, you will need to decompress it: `gunzip CosmicCodingMuts.vcf.gz`
+    7. After you have downloaded the file, you will need to decompress it: `gunzip CosmicCodingMuts.vcf.gz` and put it in directory database/VCF_annotation.
     8. we need to convert it to be compatible to Mutect2 using the script  `cosmic_process.sh`
+    make sure you are in iTunes-dev fold and run this command on your downloaded file:
+    bash cosmic_process.sh -i database/VCF_annotation/CosmicCodingMuts.vcf -o database/VCF_annotation/CosmicCodingMuts_chr_M_sorted.vcf -p software/picard.jar -d database/Fasta/human.dict
     
     The usage statement from `cosmic_process.sh`:
 ```
     cosmic_process.sh: A tool to format the COSMIC VCF file compatible for Mutect2
- 	Usage: bash cosmic_process.sh <-i CosmicCodingMuts.vcf> <-o FormattedCosmicMuts.vcf> <-d Homo_sapiens_assembly38.dic>
+ 	Usage: bash cosmic_process.sh -i <CosmicCodingMuts.vcf> -o <FormattedCosmicMuts.vcf> -p <picard path> -d <Homo_sapiens_assembly38.dic>
 	-i  Input CosmicCodingMuts.vcf file as downloaded from COSMIC
 	-o  Output formatted COSMIC VCF file
 	-p  Your path to picard
 	-d  Path to the GATK hg19 bundle's sequence dictionary file
 ```
-   Run this on your downloaded file.
-
+Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blastp and VarScan.v2.4.2 were prepared in software directory, other softwares should be install by user due to complexity, please refer to the links above.
 
 5. Fill in the `config.yaml` file with your local path, make sure you have installed all above software and have downloaded
 reference data.You should be aware that the version of VEP library you use should match the references used (peptide and cDNA). E.g. in the example above is used version/release 89 of GRCh38.
@@ -139,7 +138,12 @@ The config file is specified using the `-c` option
 
     path/to/iTunes.py -c path/to/config.yaml
 
-a detailed explaination is in example `config.yaml` file, you should replace the path of required software and reference file in your system.
+The file contains four part of parameters:
+* Fixed parameters, user should not change it.
+* Input data parameters, including path of DNA/RNA sequencing data, output fold, run name, hla alleles, expression file and thread number.
+(Note: user could specific hla allele throught `hla_str` ,otherwise set it `None`, the pipeline would predict utilize sequencing data. If RNA sequencing data is provided, please also set expression file to `None`.)
+* Some filter parameter including mutation sequence depth, mutation variant allele fraction(vaf), binding affinity rank and expression FPKM.
+* Software excutable path of opitype, vep, netMHCpan, PyClone and strelka.
 
 ## Input Files
 Pair-end matched tumor-normal whole exome sequencing file should be provied for basic neoantigens identification, expression
@@ -151,13 +155,13 @@ iTunes accepts pair-end matched tumor-normal whole exome sequencing as input,it 
 You should specify the right path to the sequencing file in `config.yaml` like:
 
     #your path to first tumor fastq file
-    tumor_fastq_path_first: /home/zhouchi/ncbi/dbGaP-14145/sra/SRR2770550_1.fastq.gz
+    tumor_fastq_path_first: ~/ncbi/dbGaP-14145/sra/SRR2770550_1.fastq.gz
     #your path to second tumor fastq file
-    tumor_fastq_path_second: /home/zhouchi/ncbi/dbGaP-14145/sra/SRR2770550_2.fastq.gz
+    tumor_fastq_path_second: ~/ncbi/dbGaP-14145/sra/SRR2770550_2.fastq.gz
     #your path to first normal fastq file
-    normal_fastq_path_first: /home/zhouchi/ncbi/dbGaP-14145/sra/SRR2669057_1.fastq.gz
+    normal_fastq_path_first: ~/ncbi/dbGaP-14145/sra/SRR2669057_1.fastq.gz
     #your path to second normal fastq file
-    normal_fastq_path_second: /home/zhouchi/ncbi/dbGaP-14145/sra/SRR2669057_2.fastq.gz
+    normal_fastq_path_second: ~/ncbi/dbGaP-14145/sra/SRR2669057_2.fastq.gz
 
 A full example of an expression file can be found in example fold.
 ### Input Files (optional) 
@@ -180,11 +184,9 @@ The following references are required for iTunes to run:
 * Snp: These files are used in somatic variant calling process.
 
         [Genome reference]
-        Homo_sapiens_assembly38.fasta
+        human.fasta
         dbsnp_138.hg38.vcf.gz
-        hapmap_3.3.hg38.vcf.gz
         1000G_phase1.snps.high_confidence.hg38.vcf.gz
-        1000G_omni2.5.hg38.vcf.gz
         Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
         CosmicCodingMuts_chr_M_sorted.vcf.gz 
     
@@ -225,21 +227,11 @@ The output files are the following:
 
     The file is a TSV file with the extracted mutated peptides derived from INDEL mutation with a model-based score measures
     the immunity of neoantigens in in-vivo experiment such as `ELISPOT` and `ICS`.
-    
-3.  snv.score.tsv
-
-    The file is a TSV file with the extracted mutated peptides derived from nonsynonymous point mutation with a priority
-    score measures the in-vitro immunogecity of neoantigens.
-    
-4.  indel.score.tsv
-
-    The file is a TSV file with the extracted mutated peptides derived from INDEL mutation with a priority score
-    measures the in-vitro immunogecity of neoantigens.
 
 
 ### Column explanation
 
-The prediction output (.snv.model.tsv) for each peptide pair consists of the following columns:
+The prediction output (snv.model.tsv/indel.model.tsv) for each peptide pair consists of the following columns:
 
 | Column Name           | Description |
 | -----------           | ----------- |
@@ -264,7 +256,8 @@ The prediction output (.snv.model.tsv) for each peptide pair consists of the fol
 | Recognition_score     | T cell recognition score calculated based on TCR cross reactivity. |
 | Hydrophobicity_score  | Neo-peptide immunity mesurement based on animo acid hydrophobicity. |
 | Self_sequence_similarity | Sequence similarity bewteen mutated peptide and normal(homglogous) peptide, We select the bigger one as final score |
-| model_pro       | Model prediction score denpend on Recognition_score, Hydrophobicity_score, Self_sequence_similarity, WT_Binding_EL, MT_Binding_EL . |
+| Model_pro       | Model prediction score denpend on Recognition_score, Hydrophobicity_score, Self_sequence_similarity, WT_Binding_EL, MT_Binding_EL . |
+| Immuno_effect_score	| In vivo immunogenicty score for neoantigens.
 
 ## Test example 
 
