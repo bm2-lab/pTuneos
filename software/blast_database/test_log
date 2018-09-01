@@ -1,0 +1,10 @@
+
+
+Building a new DB, current time: 01/15/2018 16:44:28
+New DB name:   /home/zhouchi/test/blast_test/database_test
+New DB title:  test
+Sequence type: Protein
+Keep Linkouts: T
+Keep MBits: T
+Maximum file size: 1000000000B
+Adding sequences from FASTA; added 104295 sequences in 3.57214 seconds.

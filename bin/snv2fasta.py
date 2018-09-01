@@ -3,17 +3,19 @@ import numpy as np
 import sys,getopt,os
 import re
 #####prepare fasta format input file for netMHC######
-opts,args=getopt.getopt(sys.argv[1:],"hi:o:s:",["input_snv_vep_file","out_dir","sample_id"])
+opts,args=getopt.getopt(sys.argv[1:],"hi:o:s:p:",["input_snv_vep_file","out_dir","sample_id","human_peptide"])
 input_snv_vep_file =""
 out_dir=""
 sample_id=""
+human_peptide=""
 USAGE='''
 	This script convert VEP result to fasta format file for netMHC
-	usage: python animo_acid_prepare.py -i <input_snv_vep_file> -o <outdir> -s <sample_id>
+	usage: python animo_acid_prepare.py -i <input_snv_vep_file> -o <outdir> -s <sample_id> -p <human_peptide>
 		required argument:
 			-i | --input_snv_vep_file : input file,result from VEP
 			-o | --out_dir : output directory
 			-s | --sample_id : sample id
+			-p | --human_peptide : reference protein sequence of human
 '''
 for opt,value in opts:
 	if opt =="h":
@@ -24,16 +26,18 @@ for opt,value in opts:
 	elif opt in ("-o","--out_dir"):
 		out_dir =value
 	elif opt in ("-s","--sample_id"):
-		sample_id =value  
+		sample_id =value 
+	elif opt in ("-p","--human_peptide"):
+		human_peptide =value 
 	
 #print coverage
-if (input_snv_vep_file =="" or out_dir =="" or sample_id==""):
+if (input_snv_vep_file =="" or out_dir =="" or sample_id=="" or human_peptide=""):
 	print USAGE
 	sys.exit(2)		
 
 
 transcript_aa={}
-for line in open("/home/zhouchi/database/Annotation/protein/Homo_sapiens.GRCh38.pep.all.fa",'r'):
+for line in open(human_peptide,'r'):
 	if line.startswith(">"):
 		transcript_name = line.strip().split(' ')[4][11:26]
 		transcript_aa[transcript_name] = '' 

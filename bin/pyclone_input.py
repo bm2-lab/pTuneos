@@ -4,14 +4,14 @@
 import pandas as pd
 import sys,getopt
 
-opts,args=getopt.getopt(sys.argv[1:],"hn:i:s:c:o:S:C:",["neoantigen_file","vep_input_file","snv_mutect2_file","copynumber_file","out_dir","SampleID","Coverage"])
+opts,args=getopt.getopt(sys.argv[1:],"hn:i:s:c:o:S:",["neoantigen_file","vep_input_file","snv_mutect2_file","copynumber_file","out_dir","SampleID"])
 neoantigen_file=""
 vep_input_file=""
 snv_mutect2_file=""
 copynumber_file=""
 output_dir=""
 sample_id=""
-coverage=2	
+
 USAGE='''usage: python pyclone_input.py -n <neoantigen_file> -i <vep_input_file> -s <snv_mutect2_file> -c <copynumber_file> -o <outdir> -S <sample_id> [option]"
 		required argument:
 			-n | --neoantigen_file: 
@@ -20,8 +20,7 @@ USAGE='''usage: python pyclone_input.py -n <neoantigen_file> -i <vep_input_file>
 			-c | --copynumber_file : copynumber file result from varscan
 			-o | --out_dir : output_directory
 			-S | --SampleID : sample id
-		optional argument:
-			-C | --Coverage : allele reads coverage cutoff
+
 '''
 for opt,value in opts:
 	if opt =="h":
@@ -39,11 +38,7 @@ for opt,value in opts:
 		output_dir=value  
 	elif opt in ("-S","--SampleID"):
 		sample_id=value
-	elif opt in ("-C","--Coverage"):
-		coverage=value 
 
-#print coverage
-print neoantigen_file,vep_input_file,snv_mutect2_file,copynumber_file,output_dir,sample_id
 if (neoantigen_file=="" or vep_input_file=="" or snv_mutect2_file=="" or copynumber_file=="" or output_dir=="" or sample_id==""):
 	print USAGE
 	sys.exit(2)
@@ -230,7 +225,6 @@ for i in range(len(data_allele_count.chrom)):
 data_allele_count['variant_freq']=VariantFreq
 data_pyclone_input=data_allele_count[['mutation_id','tumor_reads1','tumor_reads2','normal_cn','minor_cn','major_cn','variant_case','variant_freq','genotype']]
 data_pyclone_input=data_pyclone_input.rename(columns={'tumor_reads1':'ref_counts','tumor_reads2':'var_counts'})
-#data_pyclone_input_filter=data_pyclone_input[(data_pyclone_input.ref_counts > int(coverage)) & (data_pyclone_input.var_counts > int(coverage))]
 data_pyclone_input.to_csv(output_dir+'/'+sample_id+'_pyclone_input.tsv',sep='\t',index=0)
 
 
