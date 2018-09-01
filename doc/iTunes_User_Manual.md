@@ -90,6 +90,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
     a few reference data would be in the fold `database` and process by coustom script in order to run the pipeline, including:
 
         [Fasta] 
+	
 	This fold contains the reference fasta file, its bwa index and some other files result from `huamn.fasta`:
         human.fasta	
 	human.fasta.amb	
@@ -97,15 +98,18 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 	etc...
 	
 	[VCF_annotation] 
+	
 	This fold contains the vcf file and its index files used to run GATK best practice:
         dbsnp_138.hg38.vcf.gz
         1000G_phase1.snps.high_confidence.hg38.vcf.gz
         Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
      
         [Protein] 
+	
 	This fold contains the reference cDNA and protein sequence of human:
         human.cdna.all.fa
         human.pep.all.fa
+	
     Moreover,the Catalogue of Somatic Mutations In Cancer (COSMIC) provides a variant file (VCF) of all coding mutations in 
     COSMIC. This VCF file is called CosmicCodingMuts.vcf.gz and can be found under the "Download" tab on the COSMIC website 
     (click the "VCF files" dropdown menu after loading the Download tab). You will need to register before gaining access to 
