@@ -63,10 +63,10 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 ## Installation via Docker
 1. Install Docker on your computer and make sure it works.
 
-2. Call docker `pull chizhou/itunes` which will download the Docker image.
+2. Call docker `pull bm2lab/itunes` which will download the Docker image.
 
 3. Run the image with interactive mode with your dataset:
-docker run -it -v /your/path/to/data/:/home/bioworker chizhou/itunes /bin/bash
+docker run -it -v /your/path/to/data/:/home/bioworker itunes/itunes /bin/bash
 
 4. Change directory into /home/bioworker/project/iTunes:
 cd /home/bioworker/project/iTunes
