@@ -204,7 +204,6 @@ You should specify the right path to the sequencing file in `config.yaml` like:
     #your path to second normal fastq file
     normal_fastq_path_second: ~/ncbi/dbGaP-14145/sra/SRR2669057_2.fastq.gz
 
-An example of an expression file can be found in example fold.
 ### Input Files (optional) 
 
 It is optional, but preferable, to provide RNA sequencing data for evaluating the expression level of neoantigens or you 
