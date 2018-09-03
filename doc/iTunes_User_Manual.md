@@ -233,7 +233,7 @@ match in release version (e.g. release-89)).
 TSV file containing known cancer driver genes. The cancer gene census can be
 downloaded from the [COSMIC](http://cancer.sanger.ac.uk/census) website.  
 
-* Cosmic VCF file
+* Cosmic VCF file  
 
 The Catalogue of Somatic Mutations In Cancer (COSMIC) provides a variant file (VCF) of all coding mutations in COSMIC. This VCF file is called CosmicCodingMuts.vcf.gz and can be found under the "Download" tab on the COSMIC website (click the "VCF files" dropdown menu after loading the Download tab). You will need to register before gaining access to the file. Note: to our knowledge COSMIC uses b38 which does not contain the 'chr' before the chromosome names like the UCSC hg38. Thus, we provide scripts to convert the file into the correct format.
 
