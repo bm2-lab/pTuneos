@@ -71,7 +71,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 
 3. Run the image with interactive mode with your dataset:
         
-		docker run -it -v /your/path/to/data/:/home/bioworker itunes/itunes /bin/bash
+		docker run -it -v /your/path/to/data/:/home/bioworker bm2lab/itunes /bin/bash
 
 4. Change directory into /home/bioworker/project/iTunes:
 
