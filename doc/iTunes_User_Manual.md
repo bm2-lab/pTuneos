@@ -6,6 +6,7 @@
 2. [Dependencies](#dependencies)  
     - [Required software](#required-software)  
     - [Python packages](#python-packages) 
+    - [R packages](#r-packages) 
 3. [Installation via Docker](#installation-via-docker)  
 4. [Installation from source](#installation-from-source)  
 5. [Usage](#usage)  
@@ -49,7 +50,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 * [tabix](http://www.htslib.org/doc/tabix.html)
 
 
-#### Python modules:
+#### Python packages:
     multiprocessing
     pyper
     yaml
@@ -58,7 +59,11 @@ iTunes currently test on x86_64 on ubuntu 16.04.
     sklearn
     pandas
     numpy
-   
+    
+#### R packages:
+    copynumebr
+    squash
+
 ## Installation via Docker
 1. Install Docker on your computer and make sure it works.
 
