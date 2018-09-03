@@ -147,7 +147,7 @@ python iTunes.py PairMatchDna -i example.yaml
 	-d  Path to the GATK hg19 bundle's sequence dictionary file
 ```
 
-5. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blastp and  VarScan.v2.4.2 were prepared in software directory, other softwares should be install by user due to complexity, please   refer to the links above.
+5. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blastp and  VarScan.v2.4.2 were prepared in software directory, other softwares should be installed by user own due to complexity, please refer to the software links above.
 
 6. Fill in the `config.yaml` file with your local path, make sure you have installed all above software and have downloaded
 reference data.You should be aware that the version of VEP library you use should match the references used (peptide and cDNA). E.g. in the example above is used version/release 89 of GRCh38.
