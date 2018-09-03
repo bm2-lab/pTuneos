@@ -1,10 +1,6 @@
 # iTunes: identification of Tumor neoantigens pipeline from next-generation sequencing data #
 
-Given matched tumor-normal whole exome sequencing and tumor RNA-seq sequencing data 
-as input, iTunes infers HLA sub-types, mutated peptides (neo-peptide), variant allele
-frequency, expression profile etc feature information. Based on these feature, a model-based
-refined ranking-score scheme could identify which of the neo-peptides have strong 
-immunogecity. Detailed information please refer to citation.
+iTunes is a computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTunes calculates five important immunogenicity features to construct a machine learning-based classifier (vitroneo) to predict and prioritize neoantigens with strong in vitro immunologic effects, followed by an efficient score scheme (vivoneo) to identify neoantigens with in vivo immunologic effects.
 
 #### Authors and Email:
 Chi Zhou 
