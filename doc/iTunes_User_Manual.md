@@ -275,7 +275,7 @@ The prediction output (snv_model.tsv/indel_model.tsv) for each peptide pair cons
 | Recognition_score     | T cell recognition score calculated based on TCR cross reactivity. |
 | Hydrophobicity_score  | Neo-peptide immunity mesurement based on animo acid hydrophobicity. |
 | Self_sequence_similarity | Sequence similarity bewteen mutated peptide and normal(homglogous) peptide, We select the bigger one as final score |
-| Model_pro       | Model prediction score denpend on Recognition_score, Hydrophobicity_score, Self_sequence_similarity, WT_Binding_EL, MT_Binding_EL . |
+| Model_pro       | In vitro model prediction score denpend on Recognition_score, Hydrophobicity_score, Self_sequence_similarity, WT_Binding_EL, MT_Binding_EL . |
 | Immuno_effect_score	| In vivo immunogenicty score for neoantigens.
 
 ## Test example 
