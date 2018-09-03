@@ -138,7 +138,8 @@ iTunes currently test on x86_64 on ubuntu 16.04.
     7. After you have downloaded the file, you will need to decompress it: `gunzip CosmicCodingMuts.vcf.gz` and put it in directory database/VCF_annotation.
     8. we need to convert it to be compatible to Mutect2 using the script  `cosmic_process.sh`
     make sure you are in iTunes-dev fold and run this command on your downloaded file:
-    bash cosmic_process.sh -i database/VCF_annotation/CosmicCodingMuts.vcf -o database/VCF_annotation/CosmicCodingMuts_chr_M_sorted.vcf -p software/picard.jar -d database/Fasta/human.dict
+    
+		bash cosmic_process.sh -i database/VCF_annotation/CosmicCodingMuts.vcf -o database/VCF_annotation/CosmicCodingMuts_chr_M_sorted.vcf -p software/picard.jar -d database/Fasta/human.dict
     
     The usage statement from `cosmic_process.sh`:
 ```
