@@ -16,9 +16,8 @@
     - [References](#references)
 7. [Output Files](#output-files)  
     - [Column explanation](#column-explanation)  
-8. [Test Example](#test-example)  
-9. [Contact](#contact)
-10. [Algorithmic Flow Chart](#algorithmic-flow-chart)
+8. [Contact](#contact)
+9. [Algorithmic Flow Chart](#algorithmic-flow-chart)
 
 ## General Description
 
@@ -294,11 +293,6 @@ The prediction output (snv_model.tsv/indel_model.tsv) for each peptide pair cons
 | Model_pro       | Model prediction score for neoantigen in vitro immunogenicty denpend on Recognition_score, Hydrophobicity_score, Self_sequence_similarity, WT_Binding_EL, MT_Binding_EL . |
 | Immuno_effect_score	| In vivo immunogenicty score for neoantigens.
 
-## Test example 
-
-To run the provided test files with iTunes the following command can be run: 
-
-        path/to/iTunes.py -i config.yaml
 
 ## Contact   
  
