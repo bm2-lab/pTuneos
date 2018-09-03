@@ -22,7 +22,7 @@
 
 ## General Description
 
-Given matched tumor-normal whole exome sequencing and tumor RNA-seq sequencing data as input, iTunes infers HLA sub-types, mutated peptides (neo-peptide), variant allele frequency, expression profile etc feature information. Based on these feature, a model- based refined ranking-score scheme could identify which of the neo-peptides have strong immunogecity.
+iTunes is a computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTunes calculates five important immunogenicity features to construct a machine learning-based classifier (vitroneo) to predict and prioritize neoantigens with strong in vitro immunologic effects, followed by an efficient score scheme (vivoneo) to identify neoantigens with in vivo immunologic effects.
 
 ## Dependencies  
 
@@ -198,8 +198,6 @@ could provide expression file derived from killasto or other tools. The files sh
     ENST00000631435.1	12	6.5	0	0
     ENST00000632684.1	12	6.5	0	0
 
-A full example of an expression file can be found in example
-[here](exmple/abundance.tsv).
 
 ### References 
 The following references are required for iTunes to run:
@@ -240,12 +238,12 @@ The Catalogue of Somatic Mutations In Cancer (COSMIC) provides a variant file (V
 iTunes output four result files contains information of identified neoantigens corresponding to nonsynonymous point mutation and INDEL mutation.
 
 The output files are the following: 
-1.  snv.model.tsv 
+1.  snv_model.tsv 
 
     The file is a TSV file with the extracted mutated peptides derived from nonsynonymous point mutation with a model-based
     score measures the immunity of neoantigens in in-vivo experiment such as `ELISPOT` and `ICS`. 
     
-2.  indel.model.tsv
+2.  indel_model.tsv
 
     The file is a TSV file with the extracted mutated peptides derived from INDEL mutation with a model-based score measures
     the immunity of neoantigens in in-vivo experiment such as `ELISPOT` and `ICS`.
@@ -253,7 +251,7 @@ The output files are the following:
 
 ### Column explanation
 
-The prediction output (snv.model.tsv/indel.model.tsv) for each peptide pair consists of the following columns:
+The prediction output (snv_model.tsv/indel_model.tsv) for each peptide pair consists of the following columns:
 
 | Column Name           | Description |
 | -----------           | ----------- |
