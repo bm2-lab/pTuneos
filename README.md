@@ -1,9 +1,9 @@
-# iTunes: identification of Tumor neoantigens pipeline from next-generation sequencing data #
+# iTunes: identification of personalized Tumor neoantigens from next-generation sequencing data #
 
-iTunes is a computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTunes calculates five important immunogenicity features to construct a machine learning-based classifier (vitroneo) to predict and prioritize neoantigens with strong in vitro immunologic effects, followed by an efficient score scheme (vivoneo) to identify neoantigens with in vivo immunologic effects.
+iTunes is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTunes calculates five important immunogenicity features to construct a machine learning-based classifier (vitroneo) to predict and prioritize neoantigens with strong in vitro immunologic effects, followed by an efficient score scheme (vivoneo) to identify neoantigens with in vivo immunologic effects.
 
 #### Authors and Email:
-Chi Zhou 
+Chi Zhou and Qi Liu
 
 #### Citation:
 iTunes: identification of personalized Tumor neoantigens from next-generation sequencing data, Submitted, 2018.
@@ -19,7 +19,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
 * [R 3.2.3](https://cran.r-project.org/src/base/R-3/R-3.2.3.tar.gz)
-* [NetMHCpan 3.0](http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?netMHCpan)
+* [NetMHCpan 4.0](http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?netMHCpan)
 * [Variant Effect Predictor (VEP)](https://github.com/Ensembl/ensembl-vep)
 * [bwa](https://github.com/lh3/bwa)
 * [samtools](https://github.com/samtools)
@@ -68,9 +68,10 @@ All options can be displayed using the usage information with the `-h` option:
 
 ## User Manual 
 For detailed information about usage, input and output files, test examples and data
-preparation read the [iTunes User Manual](/doc/iTunes_User_Manual.md)
+preparation please refer to the [iTunes User Manual](/doc/iTunes_User_Manual.md)
 
 
 ## Contact   
 
 1410782Chiz@tongji.edu.cn or qiliu@tongji.edu.cn
+Tongji University, Shanghai, China
