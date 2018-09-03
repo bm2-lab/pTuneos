@@ -13,7 +13,6 @@
     - [Input Files (required)](#input-files (required))  
     - [Input Files (optional)](#input-files (optional))  
     - [References](#references)
-    - [Training dataset](#training-dataset)
 7. [Output Files](#output-files)  
     - [Column explanation](#column-explanation)  
 8. [Test Example](#test-example)  
