@@ -61,9 +61,6 @@ for a detailed description.
 
 ## Usage
 
-Here is a simple example in which somatic mutation calls and gene expression data are
-provided, and MHC binding is predicted for HLA types HLA-A01:01 and HLA-B08:01. 
-
     python path/to/iTunes.py -i example.yaml
 
 All options can be displayed using the usage information with the `-h` option:   
