@@ -31,13 +31,18 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 * [Picard tools](https://broadinstitute.github.io/picard/)
 * [Java 8](https://java.com/en/download/help/linux_x64rpm_install.xml)
 
-#### Required software:
+#### Required Python package:
 * [yaml]()
 * [XGboost]()
 * [Bio]()
 * [sklearn]()
 * [pandas]()
 * [numpy]()
+
+#### Required R package:
+* [cpynumber]()
+* [squash]()
+
 
 ## Installation
 
