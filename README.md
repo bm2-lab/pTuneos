@@ -60,13 +60,9 @@ for a detailed description.
     see the example.yaml file for more information
 
 ## Usage
-
-    python path/to/iTunes.py -i example.yaml
-
-All options can be displayed using the usage information with the `-h` option:   
-
-    python path/to/iTunes.py -h
-
+After installation, iTunes is called as follows. The config file is specified using the -c option
+        
+        path/to/iTunes.py -c path/to/example.yaml
 
 ## User Manual 
 For detailed information about usage, input and output files, test examples and data
