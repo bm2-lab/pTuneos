@@ -91,18 +91,25 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 ## Installation from source
 
 1. Install all software listed above. 
-2. Install multiprocessing, pyper and sklearn with the following command:
+2. Install multiprocessing, pyper and other packages with the `pip` command:
 
-        pip install multiprocessing
-        pip install pyper
-        pip install sklearn
+        pip install -U multiprocessing
+        pip install -U pyper
+        ...
+3. Install R package `copynumber` and its dependence:
 
+        source("http://bioconductor.org/biocLite.R")
+        biocLite("copynumber")
 
-3. Download or clone the iTuNEs repository to your local system:
+   Install R package `squash`:
+   
+        install.package('squash')
+ 
+4. Download or clone the iTuNEs repository to your local system:
 
         git clone https://github.com/bm2-lab/iTunes.git
 
-4. Reference data includes genome fasta, cDNA, peptide, cosmic reference(GRCh38 build) could be downloaded through:
+5. Reference data includes genome fasta, cDNA, peptide, cosmic reference(GRCh38 build) could be downloaded through:
 
         bash data_download.sh
         
@@ -159,9 +166,9 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 	-d  Path to the GATK hg19 bundle's sequence dictionary file
 ```
 
-5. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blastp and  VarScan.v2.4.2 were prepared in software directory, other softwares should be installed by user own due to complexity, please refer to the software links above.
+6. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blastp and  VarScan.v2.4.2 were prepared in software directory, other softwares should be installed by user own due to complexity, please refer to the software links above.
 
-6. Fill in the `config.yaml` file with your local path, make sure you have installed all above software and have downloaded
+7. Fill in the `config.yaml` file with your local path, make sure you have installed all above software and have downloaded
 reference data.You should be aware that the version of VEP library you use should match the references used (peptide and cDNA). E.g. in the example above used version/release 89 of GRCh38.
 
 
