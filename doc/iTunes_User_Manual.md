@@ -223,13 +223,11 @@ The following references are required for iTunes to run:
         Homo_sapiens.GRCh38.cdna.all.fa
         Homo_sapiens.GRCh38.pep.all.fa
         
-* EnsemblVEP: VEP cache database.   
+* EnsemblVEP: VEP cache database (It should be emphasized that it is of very high importance that the references and VEP
+match in release version (e.g. release-89)).
 
         [EnsemblVEP]
         homo_sapiens_vep_89_GRCh38.tar.gz
-
-It should be emphasized that it is of very high importance that the references and VEP
-match in release version (e.g. release-89).
 
 * Cosmic consencus gene 
 TSV file containing known cancer driver genes. The cancer gene census can be
