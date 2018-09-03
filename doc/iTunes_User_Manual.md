@@ -179,7 +179,7 @@ reference data.You should be aware that the version of VEP library you use shoul
 After installation, iTunes is called as follows. 
 The config file is specified using the `-c` option
 
-    path/to/iTunes.py -c path/to/config.yaml
+    path/to/iTunes.py -c path/to/example.yaml
 
 The file contains four part of parameters:
 * Fixed parameters, user should not change it.
