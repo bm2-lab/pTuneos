@@ -221,6 +221,7 @@ Input file for `VCF` mode contains:
 * expression profile in the format same as mentioned in WES mode(recommend obtain from `kallisto`).
 * copynumber profile (recommend obtain from `sequenza`).
 * tumor cellularity (bewteen 0 and 1) (also recommend obtain from `sequenza`).
+
 We give the example data of these file in fold `VCF_example_data/`
 
 ### References 
