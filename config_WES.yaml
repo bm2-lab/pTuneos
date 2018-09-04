@@ -21,9 +21,6 @@ trimmomatic_path: software/trimmomatic-0.36.jar
 adapter_path: software/TruSeq3-PE.fa
 blast_db_path: software/blast_database/database
 iedb_file: train_data/iedb.fasta
-mhc_pos_file: train_data/all_postive.txt
-mhc_neg_file: train_data/all_negative.txt
-model_train_file: train_data/feature_train_2191.txt
 ##### Set path for input data, output fold, run name, thread number, 
 tumor_fastq_path_first: /your/path/to/first/tumor/exome-seq/fastq/
 tumor_fastq_path_second: /your/path/to/first/tumor/exome-seq/fastq/

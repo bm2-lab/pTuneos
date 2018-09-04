@@ -1,40 +1,32 @@
 import subprocess
 import os,sys,time
-import os,sys,time
 import multiprocessing
 import shutil 
-import subprocess
-import pandas as pd
-import math
 from pyper import *
 import numpy as np
 import math
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from matplotlib import pyplot as plt
-from sklearn.semi_supervised import label_propagation
 import itertools
 from scipy import linalg
 import matplotlib as mpl
 from sklearn import mixture
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
-from imblearn.under_sampling import RandomUnderSampler
 from imblearn.metrics import classification_report_imbalanced
 from Bio.Blast import NCBIXML
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
 from math import log, exp
 import pandas as pd
-import math	
-import numpy as np
 from scipy import interp
 from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 import xgboost as xgb
 from xgboost.sklearn import XGBClassifier
 from sklearn import cross_validation, metrics
-from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 import matplotlib.pylab as plt
 from sklearn.model_selection import train_test_split
 from Bio.Blast import NCBIXML
@@ -46,7 +38,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 from collections import Counter
-from sklearn.cross_validation import cross_val_score
+from sklearn.model_selection import cross_val_score
+from sklearn.externals import joblib
 a=26
 k=4.86936
 M=1. #default concentration of mutant peptides
@@ -204,7 +197,7 @@ def indel_neo(indel_fasta_file,somatic_out_fold,hla_str,netmhc_out_file,split_nu
 		#subprocess.call(str_proc2, shell=True, executable='/bin/bash')
 
 
-def pyclone_annotation(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,coverage,pyclone_path):
+def pyclone_annotation(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,pyclone_path):
 	str_proc=r'''
 somatic_mutation=%s
 copynumber_profile=%s
@@ -212,14 +205,13 @@ TUMOR_CONTENT=%f
 PREFIX=%s
 pyclone=%s
 netctl=%s
-COVERAGE=%d
 Pyclone=%s
-python ${iTuNES_BIN_PATH}/pyclone_input.py -n ${netctl}/${PREFIX}_snv_netctl_concact.txt -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${somatic_mutation}/${PREFIX}_SNVs_only.recode.vcf -c ${copynumber_profile} -o ${pyclone} -S ${PREFIX} -C ${COVERAGE}
+python ${iTuNES_BIN_PATH}/pyclone_input.py -n ${netctl}/${PREFIX}_snv_netctl_concact.txt -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${somatic_mutation}/${PREFIX}_SNVs_only.recode.vcf -c ${copynumber_profile} -o ${pyclone} -S ${PREFIX}
 $Pyclone setup_analysis --in_files ${pyclone}/${PREFIX}_pyclone_input.tsv --tumour_contents $TUMOR_CONTENT --prior major_copy_number --working_dir ${pyclone}
 $Pyclone run_analysis --config_file ${pyclone}/config.yaml
 $Pyclone build_table --config_file ${pyclone}/config.yaml --out_file ${pyclone}/loci.tsv --table_type loci
 python ${iTuNES_BIN_PATH}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_netctl_concact.txt -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
-'''%(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,coverage,pyclone_path)
+'''%(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,pyclone_path)
 	print str_proc
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 
@@ -231,173 +223,7 @@ def hydro_vector(pep):
 	for pep in pep_list:
 		hydrophobicity_vector.append(hydro_score[pep.upper()])
 	return hydrophobicity_vector
-def Train_hydrophobicity_xgboost(postive_pep_file,negative_pep_file):
-	pos_pep_list=[]
-	for line in open(postive_pep_file):
-		if line.startswith(">"):
-			continue
-		else:
-			record=line.strip()
-			if len(record)==9:
-				pos_pep_list.append(record)
-	neg_pep_list=[]
-	for line in open(negative_pep_file):
-		if line.startswith(">"):
-			continue
-		else:
-			record=line.strip()
-			if len(record)==9:
-				neg_pep_list.append(record)
-	pos_pep_hydro_list=[hydro_vector(p) for p in pos_pep_list]#[0:len(neg_pep_all)]
-	neg_pep_hydro_list=[hydro_vector(p) for p in neg_pep_list]
-	X=pos_pep_hydro_list+neg_pep_hydro_list
-	X_scale = StandardScaler().fit_transform(X)
-	y=[1]*len(pos_pep_hydro_list)+[0]*len(neg_pep_hydro_list)
-	nm1 = NearMiss(random_state=0, version=1)
-	X_resampled_nm1, y_resampled_nm1 = nm1.fit_sample(X, y)
-	clf_mlp = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(3), random_state=0)
-	clf_mlp.fit(X_resampled_nm1, y_resampled_nm1)
-	#hydro_score=clf_mlp.predict_prob([hydro_vector[pep]])
-	return clf_mlp
 
-#def Train_bioactivity_rf():
-	
-
-
-def aligner(seq1,seq2):
-	matrix = matlist.blosum62
-	gap_open = -11
-	gap_extend = -1
-	aln = pairwise2.align.localds(seq1.upper(), seq2.upper(), matrix,gap_open,gap_extend)
-	return aln
-
-def logSum(v):
-	ma=max(v)
-	return log(sum(map(lambda x: exp(x-ma),v)))+ma
-
-
-
-def calculate_R(neo_seq,iedb_seq):
-	align_score=[]
-	#i=0
-	for seq in iedb_seq:
-		aln_score=aligner(neo_seq,seq)
-		#i=i+1
-		#print i
-		#print aln_score
-		if aln_score!=[]:
-			localds_core=max([line[2] for line in aln_score])
-			align_score.append(localds_core)
-	#print align_score
-	#print k,a
-	bindingEnergies=map(lambda x: -k*(a-x),align_score)
-	#print bindingEnergies
-	lZk=logSum(bindingEnergies+[0])
-	lGb=logSum(bindingEnergies)
-	R=exp(lGb-lZk)
-	return R
-
-
-
-def GetNmerPositivePep(n,mhc_pos_file):
-	pep_list=[]
-	for line in open(mhc_pos_file):
-		if line.startswith(">"):
-			continue
-		else:
-			record=line.strip()
-			if len(record)==n:
-				pep_list.append(record)
-	return pep_list
-
-
-def GetNmerNegativePep(n,mhc_neg_file):
-	pep_list=[]
-	for line in open(mhc_neg_file):
-		if line.startswith(">"):
-			continue
-		else:
-			record=line.strip()
-			if len(record)==n:
-				pep_list.append(record)
-	return pep_list
-
-def hydro_vector(pep):
-	hydrophobicity_vector=[]
-	pep_list=list(pep)
-	pep_len=len(pep_list)
-	for pep in pep_list:
-		hydrophobicity_vector.append(hydro_score[pep.upper()])
-
-	return hydrophobicity_vector
-
-def getXY(n,mhc_pos_file,mhc_neg_file):
-	pos_pep=GetNmerPositivePep(n,mhc_pos_file)
-	neg_pep=GetNmerNegativePep(n,mhc_neg_file)
-	####get hydrophobicity list
-	pos_pep_hydro_list=[hydro_vector(p) for p in pos_pep]#[0:len(neg_pep_all)]
-	neg_pep_hydro_list=[hydro_vector(p) for p in neg_pep]
-	#print len(pos_pep_hydro_list)
-	#print len(neg_pep_hydro_list)
-	######transform into array
-	#pos_pep_hydro_array=np.array(pos_pep_hydro_list)
-	#neg_pep_hydro_array=np.array(neg_pep_hydro_list)
-	X=pos_pep_hydro_list+neg_pep_hydro_list
-	y=[1]*len(pos_pep_hydro_list)+[0]*len(neg_pep_hydro_list)
-	X_array=np.asarray(X)
-	y_array=np.asarray(y)
-	return X_array,y_array
-def get_hydro_model(mhc_pos_file,mhc_neg_file):
-	xgb_9 = XGBClassifier(
-	 learning_rate =0.1,
-	 n_estimators=208,
-	 max_depth=5,
-	 min_child_weight=1,
-	 gamma=0,
-	 subsample=0.8,
-	 colsample_bytree=0.8,
-	 objective= 'binary:logistic',
-	 n_jobs=4,
-	 scale_pos_weight=1,
-	 random_state=27)
-	#[207]  train-auc:0.95222+0.000337282   test-auc:0.852987+0.00777271
-	#AUC Score (Train): 0.941597
-	#AUC Score (Test): 0.768922
-
-	xgb_10 = XGBClassifier(
-	 learning_rate =0.1,
-	 n_estimators=165,
-	 max_depth=16,
-	 min_child_weight=1,
-	 gamma=0,
-	 subsample=0.8,
-	 colsample_bytree=0.8,
-	 objective= 'binary:logistic',
-	 n_jobs=4,
-	 scale_pos_weight=1,
-	 random_state=27)
-	#[164]  train-auc:1+0   test-auc:0.900267+0.00955733
-	#AUC Score (Train): 1.000000
-	#AUC Score (Test): 0.802474
-	xgb_11 = XGBClassifier(
-	 learning_rate =0.1,
-	 n_estimators=123,
-	 max_depth=5,
-	 min_child_weight=1,
-	 gamma=0.1,
-	 subsample=0.8,
-	 colsample_bytree=0.8,
-	 objective= 'binary:logistic',
-	 n_jobs=4,
-	 scale_pos_weight=1,
-	 random_state=27)
-	X_array_9,y_array_9=getXY(9,mhc_pos_file,mhc_neg_file)
-	hy_xgb_9=xgb_9.fit(X_array_9,y_array_9)
-	X_array_10,y_array_10=getXY(10,mhc_pos_file,mhc_neg_file)
-	hy_xgb_10=xgb_10.fit(X_array_10,y_array_10)
-	X_array_11,y_array_11=getXY(11,mhc_pos_file,mhc_neg_file)
-	hy_xgb_11=xgb_11.fit(X_array_11,y_array_11)
-	return hy_xgb_9,hy_xgb_10,hy_xgb_11
 def logSum(v):
 	ma=max(v)
 	return log(sum(map(lambda x: exp(x-ma),v)))+ma
@@ -496,9 +322,11 @@ def get_EL_info(seq,hla_type,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file):
 			pep_el_rank=ml_record[12]
 	return pep_el_rank
 #read in data 
-def InVivoModelAndScoreSNV(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,immunogenicity_gmm_all_score_ranking,immunogenicity_gmm_pos_score_ranking,gmm_classification_file,immunogenicity_bioactive_score_ranking):
+def InVivoModelAndScoreSNV(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
 	iedb_seq=get_iedb_seq(iedb_file)
-	hy_xgb_9,hy_xgb_10,hy_xgb_11=get_hydro_model(mhc_pos_file,mhc_neg_file)
+	hy_xgb_9=joblib.load(cf_hy_model_9)
+	hy_xgb_10=joblib.load(cf_hy_model_10)
+	hy_xgb_11=joblib.load(cf_hy_model_11)
 	data_neo=pd.read_table(neo_file,header=0,sep='\t')
 	MT_peptide=data_neo.MT_pep
 	HLA=data_neo.HLA_type
@@ -564,25 +392,8 @@ def InVivoModelAndScoreSNV(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,n
 	data_neo["MT_Binding_EL"]=MT_peptide_EL
 	data_neo["WT_Binding_EL"]=WT_peptide_EL
 	df_neo=data_neo.loc[:,['Hydrophobicity_score','Recognition_score','Self_sequence_similarity','MT_Binding_EL','WT_Binding_EL']]
-	data_train = pd.read_table(model_train_file,header=0,sep='\t')
-	data_train_dropna=data_train.dropna()
-	target = 'response'
-	HPcol = 'hydrophobicity_score'
-	Rcol = 'Recognition_score'
-	SScol = 'self_sequence_similarity'
-	ELcol = 'EL_dissimilarity'
-	predictors = [x for x in data_train_dropna.columns if x not in [target,'Pep_len',ELcol,'EL_ht_rank']]
-	X_train=data_train_dropna[predictors].values
-	X_train_scale = StandardScaler().fit_transform(X_train)
-	y_train=data_train_dropna[target].values
-	print 'Original dataset shape {}'.format(Counter(y_train))
-	sm=SMOTE(k_neighbors=4,kind='borderline1',random_state=42)
-	X_res, y_res = sm.fit_sample(X_train,y_train)
-	print 'Resampled dataset shape {}'.format(Counter(y_res))
-	rf0 = RandomForestClassifier(oob_score=True, random_state=10)  
-	print rf0
-	rf0.fit(X_res, y_res)
-	dneo_predprob = rf0.predict_proba(df_neo.values)[:,1]
+	cf_RF=joblib.load(RF_model)
+	dneo_predprob = cf_RF.predict_proba(df_neo.values)[:,1]
 	print dneo_predprob
 	data_neo["model_pro"]=dneo_predprob
 	f_EL_rank_wt=lambda x:1-(1/(1+math.pow(math.e,5*(float(x)-2))))/2
@@ -600,9 +411,11 @@ def InVivoModelAndScoreSNV(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,n
 	data_neo_out_sort=data_neo.sort_values(['model_pro',"immuno_effect_score"],ascending=[0,0])
 	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)
 	del data_neo_out_sort["contain_X"]
-def InVivoModelAndScoreINDEL(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,immunogenicity_gmm_all_score_ranking,immunogenicity_gmm_pos_score_ranking,gmm_classification_file,immunogenicity_bioactive_score_ranking):
+def InVivoModelAndScoreINDEL(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_mode,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
 	iedb_seq=get_iedb_seq(iedb_file)
-	hy_xgb_9,hy_xgb_10,hy_xgb_11=get_hydro_model(mhc_pos_file,mhc_neg_file)
+	hy_xgb_9=joblib.load(cf_hy_model_9)
+	hy_xgb_10=joblib.load(cf_hy_model_10)
+	hy_xgb_11=joblib.load(cf_hy_model_11)	
 	data_neo=pd.read_table(neo_file,header=0,sep='\t')
 	MT_peptide=data_neo.MT_pep
 	HLA=data_neo.HLA_type
@@ -668,144 +481,24 @@ def InVivoModelAndScoreINDEL(mhc_pos_file,mhc_neg_file,neo_file,model_train_file
 	data_neo["MT_Binding_EL"]=MT_peptide_EL
 	data_neo["WT_Binding_EL"]=WT_peptide_EL
 	df_neo=data_neo.loc[:,['Hydrophobicity_score','Recognition_score','Self_sequence_similarity','MT_Binding_EL','WT_Binding_EL']]
-	data_train = pd.read_table(model_train_file,header=0,sep='\t')
-	data_train_dropna=data_train.dropna()
-	target = 'response'
-	HPcol = 'hydrophobicity_score'
-	Rcol = 'Recognition_score'
-	SScol = 'self_sequence_similarity'
-	ELcol = 'EL_dissimilarity'
-	predictors = [x for x in data_train_dropna.columns if x not in [target,'Pep_len',ELcol,'EL_ht_rank']]
-	X_train=data_train_dropna[predictors].values
-	X_train_scale = StandardScaler().fit_transform(X_train)
-	y_train=data_train_dropna[target].values
-	print 'Original dataset shape {}'.format(Counter(y_train))
-	sm=SMOTE(k_neighbors=4,kind='borderline1',random_state=42)
-	X_res, y_res = sm.fit_sample(X_train,y_train)
-	print 'Resampled dataset shape {}'.format(Counter(y_res))
-	rf0 = RandomForestClassifier(oob_score=True, random_state=10)  
-	print rf0
-	rf0.fit(X_res, y_res)
-	dneo_predprob = rf0.predict_proba(df_neo.values)[:,1]
+	cf_RF=joblib.load(RF_model)
+	dneo_predprob = cf_RF.predict_proba(df_neo.values)[:,1]
 	print dneo_predprob
 	data_neo["model_pro"]=dneo_predprob
-	neoantigen_infor = []
-	for i in range(len(data_neo.Gene)):
-		neo_infor = data_neo["Gene"][i]+'_'+data_neo["AA_change"][i]+'_'+data_neo["MT_pep"][i]+'_'+data_neo["WT_pep"][i]
-		neoantigen_infor.append(neo_infor)
-	data_neo["neoantigen_infor"] = neoantigen_infor
-	data_neo_out_sort=data_neo.sort_values(['model_pro'],ascending=[0])
-	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)
 	f_EL_rank_wt=lambda x:1-(1/(1+math.pow(math.e,5*(float(x)-2))))/2
 	f_EL_rank_mt=lambda x:1/(1+math.pow(math.e,5*(float(x)-2)))
 	EL_mt_rank_score=data_neo.MT_Binding_EL.apply(f_EL_rank_mt)
 	EL_wt_rank_score=data_neo.WT_Binding_EL.apply(f_EL_rank_wt)
-	bioactive_score=[data_neo.Hydrophobicity_score[i]*data_neo.Recognition_score[i]*data_neo.Self_sequence_similarity[i]*EL_mt_rank_score[i]*EL_wt_rank_score[i] for i in range(len(data_neo.MT_Binding_EL))]
-	data_neo["bioactive_score"]=bioactive_score
-	data_neo_sortedby_bioactive=data_neo.sort_values(["bioactive_score"],ascending=False)
-	data_neo_sortedby_bioactive.to_csv(immunogenicity_bioactive_score_ranking,header=1,index=0,sep='\t')
 	k=1
 	f_TPM=lambda x:math.tanh(x/k)
 	allele_frequency_score=data_neo.variant_allele_frequency
 	netchop_score=data_neo.combined_prediction_score
-	try:
-		tpm_score=data_neo.tpm.apply(f_TPM)
-		immuno_effect_score=[tpm_score[i]*allele_frequency_score[i]*netchop_score[i]*data_neo.Hydrophobicity_score[i]*data_neo.Recognition_score[i]*data_neo.Self_sequence_similarity[i]*EL_mt_rank_score[i]*EL_wt_rank_score[i] for i in range(len(data_neo.MT_Binding_EL))]
-		data_feature_select=pd.DataFrame()
-		data_feature_select["neoantigen_infor"]=neoantigen_infor
-		data_feature_select["EL_mt_rank_score"]=EL_mt_rank_score
-		data_feature_select["EL_wt_rank_score"]=EL_wt_rank_score
-		data_feature_select["tpm_score"]=tpm_score
-		#data_feature_select["tpm_normal_score"]=tpm_normal_score
-		data_feature_select["allele_frequency_score"]=allele_frequency_score
-		data_feature_select["netchop_score"]=netchop_score
-		data_feature_select["hydrophobicity_score"]=data_neo.Hydrophobicity_score
-		data_feature_select["Recogonition"]=data_neo.Recognition_score
-		data_feature_select["Self_sequence_similarity"]=data_neo.Self_sequence_similarity
-		data_feature_select["immuno_effect_score"]=immuno_effect_score
-		X_neo = data_feature_select.values[:,1:9]
-		####pca on non-standardized data of all 6 feature
-		pca = PCA(n_components=2).fit(X_neo)
-		X_neo_pca = pca.transform(X_neo)
-		#print "PCA result on non-standardized data"
-		#print "explained_variance_ratio",pca.explained_variance_ratio_
-		#print "explained_variance",pca.explained_variance_
-		#print pca.n_components_
-		#print pca.components_
-		###plot GMM ellipse
-		# Fit a Gaussian mixture with EM using five components
-		gmm = mixture.GaussianMixture(n_components=2, covariance_type='full',n_init=5).fit(X_neo_pca)
-		plot_results(X_neo_pca, gmm.predict(X_neo_pca), gmm.means_, gmm.covariances_, 0,'Gaussian Mixture',gmm_classification_file)
-		#plot_results(X_neo_pca, gmm.predict(X_neo_pca), gmm.means_, gmm.covars_, 0, 'Gaussian Mixture')
-		predict_label=gmm.predict(X_neo_pca)
-		predict_prob=gmm.predict_proba(X_neo_pca)
-		predict_positive_prob=[]
-		for i in range(len(predict_prob)):
-			pos_prob=predict_prob[i][1]
-			predict_positive_prob.append(pos_prob)
-		data_feature_select["gmm_label"]=predict_label
-		data_gmm_filter_1=data_feature_select[data_feature_select["gmm_label"]==1]
-		data_gmm_filter_1_scoreAve=data_gmm_filter_1.immuno_effect_score.sum()/len(data_gmm_filter_1.immuno_effect_score)
-		data_gmm_filter_0=data_feature_select[data_feature_select["gmm_label"]==0]
-		data_gmm_filter_0_scoreAve=data_gmm_filter_0.immuno_effect_score.sum()/len(data_gmm_filter_0.immuno_effect_score)
-		if data_gmm_filter_0_scoreAve > data_gmm_filter_1_scoreAve:
-			data_gmm_filter_0.gmm_label=1
-			data_gmm_filter_1.gmm_label=0
-		else:
-			pass
-		data_labeled=pd.concat([data_gmm_filter_1,data_gmm_filter_0])
-		data_label_sorted=data_labeled.sort_values(["immuno_effect_score"],ascending=False)
-		data_label_sorted.to_csv(immunogenicity_gmm_all_score_ranking,header=1,index=0,sep='\t')
-		data_gmm_positive=data_label_sorted[data_label_sorted["gmm_label"]==1]
-		data_gmm_positive.to_csv(immunogenicity_gmm_pos_score_ranking,header=1,index=0,sep='\t')
-	except AttributeError,e:
-		print e
-		immuno_effect_score=[allele_frequency_score[i]*netchop_score[i]*data_neo.Hydrophobicity_score[i]*data_neo.Recognition_score[i]*data_neo.Self_sequence_similarity[i]*EL_mt_rank_score[i]*EL_wt_rank_score[i] for i in range(len(data_neo.MT_Binding_EL))]
-		data_feature_select=pd.DataFrame()
-		data_feature_select["neoantigen_infor"]=neoantigen_infor
-		data_feature_select["EL_mt_rank_score"]=EL_mt_rank_score
-		data_feature_select["EL_wt_rank_score"]=EL_wt_rank_score
-		data_feature_select["allele_frequency_score"]=allele_frequency_score
-		data_feature_select["netchop_score"]=netchop_score
-		data_feature_select["hydrophobicity_score"]=data_neo.Hydrophobicity_score
-		data_feature_select["Recogonition"]=data_neo.Recognition_score
-		data_feature_select["Self_sequence_similarity"]=data_neo.Self_sequence_similarity
-		data_feature_select["immuno_effect_score"]=immuno_effect_score
-		X_neo = data_feature_select.values[:,1:8]
-		####pca on non-standardized data of all 6 feature
-		pca = PCA(n_components=2).fit(X_neo)
-		X_neo_pca = pca.transform(X_neo)
-		#print "PCA result on non-standardized data"
-		#print "explained_variance_ratio",pca.explained_variance_ratio_
-		#print "explained_variance",pca.explained_variance_
-		#print pca.n_components_
-		#print pca.components_
-		###plot GMM ellipse
-		# Fit a Gaussian mixture with EM using five components
-		gmm = mixture.GaussianMixture(n_components=2, covariance_type='full',n_init=5).fit(X_neo_pca)
-		plot_results(X_neo_pca, gmm.predict(X_neo_pca), gmm.means_, gmm.covariances_, 0,'Gaussian Mixture',gmm_classification_file)
-		#plot_results(X_neo_pca, gmm.predict(X_neo_pca), gmm.means_, gmm.covars_, 0, 'Gaussian Mixture')
-		predict_label=gmm.predict(X_neo_pca)
-		predict_prob=gmm.predict_proba(X_neo_pca)
-		predict_positive_prob=[]
-		for i in range(len(predict_prob)):
-			pos_prob=predict_prob[i][1]
-			predict_positive_prob.append(pos_prob)
-		data_feature_select["gmm_label"]=predict_label
-		data_gmm_filter_1=data_feature_select[data_feature_select["gmm_label"]==1]
-		data_gmm_filter_1_scoreAve=data_gmm_filter_1.immuno_effect_score.sum()/len(data_gmm_filter_1.immuno_effect_score)
-		data_gmm_filter_0=data_feature_select[data_feature_select["gmm_label"]==0]
-		data_gmm_filter_0_scoreAve=data_gmm_filter_0.immuno_effect_score.sum()/len(data_gmm_filter_0.immuno_effect_score)
-		if data_gmm_filter_0_scoreAve > data_gmm_filter_1_scoreAve:
-			data_gmm_filter_0.gmm_label=1
-			data_gmm_filter_1.gmm_label=0
-		else:
-			pass
-		data_labeled=pd.concat([data_gmm_filter_1,data_gmm_filter_0])
-		data_label_sorted=data_labeled.sort_values(["immuno_effect_score"],ascending=False)
-		data_label_sorted.to_csv(immunogenicity_gmm_all_score_ranking,header=1,index=0,sep='\t')
-		data_gmm_positive=data_label_sorted[data_label_sorted["gmm_label"]==1]
-		data_gmm_positive.to_csv(immunogenicity_gmm_pos_score_ranking,header=1,index=0,sep='\t')
+	tpm_score=data_neo.tpm.apply(f_TPM)
+	immuno_effect_score=[tpm_score[i]*allele_frequency_score[i]*netchop_score[i]*cellular_prevalence_score[i]*data_neo.Hydrophobicity_score[i]*data_neo.Recognition_score[i]*data_neo.Self_sequence_similarity[i]*EL_mt_rank_score[i]*EL_wt_rank_score[i] for i in range(len(data_neo.MT_Binding_EL))]
+	data_neo["immuno_effect_score"]=immuno_effect_score
+	data_neo_out_sort=data_neo.sort_values(['model_pro',"immuno_effect_score"],ascending=[0,0])
+	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)
+	del data_neo_out_sort["contain_X"]	
 
 
 

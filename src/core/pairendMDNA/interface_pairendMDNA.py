@@ -2,15 +2,15 @@ import os
 from pairendMDNAprocessor import *
 import shutil
 import yaml
+import time
 def PEMD(opts):
 	config_file=opts.Config_file
 	f=open(config_file)
 	config_list=yaml.load(f)
 	#######read and parse parameter
-	print "read and parse parameter."
+	print "Read and parse parameters..."
 	output_fold=config_list["output_fold"]
 	itunes_bin_path=config_list["itunes_bin_path"]
-	print itunes_bin_path
 	normal_fastq_path_first=config_list["normal_fastq_path_first"]
 	normal_fastq_path_second=config_list["normal_fastq_path_second"]
 	tumor_fastq_path_first=config_list["tumor_fastq_path_first"]
@@ -45,7 +45,7 @@ def PEMD(opts):
 	bamstat_out_fold=output_fold + '/' + 'bamstat'
 	indel_fasta_file=netmhc_out_fold+'/'+prefix+'_indel.fasta'
 	hla_str=config_list["hla_str"]
-	indel_netmhc_out_file=netmhc_out_fold+'/'+prefix+'_indel_netmhc.txt'
+	indel_netmhc_out_file=netmhc_out_fold+'/'+prefix+'_indel_netmhc.tsv'
 	split_num=200
 	human_peptide_path=config_list["human_peptide_path"]
 	binding_fc_aff_cutoff=int(config_list["binding_fc_aff_cutoff"])
@@ -55,12 +55,10 @@ def PEMD(opts):
 	netMHCpan_path=config_list["netMHCpan_path"]
 	varscan_copynumber_fold=output_fold + '/' + 'copynumber_profile'
 	snv_fasta_file=netmhc_out_fold+'/'+prefix+'_snv.fasta'
-	snv_netmhc_out_file=netmhc_out_fold+'/'+prefix+'_snv_netmhc.txt'
+	snv_netmhc_out_file=netmhc_out_fold+'/'+prefix+'_snv_netmhc.tsv'
 	pyclone_fold=output_fold + '/' + 'pyclone'
-	coverage=int(config_list["coverage_cutoff"])
 	pyclone_path=config_list["pyclone_path"]
 	strelka_path=config_list["strelka_path"]
-	cancer_type=config_list["cancer_type"]
 	rna_fastq_1_path=config_list["tumor_rna_fastq_1"]
 	rna_fastq_2_path=config_list["tumor_rna_fastq_2"]
 	kallisto_path=config_list["kallisto_path"]
@@ -69,47 +67,37 @@ def PEMD(opts):
 	normal_vaf_cutoff=config_list["normal_vaf_cutoff"]
 	kallisto_out_fold=output_fold + '/' + 'expression'
 	kallisto_cdna_path=config_list["kallisto_cdna_path"]
-	snv_final_neo_file=netctl_out_fold + '/' + prefix + '_pyclone_neo.txt'
-	indel_final_neo_file=netctl_out_fold + '/' + prefix + '_neo_indel_vaf.txt'
-	candidate_neoantigens_fold=output_fold + '/' + 'candidate_neoantigens'
-	immunogenicity_score_ranking_file=candidate_neoantigens_fold + '/' + prefix + '_immunogenicity_score_ranking.txt'
-
-	neo_for_rankagg_file=netctl_out_fold + '/' + prefix + '_neo_for_rankagg.txt'
-	neo_rank_agg_result=candidate_neoantigens_fold + '/'+ prefix + '_neo_rankagg_score_ranking.txt'
+	snv_final_neo_file=netctl_out_fold + '/' + prefix + '_pyclone_neo.tsv'
+	indel_final_neo_file=netctl_out_fold + '/' + prefix + '_neo_indel_vaf.tsv'
 	trimmomatic_path=config_list["trimmomatic_path"]
 	adapter_path=config_list["adapter_path"]
 	tumor_fastq_prefix=clean_fastq_fold + '/' + prefix + "_tumor_clean.fq.gz"
 	normal_fastq_prefix=clean_fastq_fold + '/' + prefix + "_normal_clean.fq.gz"
-	
-	#tumor_fastq_prefix_first=os.path.splitext(os.path.basename(tumor_fastq_path_first))[0]
-	#tumor_fastq_prefix_second=os.path.splitext(os.path.basename(tumor_fastq_path_second))[0]
-	#tumor_fastq_dir=os.path.dirname(tumor_fastq_path_first)
 	tumor_fastq_dir=clean_fastq_fold
 	tumor_fastq_clean_first=clean_fastq_fold + '/' + prefix + "_tumor_clean_1P.fq.gz"
 	tumor_fastq_clean_second=clean_fastq_fold + '/' + prefix + "_tumor_clean_2P.fq.gz"
-	
-	#normal_fastq_prefix_first=os.path.splitext(os.path.basename(normal_fastq_path_first))[0]
-	#normal_fastq_prefix_second=os.path.splitext(os.path.basename(normal_fastq_path_second))[0]
-	#normal_fastq_dir=os.path.dirname(normal_fastq_path_first)
 	normal_fastq_dir=clean_fastq_fold
 	normal_fastq_clean_first=clean_fastq_fold + '/' + prefix + "_normal_clean_1P.fq.gz"
 	normal_fastq_clean_second=clean_fastq_fold + '/' + prefix + "_normal_clean_2P.fq.gz"
 	iedb_file=config_list["iedb_file"]
-	mhc_pos_file=config_list["mhc_pos_file"]
-	mhc_neg_file=config_list["mhc_neg_file"]
-	model_train_file=config_list['model_train_file']
-	snv_neo_model_file=netctl_out_fold + '/' + prefix + '_snv_neo_model.txt'
-	snv_blastp_tmp_file=netctl_out_fold + '/' + prefix + '_snv_blastp_tmp.txt'
-	snv_blastp_out_tmp_file=netctl_out_fold + '/' + prefix + '_snv_blastp_out_tmp.txt'
-	snv_netMHCpan_pep_tmp_file=netctl_out_fold + '/' + prefix + '_snv_netMHCpan_pep_tmp.txt'
-	snv_netMHCpan_ml_out_tmp_file=netctl_out_fold + '/' + prefix + '_snv_netMHCpan_ml_out_tmp.txt'
-	indel_neo_model_file=netctl_out_fold + '/' + prefix + '_indel_neo_model.txt'
-	indel_blastp_tmp_file=netctl_out_fold + '/' + prefix + '_indel_blastp_tmp.txt'
-	indel_blastp_out_tmp_file=netctl_out_fold + '/' + prefix + '_indel_blastp_out_tmp.txt'
-	indel_netMHCpan_pep_tmp_file=netctl_out_fold + '/' + prefix + '_indel_netMHCpan_pep_tmp.txt'
-	indel_netMHCpan_ml_out_tmp_file=netctl_out_fold + '/' + prefix + '_indel_netMHCpan_ml_out_tmp.txt'
+	cf_hy_model_9="train_model/cf_hy_9_model.m"
+	cf_hy_model_10="train_model/cf_hy_10_model.m"
+	cf_hy_model_11="train_model/cf_hy_11_model.m"
+	RF_model="train_model/RF_train_model.m"
+	snv_neo_model_file=netctl_out_fold + '/' + prefix + '_snv_neo_model.tsv'
+	snv_blastp_tmp_file=netctl_out_fold + '/' + prefix + '_snv_blastp_tmp.tsv'
+	snv_blastp_out_tmp_file=netctl_out_fold + '/' + prefix + '_snv_blastp_out_tmp.tsv'
+	snv_netMHCpan_pep_tmp_file=netctl_out_fold + '/' + prefix + '_snv_netMHCpan_pep_tmp.tsv'
+	snv_netMHCpan_ml_out_tmp_file=netctl_out_fold + '/' + prefix + '_snv_netMHCpan_ml_out_tmp.tsv'
+	indel_neo_model_file=netctl_out_fold + '/' + prefix + '_indel_neo_model.tsv'
+	indel_blastp_tmp_file=netctl_out_fold + '/' + prefix + '_indel_blastp_tmp.tsv'
+	indel_blastp_out_tmp_file=netctl_out_fold + '/' + prefix + '_indel_blastp_out_tmp.tsv'
+	indel_netMHCpan_pep_tmp_file=netctl_out_fold + '/' + prefix + '_indel_netMHCpan_pep_tmp.tsv'
+	indel_netMHCpan_ml_out_tmp_file=netctl_out_fold + '/' + prefix + '_indel_netMHCpan_ml_out_tmp.tsv'
 	blast_db_path=config_list['blast_db_path']
-	summary_out=netctl_out_fold + '/' + prefix + '_neo_sum.txt'
+	time.sleep(5)
+	print "Read and parse parameters done..."
+	print "Check reference file path and input file path..."
 	if os.path.exists(rna_fastq_1_path) and os.path.exists(rna_fastq_2_path):
 		exp_file=output_fold + '/' + "expression/abundance.tsv"
 	else:
@@ -185,6 +173,7 @@ def PEMD(opts):
 	else:
 		print "ERROR: no kallisto cdna reference file"
 		os._exit(1)
+	time.sleep(5)
 	#####check output directory###
 	print "check output directory"
 	if not os.path.exists(output_fold):
@@ -203,16 +192,14 @@ def PEMD(opts):
 		os.mkdir(alignment_out_fold)
 	if not os.path.exists(kallisto_out_fold):
 		os.mkdir(kallisto_out_fold)
-	if not os.path.exists(candidate_neoantigens_fold):
-		os.mkdir(candidate_neoantigens_fold)
-	if not os.path.exists(candidate_neoantigens_fold):
-		os.mkdir(candidate_neoantigens_fold)
 	if not os.path.exists(logfile_out_fold):
 		os.mkdir(logfile_out_fold)	
 	if not os.path.exists(bamstat_out_fold):
 		os.mkdir(bamstat_out_fold)
 	if not os.path.exists(clean_fastq_fold):
-		os.mkdir(clean_fastq_fold)		
+		os.mkdir(clean_fastq_fold)	
+	print "ALL file paths are correct!"	
+	time.sleep(5)
 	print "start fastq quality control"
 	processes_0=[]
 	q1=multiprocessing.Process(target=read_trimmomatic,args=(tumor_fastq_path_first,tumor_fastq_path_second,trimmomatic_path,adapter_path,tumor_fastq_prefix,logfile_out_fold,"tumor",CPU,))
@@ -287,7 +274,7 @@ def PEMD(opts):
 	print "stage 3 done."
 	print 'start stage 4.'
 	processes_4=[]
-	l1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_out_fold,coverage,pyclone_path,logfile_out_fold,itunes_bin_path,))
+	l1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_out_fold,pyclone_path,logfile_out_fold,itunes_bin_path,))
 	processes_4.append(l1)	
 	for p in processes_4:
 		p.daemon = True
@@ -297,9 +284,9 @@ def PEMD(opts):
 	print 'stage 4 done.'
 	print 'start stage 5.'
 	processes_5=[]
-	r1=multiprocessing.Process(target=InVivoModelAndScoreSNV,args=(mhc_pos_file,mhc_neg_file,snv_final_neo_file,model_train_file,snv_neo_model_file,snv_blastp_tmp_file,snv_blastp_out_tmp_file,snv_netMHCpan_pep_tmp_file,snv_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
+	r1=multiprocessing.Process(target=InVivoModelAndScoreSNV,args=(snv_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,snv_neo_model_file,snv_blastp_tmp_file,snv_blastp_out_tmp_file,snv_netMHCpan_pep_tmp_file,snv_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
 	processes_5.append(r1)
-	r2=multiprocessing.Process(target=InVivoModelAndScoreINDEL,args=(mhc_pos_file,mhc_neg_file,indel_final_neo_file,model_train_file,indel_neo_model_file,indel_blastp_tmp_file,indel_blastp_out_tmp_file,indel_netMHCpan_pep_tmp_file,indel_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
+	r2=multiprocessing.Process(target=InVivoModelAndScoreINDEL,args=(indel_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,indel_neo_model_file,indel_blastp_tmp_file,indel_blastp_out_tmp_file,indel_netMHCpan_pep_tmp_file,indel_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
 	processes_5.append(r2)
 	for p in processes_5:
 		p.daemon = True
@@ -312,11 +299,20 @@ def PEMD(opts):
 	#	shutil.rmtree(alignment_out_fold)
 	#if os.path.exists(clean_fastq_fold):
 	#	shutil.rmtree(clean_fastq_fold)
-	os.remove(snv_blastp_tmp_file)
-	os.remove(snv_blastp_out_tmp_file)
-	os.remove(snv_netMHCpan_pep_tmp_file)
-	os.remove(snv_netMHCpan_ml_out_tmp_file)
-	os.remove(indel_blastp_tmp_file)
-	os.remove(indel_blastp_out_tmp_file)
-	os.remove(indel_netMHCpan_pep_tmp_file)
-	os.remove(indel_netMHCpan_ml_out_tmp_file)
+	if os.path.exists(snv_blastp_tmp_file):
+		os.remove(snv_blastp_tmp_file)
+	if os.path.exists(snv_blastp_out_tmp_file):
+		os.remove(snv_blastp_out_tmp_file)
+	if os.path.exists(snv_netMHCpan_pep_tmp_file):
+		os.remove(snv_netMHCpan_pep_tmp_file)
+	if os.path.exists(snv_netMHCpan_ml_out_tmp_file):
+		os.remove(snv_netMHCpan_ml_out_tmp_file)
+	if os.path.exists(indel_blastp_tmp_file):
+		os.remove(indel_blastp_tmp_file)
+	if os.path.exists(indel_blastp_out_tmp_file):
+		os.remove(indel_blastp_out_tmp_file)
+	if os.path.exists(indel_netMHCpan_pep_tmp_file):
+		os.remove(indel_netMHCpan_pep_tmp_file)
+	if os.path.exists(indel_netMHCpan_ml_out_tmp_file):
+		os.remove(indel_netMHCpan_ml_out_tmp_file)
+	print "Finished! please check result files 'snv_neo_model.tsv' and 'indel_neo_model.tsv' in netctl fold"

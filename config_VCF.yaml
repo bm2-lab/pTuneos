@@ -1,0 +1,31 @@
+##Fixed parameter, should not be changed.
+itunes_bin_path: bin
+reference_path: database/Fasta/human.fasta
+vcftools_path: software/vcftools
+iedb_file: train_data/iedb.fasta
+blast_db_path: software/blast_database/database
+iedb_file: train_model/iedb.fasta
+
+##### Set path for input data 
+output_fold: VCF_test
+vcf_file: vcf_example_data/example_mutect2.vcf
+sample_name: test
+hla_str: HLA-A02:01
+expression_file: vcf_example_data/example_abundance.tsv
+copynumber_profile: vcf_example_data/example_seg_copynumber.txt
+tumor_cellularity: 0.33
+peptide_length: 9
+
+##### Some filters parameter
+tumor_depth_cutoff: 7
+tumor_vaf_cutoff: 0.05
+normal_vaf_cutoff: 0.03
+binding_fc_aff_cutoff: 1
+binding_aff_cutoff: 2
+fpkm_cutoff: 0
+
+##### specify other software excutable path in your system as you have installed them.
+vep_path: /your/path/to/vep
+vep_cache_path: /your/path/to/vep cache data/
+pyclone_path: /your/path/to/PyClone
+netMHCpan_path: /your/path/to/netMHCpan

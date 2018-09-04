@@ -31,8 +31,8 @@ from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 import xgboost as xgb
 from xgboost.sklearn import XGBClassifier
-from sklearn import cross_validation, metrics
-from sklearn.grid_search import GridSearchCV
+from sklearn import metrics
+from sklearn.model_selection import GridSearchCV
 import matplotlib.pylab as plt
 from sklearn.model_selection import train_test_split
 from Bio.Blast import NCBIXML
@@ -44,7 +44,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 from collections import Counter
-from sklearn.cross_validation import cross_val_score
+from sklearn.model_selection import cross_val_score
+from sklearn.externals import joblib
+
 a=26
 k=4.86936
 M=1. #default concentration of mutant peptides
@@ -53,7 +55,6 @@ W=1. #default concentration of wildtype peptides
 WEPS=0.0003
 HYDROPHOBIC_RESIDUES="AILMFWYV"
 WEIRD_RESIDUES="CGP"
-hydro_score={"A":1.8,"C":2.5,"D":-3.5,"E":-3.5,"F":2.8,"G":-0.4,"H":-3.2,"I":4.5,"K":-3.9,"L":3.8,"M":1.9,"N":-3.5,"P":-1.6,"Q":-3.5,"R":-4.5,"S":-0.8,"T":-0.7,"V":4.2,"W":-0.9,"Y":-1.3}
 def get_iedb_seq(iedb_file):
 	iedb_seq=[]
 	for line in open(iedb_file):
@@ -64,20 +65,20 @@ def get_iedb_seq(iedb_file):
 	return iedb_seq
 def read_trimmomatic(raw_fastq_path_first,raw_fastq_path_second,trimmomatic_path,adapter_path,fastq_prefix,logfile_fold,fastq_type,CPU):
 	cmd_trimmomatic="java -jar " + trimmomatic_path + " PE -phred33 -threads " + str(CPU) + ' ' + raw_fastq_path_first + ' ' + raw_fastq_path_second  + ' -baseout ' + fastq_prefix + " ILLUMINACLIP:" + adapter_path + ':2:30:10' + ' LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 > ' + logfile_fold + '/' + fastq_type + '_trimmomatic.log' + ' 2>&1'
-	print cmd_trimmomatic
+	#print cmd_trimmomatic
 	os.system(cmd_trimmomatic)
 
 
 def hlatyping(raw_fastq_path_first,raw_fastq_path_second,opitype_fold,opitype_out_fold,opitype_ext,prefix):
 	cmd_hla = 'python ' + opitype_fold + ' -i ' + raw_fastq_path_first + ' ' + raw_fastq_path_second + ' --dna -o ' + opitype_out_fold
-	print cmd_hla
+	#print cmd_hla
 	os.system(cmd_hla)
 	result_dir=os.listdir(opitype_out_fold)
-	print result_dir[0]
+	#print result_dir[0]
 	hla_result_path=opitype_out_fold+'/'+result_dir[0]+'/'+result_dir[0]+'_result.tsv'
-	print hla_result_path
+	#print hla_result_path
 	cmd_hla_ext = 'python ' + opitype_ext + ' -i ' + hla_result_path + ' -o ' + opitype_out_fold + ' -s ' + prefix
-	print cmd_hla_ext
+	#print cmd_hla_ext
 	os.system(cmd_hla_ext)
 	print 'hla type process done.'
 
@@ -94,54 +95,54 @@ def mapping_qc_gatk_preprocess(fastq_1_path,fastq_2_path,fastq_type,CPU,BWA_INDE
 	cmd_buildbamindex="java -Xmx4G -jar " + java_picard_path + ' BuildBamIndex I=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam' + ' O=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam.bai' + ' VALIDATION_STRINGENCY=SILENT > ' + logfile_fold + '/' + fastq_type + '_buildindex.log' + ' 2>&1'
 	cmd_BaseRecalibrator="java -Xmx4G -jar " + GATK_path + ' -T BaseRecalibrator -nct ' + str(CPU) + ' -R ' + REFERENCE + ' -I ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam' + ' -knownSites ' + OneKG + ' -knownSites ' + mills + ' -knownSites ' + dbsnp138 + ' -o ' + alignment_out_fold + '/' + prefix + '_'+fastq_type + '.table > ' + logfile_fold + '/' + fastq_type + '_BaseRecalibrator.log'# + ' 2>&1'
 	cmd_PrintReads="java -Xmx4G -jar " + GATK_path + ' -T PrintReads -nct 8 -dt NONE -R ' + REFERENCE + ' -I ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam' + ' -BQSR ' + alignment_out_fold + '/' + prefix + '_'+fastq_type + '.table' + ' -o ' + alignment_out_fold + '/' + prefix + '_'+fastq_type + '_recal.bam > ' + logfile_fold + '/' + fastq_type + '_PrintRead.log' #+ ' 2>&1'
-	print cmd_bwa
+	#print cmd_bwa
 	os.system(cmd_bwa)
-	print cmd_samtools_1
+	#print cmd_samtools_1
 	os.system(cmd_samtools_1)
-	print cmd_samtools_sort
+	#print cmd_samtools_sort
 	os.system(cmd_samtools_sort)
-	print cmd_samtools_index_1
+	#print cmd_samtools_index_1
 	os.system(cmd_samtools_index_1)
-	print cmd_picard
+	#print cmd_picard
 	os.system(cmd_picard)
-	print cmd_samtools_index_2
+	#print cmd_samtools_index_2
 	os.system(cmd_samtools_index_2)
-	print cmd_add_readgroup
+	#print cmd_add_readgroup
 	os.system(cmd_add_readgroup)
-	print cmd_buildbamindex
+	#print cmd_buildbamindex
 	os.system(cmd_buildbamindex)
-	print cmd_BaseRecalibrator
+	#print cmd_BaseRecalibrator
 	os.system(cmd_BaseRecalibrator)
-	print cmd_PrintReads
+	#print cmd_PrintReads
 	os.system(cmd_PrintReads)
 
 def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,cosmic,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path):
 	cmd_GATK="java -Xmx4G -jar " + GATK_path + ' -T MuTect2 -nct ' + str(CPU) + ' -R ' + REFERENCE  + ' -I:tumor ' + alignment_out_fold + '/' + prefix + '_'+ 'tumor_recal.bam ' + '-I:normal ' + alignment_out_fold + '/' + prefix + '_'+ 'normal_recal.bam ' + '--dbsnp ' + dbsnp138 + ' --cosmic ' + cosmic + ' -o ' + somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf'
-	print cmd_GATK
+	#print cmd_GATK
 	os.system(cmd_GATK)
 	cmd_mutation_filter='grep ' + "\'^#\|chr[1-9]\{0,1\}[0-9XY]\\{0,1\\}\\b\'" + ' ' + somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf' + ' > ' + somatic_out_fold + '/' + prefix + '_' + 'mutect2_filter.vcf'
-	print cmd_mutation_filter
+	#print cmd_mutation_filter
 	os.system(cmd_mutation_filter)
 	cmd_vcftools_snv=vcftools_path + " --vcf " + somatic_out_fold + '/' + prefix + '_'+ 'mutect2_filter.vcf' + " --remove-filtered-all --remove-indels --recode --recode-INFO-all --out " + somatic_out_fold + '/' + prefix + '_'+ 'SNVs_only'
 	cmd_vcftools_indel=vcftools_path + " --vcf " + somatic_out_fold + '/' + prefix + '_'+ 'mutect2_filter.vcf' + " --remove-filtered-all --keep-only-indels --recode --recode-INFO-all --out " + somatic_out_fold + '/' + prefix + '_'+ 'INDELs_only'
-	print cmd_vcftools_snv
-	print cmd_vcftools_indel
+	#print cmd_vcftools_snv
+	#print cmd_vcftools_indel
 	os.system(cmd_vcftools_snv)
 	os.system(cmd_vcftools_indel)
 	cmd_snv_filter="python " + itunes_bin_path + "/snv_filter.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'SNVs_only.recode.vcf' + " -d " + str(tumor_depth_cutoff) + " -v " + str(tumor_vaf_cutoff) + " -n " + str(normal_vaf_cutoff) + " -o " + somatic_out_fold + " -s " + prefix
-	print cmd_snv_filter
+	#print cmd_snv_filter
 	os.system(cmd_snv_filter)
 	cmd_vep=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'SNVs_filter.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"CANONICAL is YES and Consequence is missense_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'snv_vep_ann.txt' + " --force_overwrite"
-	print cmd_vep
+	#print cmd_vep
 	os.system(cmd_vep)
 	cmd_vep_snv_all=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'SNVs_filter.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"Consequence is missense_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'snv_vep_ann_all.txt' + " --force_overwrite"
-	print cmd_vep_snv_all
+	#print cmd_vep_snv_all
 	os.system(cmd_vep_snv_all)
 	cmd_vep_indel=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'INDELs_only.recode.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"Consequence is missense_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'mutect_indel_vep_ann.txt' + " --force_overwrite"
-	print cmd_vep_indel
+	#print cmd_vep_indel
 	os.system(cmd_vep_indel)
 	cmd_snv="python " + itunes_bin_path + "/snv2fasta.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'snv_vep_ann.txt' + " -o " + netmhc_out_path + " -s " + prefix + " -p " + human_peptide_path
-	print cmd_snv
+	#print cmd_snv
 	os.system(cmd_snv)
 
 
@@ -238,7 +239,7 @@ grep '^chrom\|chr[1-9]\{0,1\}[0-9XY]\{0,1\}\b' ${PREFIX}.snp > ${PREFIX}_filter.
 rm ${PREFIX}_normal.fifo ${PREFIX}_tumor.fifo
 cd ..
 '''%(somatic_mutation_fold,alignment_out_fold,PREFIX,REFERENCE,vep_cache,netmhc_out_fold,samtools_path,varscan_path,vep_path,logfile_fold)
-	print str_proc
+	#print str_proc
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 
 
@@ -257,7 +258,7 @@ itunes_bin_path=%s
 python ${itunes_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_snv_netmhc.txt -g ${netmhc_out}/${PREFIX}_snv.fasta -o ${netmhc_out} -s ${PREFIX}_snv -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
 python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_snv_final_neo_candidate.txt -o ${netctl_fold} -s ${PREFIX}_snv
 '''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,netctl_fold,itunes_bin_path)
-	print str_proc1
+	#print str_proc1
 	subprocess.call(str_proc1, shell=True, executable='/bin/bash')
 
 def indel_calling_drift(strelka_out_fold,strelka_path,alignment_out_fold,PREFIX,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,itunes_bin_path):
@@ -283,7 +284,7 @@ $vep -i ${strelka_fold}/results/variants/somatic.indels.vcf.gz --cache --dir ${v
 python ${itunes_bin_path}/varscandel2fasta.py -i ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt -o ${netmhc_out} -s ${PREFIX}_strelka
 python ${itunes_bin_path}/varscanins2fasta.py -i ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt  -o ${netmhc_out} -s ${PREFIX}_strelka
 '''%(strelka_out_fold,strelka_path,alignment_out_fold,PREFIX,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,itunes_bin_path)
-	print str_proc2
+	#print str_proc2
 	subprocess.call(str_proc2, shell=True, executable='/bin/bash')
 	
 def indel_neo(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path):
@@ -299,7 +300,7 @@ $vep -i ${somatic_mutation}/${PREFIX}_varscan_indel.vcf --cache --dir $vep_cache
 python ${itunes_bin_path}/varscandel2fasta.py -i ${somatic_mutation}/${PREFIX}_varscan_indel_vep_ann.txt -o ${netmhc_out} -s ${PREFIX}_varscan
 python ${itunes_bin_path}/varscanins2fasta.py -i ${somatic_mutation}/${PREFIX}_varscan_indel_vep_ann.txt  -o ${netmhc_out} -s ${PREFIX}_varscan
 '''%(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,itunes_bin_path)
-	print str_proc1
+	#print str_proc1
 	subprocess.call(str_proc1, shell=True, executable='/bin/bash')	
 	str_proc3=r'''
 PREFIX=%s
@@ -371,7 +372,7 @@ $Pyclone run_analysis --config_file ${pyclone}/config.yaml
 $Pyclone build_table --config_file ${pyclone}/config.yaml --out_file ${pyclone}/loci.tsv --table_type loci
 python ${itunes_bin_path}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_netctl_concact.txt -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
 '''%(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_fold,pyclone_path,logfile_fold,itunes_bin_path)
-	print str_proc
+	#print str_proc
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 
 
@@ -381,9 +382,9 @@ def kallisto_expression(raw_fastq_path_first,raw_fastq_path_second,kallisto_path
 	kallisto_index_path = cdna_path_dir + '/' + cnd_file_prefix + '.idx'
 	cmd_kallisto_index = kallisto_path + " index -i " + kallisto_index_path + ' ' + kallisto_cdna_path + ' > ' +  logfile_fold + '/' + prefix + '_kallisto_index.log' + ' 2>&1'
 	cmd_kallisto_quant = kallisto_path + " quant -i " + kallisto_index_path + " -o " + kallisto_out_fold + " " + raw_fastq_path_first + " " + raw_fastq_path_second + ' > ' +  logfile_fold + '/' + prefix + '_kallisto.log' + ' 2>&1'
-	print cmd_kallisto_index
+	#print cmd_kallisto_index
 	os.system(cmd_kallisto_index)
-	print cmd_kallisto_quant
+	#print cmd_kallisto_quant
 	os.system(cmd_kallisto_quant)
 
 
@@ -395,174 +396,9 @@ def hydro_vector(pep):
 	for pep in pep_list:
 		hydrophobicity_vector.append(hydro_score[pep.upper()])
 	return hydrophobicity_vector
-def Train_hydrophobicity_xgboost(postive_pep_file,negative_pep_file):
-	pos_pep_list=[]
-	for line in open(postive_pep_file):
-		if line.startswith(">"):
-			continue
-		else:
-			record=line.strip()
-			if len(record)==9:
-				pos_pep_list.append(record)
-	neg_pep_list=[]
-	for line in open(negative_pep_file):
-		if line.startswith(">"):
-			continue
-		else:
-			record=line.strip()
-			if len(record)==9:
-				neg_pep_list.append(record)
-	pos_pep_hydro_list=[hydro_vector(p) for p in pos_pep_list]#[0:len(neg_pep_all)]
-	neg_pep_hydro_list=[hydro_vector(p) for p in neg_pep_list]
-	X=pos_pep_hydro_list+neg_pep_hydro_list
-	X_scale = StandardScaler().fit_transform(X)
-	y=[1]*len(pos_pep_hydro_list)+[0]*len(neg_pep_hydro_list)
-	nm1 = NearMiss(random_state=0, version=1)
-	X_resampled_nm1, y_resampled_nm1 = nm1.fit_sample(X, y)
-	clf_mlp = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(3), random_state=0)
-	clf_mlp.fit(X_resampled_nm1, y_resampled_nm1)
-	#hydro_score=clf_mlp.predict_prob([hydro_vector[pep]])
-	return clf_mlp
-
-#def Train_bioactivity_rf():
-	
-
-
-def aligner(seq1,seq2):
-	matrix = matlist.blosum62
-	gap_open = -11
-	gap_extend = -1
-	aln = pairwise2.align.localds(seq1.upper(), seq2.upper(), matrix,gap_open,gap_extend)
-	return aln
-
-def logSum(v):
-	ma=max(v)
-	return log(sum(map(lambda x: exp(x-ma),v)))+ma
 
 
 
-def calculate_R(neo_seq,iedb_seq):
-	align_score=[]
-	#i=0
-	for seq in iedb_seq:
-		aln_score=aligner(neo_seq,seq)
-		#i=i+1
-		#print i
-		#print aln_score
-		if aln_score!=[]:
-			localds_core=max([line[2] for line in aln_score])
-			align_score.append(localds_core)
-	#print align_score
-	#print k,a
-	bindingEnergies=map(lambda x: -k*(a-x),align_score)
-	#print bindingEnergies
-	lZk=logSum(bindingEnergies+[0])
-	lGb=logSum(bindingEnergies)
-	R=exp(lGb-lZk)
-	return R
-
-
-
-
-def GetNmerPositivePep(n,mhc_pos_file):
-	pep_list=[]
-	for line in open(mhc_pos_file):
-		if line.startswith(">"):
-			continue
-		else:
-			record=line.strip()
-			if len(record)==n:
-				pep_list.append(record)
-	return pep_list
-
-
-def GetNmerNegativePep(n,mhc_neg_file):
-	pep_list=[]
-	for line in open(mhc_neg_file):
-		if line.startswith(">"):
-			continue
-		else:
-			record=line.strip()
-			if len(record)==n:
-				pep_list.append(record)
-	return pep_list
-
-def hydro_vector(pep):
-	hydrophobicity_vector=[]
-	pep_list=list(pep)
-	pep_len=len(pep_list)
-	for pep in pep_list:
-		hydrophobicity_vector.append(hydro_score[pep.upper()])
-
-	return hydrophobicity_vector
-
-def getXY(n,mhc_pos_file,mhc_neg_file):
-	pos_pep=GetNmerPositivePep(n,mhc_pos_file)
-	neg_pep=GetNmerNegativePep(n,mhc_neg_file)
-	####get hydrophobicity list
-	pos_pep_hydro_list=[hydro_vector(p) for p in pos_pep]#[0:len(neg_pep_all)]
-	neg_pep_hydro_list=[hydro_vector(p) for p in neg_pep]
-	#print len(pos_pep_hydro_list)
-	#print len(neg_pep_hydro_list)
-	######transform into array
-	#pos_pep_hydro_array=np.array(pos_pep_hydro_list)
-	#neg_pep_hydro_array=np.array(neg_pep_hydro_list)
-	X=pos_pep_hydro_list+neg_pep_hydro_list
-	y=[1]*len(pos_pep_hydro_list)+[0]*len(neg_pep_hydro_list)
-	X_array=np.asarray(X)
-	y_array=np.asarray(y)
-	return X_array,y_array
-def get_hydro_model(mhc_pos_file,mhc_neg_file):
-	xgb_9 = XGBClassifier(
-	 learning_rate =0.1,
-	 n_estimators=208,
-	 max_depth=5,
-	 min_child_weight=1,
-	 gamma=0,
-	 subsample=0.8,
-	 colsample_bytree=0.8,
-	 objective= 'binary:logistic',
-	 n_jobs=4,
-	 scale_pos_weight=1,
-	 random_state=27)
-	#[207]  train-auc:0.95222+0.000337282   test-auc:0.852987+0.00777271
-	#AUC Score (Train): 0.941597
-	#AUC Score (Test): 0.768922
-
-	xgb_10 = XGBClassifier(
-	 learning_rate =0.1,
-	 n_estimators=165,
-	 max_depth=16,
-	 min_child_weight=1,
-	 gamma=0,
-	 subsample=0.8,
-	 colsample_bytree=0.8,
-	 objective= 'binary:logistic',
-	 n_jobs=4,
-	 scale_pos_weight=1,
-	 random_state=27)
-	#[164]  train-auc:1+0   test-auc:0.900267+0.00955733
-	#AUC Score (Train): 1.000000
-	#AUC Score (Test): 0.802474
-	xgb_11 = XGBClassifier(
-	 learning_rate =0.1,
-	 n_estimators=123,
-	 max_depth=5,
-	 min_child_weight=1,
-	 gamma=0.1,
-	 subsample=0.8,
-	 colsample_bytree=0.8,
-	 objective= 'binary:logistic',
-	 n_jobs=4,
-	 scale_pos_weight=1,
-	 random_state=27)
-	X_array_9,y_array_9=getXY(9,mhc_pos_file,mhc_neg_file)
-	hy_xgb_9=xgb_9.fit(X_array_9,y_array_9)
-	X_array_10,y_array_10=getXY(10,mhc_pos_file,mhc_neg_file)
-	hy_xgb_10=xgb_10.fit(X_array_10,y_array_10)
-	X_array_11,y_array_11=getXY(11,mhc_pos_file,mhc_neg_file)
-	hy_xgb_11=xgb_11.fit(X_array_11,y_array_11)
-	return hy_xgb_9,hy_xgb_10,hy_xgb_11
 def logSum(v):
 	ma=max(v)
 	return log(sum(map(lambda x: exp(x-ma),v)))+ma
@@ -613,7 +449,7 @@ def get_homolog_info(mut_seq,hla_type,blastp_tmp_file,blastp_out_tmp_file,netMHC
 	f.write(blastp_fasta_line)
 	f.close()
 	str_blastp_pro='blastp -query ' + blastp_tmp_file + ' -db ' + blast_db_path + ' -out ' + blastp_out_tmp_file + ' -evalue 200000 -comp_based_stats 0'
-	print str_blastp_pro
+	#print str_blastp_pro
 	subprocess.call(str_blastp_pro,shell = True,executable = '/bin/bash')
 	for line in open(blastp_out_tmp_file):
 		if line.startswith('Sbjct'): 
@@ -627,12 +463,12 @@ def get_homolog_info(mut_seq,hla_type,blastp_tmp_file,blastp_out_tmp_file,netMHC
 				continue
 		else:
 			continue
-	print human_homolog_pep
+	#print human_homolog_pep
 	f=open(netMHCpan_pep_tmp_file,'w')
 	f.write(human_homolog_pep+'\n')
 	f.close()
 	str_netMHCpan_ml_pro='netMHCpan -p ' + netMHCpan_pep_tmp_file + ' -a ' + hla_type_in + ' > ' + netMHCpan_ml_out_tmp_file
-	print str_netMHCpan_ml_pro
+	#print str_netMHCpan_ml_pro
 	subprocess.call(str_netMHCpan_ml_pro,shell = True,executable = '/bin/bash')
 	for line in open(netMHCpan_ml_out_tmp_file):
 		if not line.startswith('    '):
@@ -649,7 +485,7 @@ def get_EL_info(seq,hla_type,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file):
 	f.write(seq+'\n')
 	f.close()
 	str_netMHCpan_ml_pro='netMHCpan -p ' + netMHCpan_pep_tmp_file + ' -a ' + hla_type_in + ' > ' + netMHCpan_ml_out_tmp_file
-	print str_netMHCpan_ml_pro
+	#print str_netMHCpan_ml_pro
 	subprocess.call(str_netMHCpan_ml_pro,shell = True,executable = '/bin/bash')
 	pep_el_rank=[]
 	for line in open(netMHCpan_ml_out_tmp_file):
@@ -661,9 +497,12 @@ def get_EL_info(seq,hla_type,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file):
 			pep_el_rank=ml_record[12]
 	return pep_el_rank
 #read in data 
-def InVivoModelAndScoreSNV(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
+def InVivoModelAndScoreSNV(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
 	iedb_seq=get_iedb_seq(iedb_file)
-	hy_xgb_9,hy_xgb_10,hy_xgb_11=get_hydro_model(mhc_pos_file,mhc_neg_file)
+	hy_xgb_9=joblib.load(cf_hy_model_9)
+	hy_xgb_10=joblib.load(cf_hy_model_10)
+	hy_xgb_11=joblib.load(cf_hy_model_11)
+	print hy_xgb_9
 	data_neo=pd.read_table(neo_file,header=0,sep='\t')
 	MT_peptide=data_neo.MT_pep
 	HLA=data_neo.HLA_type
@@ -699,9 +538,7 @@ def InVivoModelAndScoreSNV(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,n
 			R=calculate_R(line,iedb_seq)
 			Recognition_score.append(R)
 		else:
-			print "Oh no!!"
-			print line
-			print len(line)
+			print "The length of peptide is out of our considertion!!"
 			hydrophobicity_score.append(0.5)
 			R=calculate_R(line,iedb_seq)	
 			Recognition_score.append(R)
@@ -709,7 +546,6 @@ def InVivoModelAndScoreSNV(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,n
 	homolog_similaity_score=[]
 	#####paired similarity and homolog similarity########
 	for M_P,N_P,H_P in zip(data_neo.MT_pep,data_neo.WT_pep,Homolog_pep):
-		print M_P,N_P,H_P
 		paired_s=cal_similarity_per(M_P,N_P)
 		homolog_s=cal_similarity_per(M_P,H_P)
 		paired_similarity_score.append(paired_s)
@@ -729,26 +565,8 @@ def InVivoModelAndScoreSNV(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,n
 	data_neo["MT_Binding_EL"]=MT_peptide_EL
 	data_neo["WT_Binding_EL"]=WT_peptide_EL
 	df_neo=data_neo.loc[:,['Hydrophobicity_score','Recognition_score','Self_sequence_similarity','MT_Binding_EL','WT_Binding_EL']]
-	data_train = pd.read_table(model_train_file,header=0,sep='\t')
-	data_train_dropna=data_train.dropna()
-	target = 'response'
-	HPcol = 'hydrophobicity_score'
-	Rcol = 'Recognition_score'
-	SScol = 'self_sequence_similarity'
-	ELcol = 'EL_dissimilarity'
-	predictors = [x for x in data_train_dropna.columns if x not in [target,'Pep_len',ELcol,'EL_ht_rank']]
-	X_train=data_train_dropna[predictors].values
-	X_train_scale = StandardScaler().fit_transform(X_train)
-	y_train=data_train_dropna[target].values
-	print 'Original dataset shape {}'.format(Counter(y_train))
-	sm=SMOTE(k_neighbors=4,kind='borderline1',random_state=42)
-	X_res, y_res = sm.fit_sample(X_train,y_train)
-	print 'Resampled dataset shape {}'.format(Counter(y_res))
-	rf0 = RandomForestClassifier(oob_score=True, random_state=10)  
-	print rf0
-	rf0.fit(X_res, y_res)
-	dneo_predprob = rf0.predict_proba(df_neo.values)[:,1]
-	print dneo_predprob
+	cf_RF=joblib.load(RF_model)
+	dneo_predprob = cf_RF.predict_proba(df_neo.values)[:,1]
 	data_neo["model_pro"]=dneo_predprob
 	f_EL_rank_wt=lambda x:1-(1/(1+math.pow(math.e,5*(float(x)-2))))/2
 	f_EL_rank_mt=lambda x:1/(1+math.pow(math.e,5*(float(x)-2)))
@@ -766,9 +584,11 @@ def InVivoModelAndScoreSNV(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,n
 	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)
 	del data_neo_out_sort["contain_X"]	
 
-def InVivoModelAndScoreINDEL(mhc_pos_file,mhc_neg_file,neo_file,model_train_file,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
+def InVivoModelAndScoreINDEL(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
 	iedb_seq=get_iedb_seq(iedb_file)
-	hy_xgb_9,hy_xgb_10,hy_xgb_11=get_hydro_model(mhc_pos_file,mhc_neg_file)
+	hy_xgb_9=joblib.load(cf_hy_model_9)
+	hy_xgb_10=joblib.load(cf_hy_model_10)
+	hy_xgb_11=joblib.load(cf_hy_model_11)
 	data_neo=pd.read_table(neo_file,header=0,sep='\t')
 	MT_peptide=data_neo.MT_pep
 	HLA=data_neo.HLA_type
@@ -804,9 +624,7 @@ def InVivoModelAndScoreINDEL(mhc_pos_file,mhc_neg_file,neo_file,model_train_file
 			R=calculate_R(line,iedb_seq)
 			Recognition_score.append(R)
 		else:
-			print "Oh no!!"
-			print line
-			print len(line)
+			print "The length of peptide is out of our considertion!!"
 			hydrophobicity_score.append(0.5)
 			R=calculate_R(line,iedb_seq)	
 			Recognition_score.append(R)
@@ -814,7 +632,6 @@ def InVivoModelAndScoreINDEL(mhc_pos_file,mhc_neg_file,neo_file,model_train_file
 	homolog_similaity_score=[]
 	#####paired similarity and homolog similarity########
 	for M_P,N_P,H_P in zip(data_neo.MT_pep,data_neo.WT_pep,Homolog_pep):
-		print M_P,N_P,H_P
 		paired_s=cal_similarity_per(M_P,N_P)
 		homolog_s=cal_similarity_per(M_P,H_P)
 		paired_similarity_score.append(paired_s)
@@ -834,26 +651,8 @@ def InVivoModelAndScoreINDEL(mhc_pos_file,mhc_neg_file,neo_file,model_train_file
 	data_neo["MT_Binding_EL"]=MT_peptide_EL
 	data_neo["WT_Binding_EL"]=WT_peptide_EL
 	df_neo=data_neo.loc[:,['Hydrophobicity_score','Recognition_score','Self_sequence_similarity','MT_Binding_EL','WT_Binding_EL']]
-	data_train = pd.read_table(model_train_file,header=0,sep='\t')
-	data_train_dropna=data_train.dropna()
-	target = 'response'
-	HPcol = 'hydrophobicity_score'
-	Rcol = 'Recognition_score'
-	SScol = 'self_sequence_similarity'
-	ELcol = 'EL_dissimilarity'
-	predictors = [x for x in data_train_dropna.columns if x not in [target,'Pep_len',ELcol,'EL_ht_rank']]
-	X_train=data_train_dropna[predictors].values
-	X_train_scale = StandardScaler().fit_transform(X_train)
-	y_train=data_train_dropna[target].values
-	print 'Original dataset shape {}'.format(Counter(y_train))
-	sm=SMOTE(k_neighbors=4,kind='borderline1',random_state=42)
-	X_res, y_res = sm.fit_sample(X_train,y_train)
-	print 'Resampled dataset shape {}'.format(Counter(y_res))
-	rf0 = RandomForestClassifier(oob_score=True, random_state=10)  
-	print rf0
-	rf0.fit(X_res, y_res)
-	dneo_predprob = rf0.predict_proba(df_neo.values)[:,1]
-	print dneo_predprob
+	cf_RF=joblib.load(RF_model)
+	dneo_predprob = cf_RF.predict_proba(df_neo.values)[:,1]
 	data_neo["model_pro"]=dneo_predprob
 	f_EL_rank_wt=lambda x:1-(1/(1+math.pow(math.e,5*(float(x)-2))))/2
 	f_EL_rank_mt=lambda x:1/(1+math.pow(math.e,5*(float(x)-2)))
@@ -869,24 +668,3 @@ def InVivoModelAndScoreINDEL(mhc_pos_file,mhc_neg_file,neo_file,model_train_file
 	data_neo_out_sort=data_neo.sort_values(['model_pro',"immuno_effect_score"],ascending=[0,0])
 	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)
 	del data_neo_out_sort["contain_X"]	
-
-def get_summary(snv_neo_model_file,indel_neo_model_file,snv_immunogenicity_gmm_pos_score_ranking,indel_immunogenicity_gmm_pos_score_ranking,summary_out):
-	data_snv_model=pd.read_table(snv_neo_model_file,header=0,sep='\t')
-	data_indel_model=pd.read_table(indel_neo_model_file,header=0,sep='\t')
-	data_snv_score=pd.read_table(snv_immunogenicity_gmm_pos_score_ranking,header=0,sep='\t')
-	data_indel_score=pd.read_table(indel_immunogenicity_gmm_pos_score_ranking,header=0,sep='\t')
-	snv_neo_total_num=len(data_snv_model.model_pro)
-	snv_neo_model_num=len(data_snv_model[data_snv_model.model_pro>0])
-	indel_neo_total_num=len(data_indel_model.model_pro)
-	indel_neo_model_num=len(data_indel_model[data_indel_model.model_pro>0])
-	snv_score=sum(data_snv_score[data_snv_score.immuno_effect_score>0].immuno_effect_score)
-	indel_score=sum(data_indel_score[data_indel_score.immuno_effect_score>0].immuno_effect_score)
-	data_snv_model_score=pd.merge(data_snv_model,data_snv_score,left_on='neoantigen_infor', right_on='neoantigen_infor', how='right')
-	snv_model_score=sum(data_snv_model_score[data_snv_model_score.model_pro>0].immuno_effect_score)
-	data_indel_model_score=pd.merge(data_indel_model,data_indel_score,left_on='neoantigen_infor', right_on='neoantigen_infor', how='right')
-	indel_model_score=sum(data_indel_model_score[data_indel_model_score.model_pro>0].immuno_effect_score)
-	print snv_model_score,indel_model_score
-	f_o=open(summary_out,'w')
-	f_o.write('snv_total_neo_num\tindel_total_neo_num\tsnv_model_neo_num\tindel_model_neo_num\tsnv_score\tindel_score\tsnv_model_score\tindel_model_score\n')
-	f_o.write(str(snv_neo_total_num)+'\t'+str(indel_neo_total_num)+'\t'+str(snv_neo_model_num)+'\t'+str(indel_neo_model_num)+'\t'+str(snv_score)+'\t'+str(indel_score)+'\t'+str(snv_model_score)+'\t'+str(indel_model_score)+'\n')
-	f_o.close()
