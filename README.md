@@ -56,14 +56,19 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 files; see the References section in the [user manual](/doc/iTunes_User_Manual.md)
 for a detailed description.
 
-4. Fill in the exampe.yaml configration file  
-    see the example.yaml file for more information
 
 ## Usage
-After installation, iTunes is called as follows. The config file is specified using the -c option
-        
-        path/to/iTunes.py -c path/to/example.yaml
+iTunes has two subcommand, `PairMatchDna` and `VCF`.
 
+`PairMatchDna` module accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, expression profiling, and neoantigen prediction, filtering, annotation.
+
+`VCF` module accepts mutation VCF file, expression profile, copynuber profile and tumor cellurity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
+
+You can use these two module by:
+
+        /path/to/iTunes.py PairMatchDna -i config_WES.yaml
+        /path/to/iTunes.py VCF -i config_VCF.yaml
+        
 ## User Manual 
 For detailed information about usage, input and output files, test examples and data
 preparation please refer to the [iTunes User Manual](/doc/iTunes_User_Manual.md)
