@@ -119,7 +119,7 @@ data_drop=data_fill_na.drop_duplicates(subset=["Gene","MT_pep","WT_pep"])
 data_sort=data_drop.sort_values(["MT_Binding_Aff"],ascending=True)
 del data_sort["Transcript_name"]
 #print data_sort
-data_sort.to_csv(out_dir+'/'+sample_id+'_pyclone_neo.txt',header=1,sep='\t',index=0)
+data_sort.to_csv(out_dir+'/'+sample_id+'_pyclone_neo.tsv',header=1,sep='\t',index=0)
 
 
 

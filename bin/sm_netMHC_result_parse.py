@@ -93,9 +93,6 @@ while i<hla_num:
 		dup_full_transcript.append(Full_transcript[j])
 	i=i+1
 
-#print hla_num
-#print Full_header
-print len(dup_full_header),len(dup_full_gene)
 
 ######## extract candidate neoantigens####
 #print expression_fpkm_file
@@ -129,7 +126,7 @@ gene_record=[]
 cdna_record=[]
 chrom_pos_record=[]
 transcript_name_record=[]
-print len(MT_neo),len(WT_neo)
+
 
 
 for i in range(len(MT_neo)):
@@ -145,7 +142,7 @@ for i in range(len(MT_neo)):
 			WB_SB_MT_record.append(MT_neo[i][j])
 			WT_record.append(WT_neo[i][j])
 
-candidate_neo = open(out_dir+'/'+sample_id+"_tmp_neo_candidate.txt",'w')
+candidate_neo = open(out_dir+'/'+sample_id+"_tmp_neo_candidate.tsv",'w')
 candidate_neo.write('\t'.join(['#Position','HLA_type','Gene','Transcript_name','Mutation','AA_change','MT_pep','WT_pep','MT_Binding_Aff','WT_Binding_Aff','MT_Binding_level_des','WT_Binding_level_des','fold_change']) + '\n')
 for i in range(len(WB_SB_MT_record)):
     mt_record = [line for line in WB_SB_MT_record[i].split(' ') if line!='']
@@ -165,8 +162,6 @@ for i in range(len(WB_SB_MT_record)):
         wt_binding_level_des = wt_record[-1]
     else:
         wt_binding_level_des = 'NB'
-    print wt_binding_rank
-    print mt_binding_rank
     fold_change = float(wt_binding_rank)/float(mt_binding_rank)
     #DAI = float(wt_binding_aff) - float(mt_binding_aff)
     out_line = '\t'.join((chrom_pos_rec,HLA_tp,gene,transcript_n,cdna_change,ani_change,mt_pep,wt_pep,mt_binding_rank,wt_binding_rank,mt_binding_level_des,wt_binding_level_des,str(fold_change)))
@@ -178,7 +173,7 @@ f=lambda x: x.split('.')[0]
 
 ######neoantigens filtering#####
 ##including Binding affinity ,localized peptide, multiple length peptide screen, differential AI> ##, neoantigens stability, gene FPKM>1 #####
-data=pd.read_table(out_dir+'/'+sample_id+"_tmp_neo_candidate.txt",header=0,sep='\t')
+data=pd.read_table(out_dir+'/'+sample_id+"_tmp_neo_candidate.tsv",header=0,sep='\t')
 if expression_fpkm_file=='no_exp':
 	print "You did not provide expression file, the expression filter will not be done."
 	final_filter_data=data[(data.MT_Binding_Aff<int(binding_affinity_cutoff))] 
@@ -195,7 +190,7 @@ else:
 	sys.exit(2)
 #os.remove(out_dir+'/'+sample_id+"_tmp_neo_candidate.txt")
 #print final_filter_data
-final_filter_data.to_csv(out_dir+'/'+sample_id+"_final_neo_candidate.txt",header=1,sep='\t',index=0)
+final_filter_data.to_csv(out_dir+'/'+sample_id+"_final_neo_candidate.tsv",header=1,sep='\t',index=0)
 
     
 

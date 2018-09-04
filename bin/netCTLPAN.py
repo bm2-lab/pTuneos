@@ -40,16 +40,11 @@ if os.path.exists(out_dir+'/'+sample_id+'_netCLT.txt'):
         os.remove(out_dir+'/'+sample_id+'_netCLT.txt')
 for hla,gene,aa,mt_pep in zip(data_neo_fil['HLA_type'],data_neo_fil.Gene,data_neo_fil.AA_change,data_neo_fil.MT_pep):
     line='>'+str(gene) + '\n' + str(mt_pep) + '\n'
-    print line
     pep_len=len(mt_pep)
-    print mt_pep
-    print pep_len
-    #hla_type=hla[0:7]+':'+hla[7:]
     hla_type=hla.replace("*","")
     f=open(out_dir+'/'+sample_id+'_tmp.txt','w')
     f.write(line)
     str_pro='python /home/zhouchi/software/netchop/predict.py --method netctlpan --allele ' + hla_type + ' --length ' +  str(pep_len)+ ' --threshold -99.9 --cleavage_weight 0.225 --tap_weight 0.025 --epitope_threshold 1.0 --noplot ' + out_dir+'/' + sample_id + '_tmp.txt' + ' > '+ out_dir+'/'+sample_id+'_tmp_netCLT.txt'
-    print str_pro
     f.close()
     subprocess.call(str_pro,shell = True,executable = '/bin/bash')
     flag=1
@@ -98,7 +93,7 @@ del data_has_change_aa['index']
 data_has_change_aa["contain_X"]=['X' not in data_has_change_aa.MT_pep[i] for i in range(len(data_has_change_aa.MT_pep))]
 data_out=data_has_change_aa[data_has_change_aa.contain_X==True]
 data_out.fillna(0.5)
-data_out.to_csv(out_dir+'/'+sample_id+'_netctl_concact.txt',sep='\t',header=1,index=0)	 
+data_out.to_csv(out_dir+'/'+sample_id+'_netctl_concact.tsv',sep='\t',header=1,index=0)	 
 if os.path.exists(out_dir+'/'+sample_id+'_tmp.txt'):    
 	os.remove(out_dir+'/'+sample_id+'_tmp.txt')
 if os.path.exists(out_dir+'/'+sample_id+'_netCLT.txt'):

@@ -68,7 +68,7 @@ def PEMD(opts):
 	kallisto_out_fold=output_fold + '/' + 'expression'
 	kallisto_cdna_path=config_list["kallisto_cdna_path"]
 	snv_final_neo_file=netctl_out_fold + '/' + prefix + '_pyclone_neo.tsv'
-	indel_final_neo_file=netctl_out_fold + '/' + prefix + '_neo_indel_vaf.tsv'
+	indel_final_neo_file=netctl_out_fold + '/' + prefix + '_indel_netctl_concact.tsv'
 	trimmomatic_path=config_list["trimmomatic_path"]
 	adapter_path=config_list["adapter_path"]
 	tumor_fastq_prefix=clean_fastq_fold + '/' + prefix + "_tumor_clean.fq.gz"
@@ -80,6 +80,7 @@ def PEMD(opts):
 	normal_fastq_clean_first=clean_fastq_fold + '/' + prefix + "_normal_clean_1P.fq.gz"
 	normal_fastq_clean_second=clean_fastq_fold + '/' + prefix + "_normal_clean_2P.fq.gz"
 	iedb_file=config_list["iedb_file"]
+	peptide_length=config_list["peptide_length"]
 	cf_hy_model_9="train_model/cf_hy_9_model.m"
 	cf_hy_model_10="train_model/cf_hy_10_model.m"
 	cf_hy_model_11="train_model/cf_hy_11_model.m"
@@ -234,7 +235,6 @@ def PEMD(opts):
 	for p in processes_1:
 		p.join()
 	print 'stage 1 done.'
-	print exp_file
 	if exp_file!="None" and os.path.exists(exp_file):
 		print "check expression file done."
 	elif exp_file=="no_exp":
@@ -260,11 +260,10 @@ def PEMD(opts):
 	if hla_str=="None":
  		hla_str=open(opitype_out_fold+'/'+prefix+"_optitype_hla_type").readlines()[0]
 	print 'start stage 3'
-	print exp_file
 	processes_3=[]
-	t2=multiprocessing.Process(target=varscan_neo,args=(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,))
+	t2=multiprocessing.Process(target=varscan_neo,args=(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,peptide_length,))
 	processes_3.append(t2)
-	t3=multiprocessing.Process(target=indel_neo,args=(somatic_mutation_fold,prefix,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,))
+	t3=multiprocessing.Process(target=indel_neo,args=(somatic_mutation_fold,prefix,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,peptide_length,))
 	processes_3.append(t3)
 	for p in processes_3:
 		p.daemon = True

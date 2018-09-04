@@ -243,8 +243,8 @@ cd ..
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 
 
-def varscan_neo(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,itunes_bin_path):
-	netMHCpan(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_snv','9')
+def varscan_neo(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,itunes_bin_path,peptide_length):
+	netMHCpan(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_snv',peptide_length)
 	str_proc1=r'''
 PREFIX=%s
 netmhc_out=%s
@@ -255,8 +255,8 @@ Fpkm_Cutoff=%d
 hla_str=%s
 netctl_fold=%s
 itunes_bin_path=%s
-python ${itunes_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_snv_netmhc.txt -g ${netmhc_out}/${PREFIX}_snv.fasta -o ${netmhc_out} -s ${PREFIX}_snv -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
-python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_snv_final_neo_candidate.txt -o ${netctl_fold} -s ${PREFIX}_snv
+python ${itunes_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_snv_netmhc.tsv -g ${netmhc_out}/${PREFIX}_snv.fasta -o ${netmhc_out} -s ${PREFIX}_snv -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
+python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_snv_final_neo_candidate.tsv -o ${netctl_fold} -s ${PREFIX}_snv
 '''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,netctl_fold,itunes_bin_path)
 	#print str_proc1
 	subprocess.call(str_proc1, shell=True, executable='/bin/bash')
@@ -287,7 +287,7 @@ python ${itunes_bin_path}/varscanins2fasta.py -i ${strelka_fold}/${PREFIX}_strel
 	#print str_proc2
 	subprocess.call(str_proc2, shell=True, executable='/bin/bash')
 	
-def indel_neo(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path):
+def indel_neo(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,itunes_bin_path,peptide_length):
 	str_proc1='''
 somatic_mutation=%s
 PREFIX=%s
@@ -311,7 +311,7 @@ cat ${netmhc_out}/${PREFIX}_varscan_del.fasta >> ${netmhc_out}/${PREFIX}_indel.f
 cat ${netmhc_out}/${PREFIX}_varscan_ins.fasta >> ${netmhc_out}/${PREFIX}_indel.fasta
 '''%(PREFIX,netmhc_out_fold)
 	subprocess.call(str_proc3, shell=True, executable='/bin/bash')
-	netMHCpan(indel_fasta_file,hla_str,indel_netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_indel','9')
+	netMHCpan(indel_fasta_file,hla_str,indel_netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_indel',peptide_length)
 	str_proc4=r'''
 set -e
 PREFIX=%s
@@ -323,8 +323,8 @@ Fpkm_Cutoff=%s
 hla_str=%s
 netctl_fold=%s
 itunes_bin_path=%s
-python ${itunes_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_indel_netmhc.txt -g ${netmhc_out}/${PREFIX}_indel.fasta -o ${netmhc_out} -s ${PREFIX}_indel -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
-python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_neo_candidate.txt -o ${netctl_fold} -s ${PREFIX}_indel
+python ${itunes_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_indel_netmhc.tsv -g ${netmhc_out}/${PREFIX}_indel.fasta -o ${netmhc_out} -s ${PREFIX}_indel -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
+python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_neo_candidate.tsv -o ${netctl_fold} -s ${PREFIX}_indel
 '''%(PREFIX,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,netctl_fold,itunes_bin_path)
 	subprocess.call(str_proc4, shell=True, executable='/bin/bash')
 	
@@ -365,12 +365,12 @@ Pyclone=%s
 logfile_fold=%s
 itunes_bin_path=%s
 Rscript ${itunes_bin_path}/sequenza_test.R ${somatic_mutation}/${PREFIX}_filter.snp ${copynumber_profile}/${PREFIX}_filter.copynumber ${copynumber_profile}/ ${PREFIX} #> ${logfile_fold}/${PREFIX}_pyclone.log 2>&1
-python ${itunes_bin_path}/pyclone_input.py -n ${netctl}/${PREFIX}_snv_netctl_concact.txt -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${somatic_mutation}/${PREFIX}_SNVs_only.recode.vcf -c ${copynumber_profile}/${PREFIX}_seg_copynumber.txt -o ${pyclone} -S ${PREFIX}
+python ${itunes_bin_path}/pyclone_input.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${somatic_mutation}/${PREFIX}_SNVs_only.recode.vcf -c ${copynumber_profile}/${PREFIX}_seg_copynumber.txt -o ${pyclone} -S ${PREFIX}
 TUMOR_CONTENT=`cat ${copynumber_profile}/${PREFIX}_cellularity.txt`
 $Pyclone setup_analysis --in_files ${pyclone}/${PREFIX}_pyclone_input.tsv --tumour_contents $TUMOR_CONTENT --prior major_copy_number --working_dir ${pyclone}
 $Pyclone run_analysis --config_file ${pyclone}/config.yaml
 $Pyclone build_table --config_file ${pyclone}/config.yaml --out_file ${pyclone}/loci.tsv --table_type loci
-python ${itunes_bin_path}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_netctl_concact.txt -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
+python ${itunes_bin_path}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
 '''%(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_fold,pyclone_path,logfile_fold,itunes_bin_path)
 	#print str_proc
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
@@ -660,10 +660,9 @@ def InVivoModelAndScoreINDEL(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_1
 	EL_wt_rank_score=data_neo.WT_Binding_EL.apply(f_EL_rank_wt)
 	k=1
 	f_TPM=lambda x:math.tanh(x/k)
-	allele_frequency_score=data_neo.variant_allele_frequency
 	netchop_score=data_neo.combined_prediction_score
 	tpm_score=data_neo.tpm.apply(f_TPM)
-	immuno_effect_score=[tpm_score[i]*allele_frequency_score[i]*netchop_score[i]*cellular_prevalence_score[i]*data_neo.Hydrophobicity_score[i]*data_neo.Recognition_score[i]*data_neo.Self_sequence_similarity[i]*EL_mt_rank_score[i]*EL_wt_rank_score[i] for i in range(len(data_neo.MT_Binding_EL))]
+	immuno_effect_score=[tpm_score[i]*netchop_score[i]*data_neo.Hydrophobicity_score[i]*data_neo.Recognition_score[i]*data_neo.Self_sequence_similarity[i]*EL_mt_rank_score[i]*EL_wt_rank_score[i] for i in range(len(data_neo.MT_Binding_EL))]
 	data_neo["immuno_effect_score"]=immuno_effect_score
 	data_neo_out_sort=data_neo.sort_values(['model_pro',"immuno_effect_score"],ascending=[0,0])
 	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)

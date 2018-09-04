@@ -79,7 +79,6 @@ for ele in open(neoantigen_file,'r'):
 		gene_name.append(gene)
 		neo_chr_pos.append(n_c_r)
 
-print len(neo_chr_pos)
 #test=[]
 #test1=[]
 #for ele in neo_chr_pos:
@@ -123,7 +122,6 @@ for ele in f_snp:
 		ref_read_1_index=format_information.index('REF_F1R2')
 		ref_read_2_index=format_information.index('REF_F2R1')
 		tumor_info_list=line[9].split(':')
-		print tumor_info_list
 		t_r1=int(tumor_info_list[ref_read_1_index])+int(tumor_info_list[ref_read_2_index])
 		t_r2=int(tumor_info_list[alt_read_1_index])+int(tumor_info_list[alt_read_2_index])
 		#t_r1=line[8]
