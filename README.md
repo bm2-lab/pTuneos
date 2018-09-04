@@ -60,7 +60,7 @@ for a detailed description.
 ## Usage
 iTunes has two subcommand, `PairMatchDna` and `VCF`.
 
-`PairMatchDna` module accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, expression profiling, and neoantigen prediction, filtering, annotation.
+`PairMatchDna` module accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
 
 `VCF` module accepts mutation VCF file, expression profile, copynuber profile and tumor cellurity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
 
