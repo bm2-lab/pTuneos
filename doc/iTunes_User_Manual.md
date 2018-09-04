@@ -222,7 +222,7 @@ Input file for `VCF` mode contains:
 * copynumber profile (recommend obtain from `sequenza`).
 * tumor cellularity (bewteen 0 and 1) (also recommend obtain from `sequenza`).
 
-We give the example data of these file in fold `VCF_example_data/`
+We give the example data of these file in fold `VCF_example_data/`.
 
 ### References 
 The following references are required for iTunes to run:
