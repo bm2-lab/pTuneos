@@ -41,6 +41,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 
 #### Required R package:
 * [cpynumber]()
+* [sequenza]()
 * [squash]()
 
 
