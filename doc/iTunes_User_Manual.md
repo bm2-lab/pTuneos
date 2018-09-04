@@ -11,13 +11,14 @@
 4. [Installation from source](#installation-from-source)  
 5. [Usage](#usage)  
 6. [Input Files](#input-files)  
-    - [Input Files (required)](#input-files (required))  
-    - [Input Files (optional)](#input-files (optional))  
+    - [Input Files (WES mode)](#input-files (required))  
+    - [Input Files (VCF mode)](#input-files (optional))  
     - [References](#references)
-7. [Output Files](#output-files)  
+7. [Setting parameters](#seting-parameters) 
+8. [Output Files](#output-files)  
     - [Column explanation](#column-explanation)  
-8. [Contact](#contact)
-9. [Algorithmic Flow Chart](#algorithmic-flow-chart)
+9. [Contact](#contact)
+10. [Algorithmic Flow Chart](#algorithmic-flow-chart)
 
 ## General Description
 
@@ -60,6 +61,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
     numpy
     
 #### R packages:
+    squenza
     copynumebr
     squash
 
@@ -86,7 +88,9 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 7. Run the program with follow command:
 
-		python iTunes.py PairMatchDna -i example.yaml
+		python iTunes.py PairMatchDna -i config_WES.yaml
+		or
+		python iTunes.py VCF -i config_VCF.yaml
 
 
 ## Installation from source
@@ -102,7 +106,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
         source("http://bioconductor.org/biocLite.R")
         biocLite("copynumber")
 
-   Install R package `squash`:
+   Install R package `squash` and `sequenza`:
    
         install.package('squash')
  
@@ -175,26 +179,23 @@ reference data.You should be aware that the version of VEP library you use shoul
 
 ## Usage
 
-After installation, iTunes is called as follows. 
-The config file is specified using the `-c` option
+iTunes has two modes, `PairMatchDna` and `VCF`.
 
-    path/to/iTunes.py -c path/to/example.yaml
+`PairMatchDna` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
 
-The file contains four part of parameters:
-* Fixed parameters, user should not change it.
-* Input data parameters, including path of DNA/RNA sequencing data, output fold, run name, hla alleles, expression file and thread number.
-(Note: user could specific hla allele throught `hla_str`, otherwise set it to `None`, the pipeline will make the prediction utilizing sequencing data. If RNA sequencing data is provided, please also set expression file to `None`.)
-* Some filter parameter including mutation sequence depth, mutation variant allele fraction(vaf), binding affinity rank and expression FPKM.
-* Software excutable path of opitype, vep, netMHCpan, PyClone and strelka.
+`VCF` mode accepts mutation VCF file, expression profile, copynuber profile and tumor cellurity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
+
+You can use these two modes by:
+
+        /path/to/iTunes.py PairMatchDna -i config_WES.yaml
+        /path/to/iTunes.py VCF -i config_VCF.yaml
 
 ## Input Files
+
+### Input Files (WES mode) 
 Pair-end matched tumor-normal whole exome sequencing file should be provied for basic neoantigens identification, expression
-profile file or raw RNA sequnencing file is optional if you want to get expressed neoantigen.
-
-### Input Files (required) 
-
-iTunes accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
-You should specify the right path to the sequencing file in `config.yaml` like:
+profile file or raw RNA sequnencing file is optional if you want to get expressed neoantigen. iTunes accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
+You should specify the right path to the sequencing file in `config_WES.yaml` like:
 
     #your path to first tumor fastq file
     tumor_fastq_path_first: ~/ncbi/dbGaP-14145/sra/SRR2770550_1.fastq.gz
@@ -204,8 +205,6 @@ You should specify the right path to the sequencing file in `config.yaml` like:
     normal_fastq_path_first: ~/ncbi/dbGaP-14145/sra/SRR2669057_1.fastq.gz
     #your path to second normal fastq file
     normal_fastq_path_second: ~/ncbi/dbGaP-14145/sra/SRR2669057_2.fastq.gz
-
-### Input Files (optional) 
 
 It is optional, but preferable, to provide RNA sequencing data for evaluating the expression level of neoantigens or you 
 could provide expression file derived from killasto or other tools. The files should be tab separated and include Ensembl transcript ID (ENST) and mean expression(tpm).
@@ -217,6 +216,12 @@ could provide expression file derived from killasto or other tools. The files sh
     ENST00000631435.1	12	6.5	0	0
     ENST00000632684.1	12	6.5	0	0
 
+### Input Files (VCF mode)
+Input file for `VCF` mode contains:
+* mutaiton file in vcf format from mutect2.
+* expression profile in the format same as above(recommend obtain from `kallisto`).
+* copynumber profile (recommend obtain from `sequenza`).
+* tumor cellularity (also recommend obtain from `sequenza`).
 
 ### References 
 The following references are required for iTunes to run:
@@ -247,6 +252,14 @@ downloaded from the [COSMIC](http://cancer.sanger.ac.uk/census) website.
 
 * Cosmic VCF file.
 
+## Setting parameters
+User should set all the parameters in the configration file `config_WES.yaml` or `config_VCF.yaml`. The config file contains four part of parameters:
+
+* Fixed parameters, user should not change it.
+* Input data parameters, including path of DNA/RNA sequencing data, output fold, run name, hla alleles, expression file and thread number(for WES mode).
+(Note: user could specific hla allele throught `hla_str`, otherwise set it to `None`, the pipeline will make the prediction utilizing sequencing data. If RNA sequencing data is provided, please also set expression file to `None`.)
+* Some filter parameter including mutation sequence depth, mutation variant allele fraction(vaf), binding affinity rank and expression FPKM.
+* Software excutable path of opitype, vep, netMHCpan, PyClone and strelka.
 
 ## Output Files 
 iTunes output four result files contains information of identified neoantigens corresponding to nonsynonymous point mutation and INDEL mutation.
