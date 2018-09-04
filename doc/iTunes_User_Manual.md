@@ -264,12 +264,12 @@ User should set all the parameters in the configration file `config_WES.yaml` or
 iTunes output four result files contains information of identified neoantigens corresponding to nonsynonymous point mutation and INDEL mutation.
 
 The output files are the following: 
-1.  snv_model.tsv 
+1.  snv_neo_model.tsv 
 
     The file is a TSV file with the extracted mutated peptides derived from nonsynonymous point mutation with a model-based
     score measures the immunity of neoantigens in in-vivo experiment such as `ELISPOT` and `ICS`. 
     
-2.  indel_model.tsv
+2.  indel_neo_model.tsv
 
     The file is a TSV file with the extracted mutated peptides derived from INDEL mutation with a model-based score measures
     the immunity of neoantigens in in-vivo experiment such as `ELISPOT` and `ICS`.
