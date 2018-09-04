@@ -58,16 +58,16 @@ for a detailed description.
 
 
 ## Usage
-iTunes has two subcommand, `PairMatchDna` and `VCF`.
+iTunes has two modes, `WES` mode and `VCF` mode.
 
-`PairMatchDna` module accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
+`PairMatchDna` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
 
-`VCF` module accepts mutation VCF file, expression profile, copynuber profile and tumor cellurity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
+`VCF` mode accepts mutation VCF file, expression profile, copynuber profile and tumor cellurity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
 
-You can use these two module by:
+You can use these two mode by:
 
-        /path/to/iTunes.py PairMatchDna -i config_WES.yaml
-        /path/to/iTunes.py VCF -i config_VCF.yaml
+        python iTunes.py WES -i config_WES.yaml
+        python iTunes.py VCF -i config_VCF.yaml
         
 ## User Manual 
 For detailed information about usage, input and output files, test examples and data
