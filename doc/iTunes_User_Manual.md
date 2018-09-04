@@ -147,7 +147,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
     3. After you are registered, login to [COSMIC](https://cancer.sanger.ac.uk/cosmic/login)
     4. Click the "Download" tab
     5. Click the "VCF files" dropdown menu
-    6. Click the "CosmicCodingMuts.vcf.gz" file name ([direct link] (https://cancer.sanger.ac.uk/files/cosmic/current_release/VCF/CosmicCodingMuts.vcf.gz))
+    6. Click the "CosmicCodingMuts.vcf.gz" file name ([direct link] (https://cancer.sanger.ac.uk/files/cosmic/current_release/VCF/CosmicCodingMuts.vcf.gz)
     7. After you have downloaded the file, you will need to decompress it: `gunzip CosmicCodingMuts.vcf.gz` and put it in directory database/VCF_annotation.
     8. We need to convert it to be compatible to Mutect2 using the script  `cosmic_process.sh`
     make sure you are in iTunes-dev fold and run this command on your downloaded file:
