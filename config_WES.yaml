@@ -33,6 +33,7 @@ sample_name: test
 thread_number: 48
 hla_str: HLA-A02:01
 expression_file: None
+peptide_length: 9
 ##### Some filters parameter
 tumor_depth_cutoff: 7
 tumor_vaf_cutoff: 0.05
