@@ -173,13 +173,12 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 6. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blastp and  VarScan.v2.4.2 were prepared in software directory, other softwares should be installed by user own due to complexity, please refer to the software links above.
 
-7. Fill in the `config.yaml` file with your local path, make sure you have installed all above software and have downloaded
-reference data.You should be aware that the version of VEP library you use should match the references used (peptide and cDNA). E.g. in the example above used version/release 89 of GRCh38.
+7. Fill in the `config_WES.yaml` file with your local path, make sure you have installed all above software and have downloaded reference data.You should be aware that the version of VEP library you use should match the references used (peptide and cDNA). E.g. in the example above used version/release 89 of GRCh38.
 
 
 ## Usage
 
-iTunes has two modes, `PairMatchDna` and `VCF`.
+iTunes has two modes, `PairMatchDna` mode and `VCF` mode.
 
 `PairMatchDna` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
 
@@ -219,7 +218,7 @@ could provide expression file derived from killasto or other tools. The files sh
 ### Input Files (VCF mode)
 Input file for `VCF` mode contains:
 * mutaiton file in vcf format from mutect2.
-* expression profile in the format same as above(recommend obtain from `kallisto`).
+* expression profile in the format same as mentioned in WES mode(recommend obtain from `kallisto`).
 * copynumber profile (recommend obtain from `sequenza`).
 * tumor cellularity (also recommend obtain from `sequenza`).
 
