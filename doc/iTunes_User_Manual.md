@@ -178,15 +178,15 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 ## Usage
 
-iTunes has two modes: `PairMatchDna` mode and `VCF` mode.
+iTunes has two modes: `WES` mode and `VCF` mode.
 
-`PairMatchDna` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
+`WES` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
 
 `VCF` mode accepts mutation VCF file, expression profile, copynuber profile and tumor cellurity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
 
 You can use these two modes by:
 
-        /path/to/iTunes.py PairMatchDna -i config_WES.yaml
+        /path/to/iTunes.py WES -i config_WES.yaml
         /path/to/iTunes.py VCF -i config_VCF.yaml
 
 ## Input Files
