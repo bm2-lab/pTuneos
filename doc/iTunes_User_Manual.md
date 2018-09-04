@@ -88,7 +88,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 7. Run the program with follow command:
 
-		python iTunes.py PairMatchDna -i config_WES.yaml
+		python iTunes.py WES -i config_WES.yaml
 		or
 		python iTunes.py VCF -i config_VCF.yaml
 
