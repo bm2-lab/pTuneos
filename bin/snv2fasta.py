@@ -31,7 +31,7 @@ for opt,value in opts:
 		human_peptide =value 
 	
 #print coverage
-if (input_snv_vep_file =="" or out_dir =="" or sample_id=="" or human_peptide=""):
+if (input_snv_vep_file =="" or out_dir =="" or sample_id=="" or human_peptide==""):
 	print USAGE
 	sys.exit(2)		
 
