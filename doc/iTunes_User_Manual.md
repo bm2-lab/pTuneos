@@ -84,7 +84,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 		bash data_download.sh
 
-6. edit example.yaml and fill the exome and RNA sequencing data path with proper filepath.
+6. Edit example.yaml and fill the exome and RNA sequencing data path with proper filepath.
 
 7. Run the program with follow command:
 
@@ -180,9 +180,9 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 iTunes has two modes: `WES` mode and `VCF` mode.
 
-`WES` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutaion calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
+`WES` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutation calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
 
-`VCF` mode accepts mutation VCF file, expression profile, copynuber profile and tumor cellurity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
+`VCF` mode accepts mutation VCF file, expression profile, copy number profile and tumor cellularity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
 
 You can use these two modes by:
 
@@ -222,7 +222,7 @@ Input file for `VCF` mode contains:
 * copynumber profile (recommend obtain from `sequenza`).
 * tumor cellularity (bewteen 0 and 1) (also recommend obtain from `sequenza`).
 
-We give the example data of these file in fold `VCF_example_data/`.
+We give the example data of these files in fold `VCF_example_data/`.
 
 ### References 
 The following references are required for iTunes to run:
