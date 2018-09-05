@@ -63,7 +63,7 @@ iTunes has two modes, `WES` mode and `VCF` mode.
 
 `PairMatchDna` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutation calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
 
-`VCF` mode accepts mutation VCF file, expression profile, copy number profile and tumor cellurity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
+`VCF` mode accepts mutation VCF file, expression profile, copy number profile and tumor cellularity as input, it performs neoantigen prediction, filtering, annotation directly on input file.
 
 You can use these two mode by:
 
