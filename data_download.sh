@@ -26,6 +26,7 @@ wget ftp://ftp.ensembl.org/pub/release-89/fasta/homo_sapiens/cdna/Homo_sapiens.G
 mv Homo_sapiens.GRCh38.cdna.all.fa human.cdna.all.fa
 wget ftp://ftp.ensembl.org/pub/release-89/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz && gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 mv Homo_sapiens.GRCh38.pep.all.fa human.pep.all.fa
+makeblastdb -in human.pep.all.fa -dbtype prot -out peptide_database/peptide -parse_seqids
 cd ..
 cd ..
 

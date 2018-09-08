@@ -343,7 +343,6 @@ del_fasta_dd=del_fasta_out.drop_duplicates(subset=['mutation_header','mutation_p
 data_filter=del_fasta_dd[(del_fasta_dd["mut_peptide_length"]>=11) & (del_fasta_dd["mut_peptide_length"]==del_fasta_dd["wt_peptide_length"])]
 data_del_dd_reindex=data_filter.reset_index()
 del data_del_dd_reindex['index']
-print data_del_dd_reindex
 #######write######
 f_w=open(out_dir+'/'+sample_id+"_del.fasta",'w')
 for i in range(len(data_del_dd_reindex.mutation_header)):

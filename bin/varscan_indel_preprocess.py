@@ -51,7 +51,7 @@ for ele in open(indel_file):
 			end_list.append(end)
 			ref_alt_list.append(ref_alt)
 		
-print len(chrom_list),len(ref_alt_list)
+#print len(chrom_list),len(ref_alt_list)
 f_o=open(out_dir+'/'+sample_id+'_varscan_indel.vcf','w')
 for i in range(len(chrom_list)):
 	f_o.write(chrom_list[i]+'\t'+str(start_list[i])+'\t'+str(end_list[i])+'\t'+ref_alt_list[i]+'\n')

@@ -6,7 +6,6 @@ import pandas as pd
 import math
 from pyper import *
 import numpy as np
-import math
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from matplotlib import pyplot as plt
@@ -14,18 +13,13 @@ from sklearn.semi_supervised import label_propagation
 import itertools
 from scipy import linalg
 import matplotlib as mpl
-from sklearn import mixture
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
-from imblearn.under_sampling import RandomUnderSampler
 from imblearn.metrics import classification_report_imbalanced
 from Bio.Blast import NCBIXML
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
 from math import log, exp
-import pandas as pd
-import math	
-import numpy as np
 from scipy import interp
 from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
@@ -35,13 +29,7 @@ from sklearn import metrics
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pylab as plt
 from sklearn.model_selection import train_test_split
-from Bio.Blast import NCBIXML
-from Bio import pairwise2
-from Bio.SubsMat import MatrixInfo as matlist
-from math import log, exp
-import subprocess
 from sklearn.ensemble import RandomForestClassifier  
-from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 from collections import Counter
 from sklearn.model_selection import cross_val_score
@@ -69,8 +57,8 @@ def read_trimmomatic(raw_fastq_path_first,raw_fastq_path_second,trimmomatic_path
 	os.system(cmd_trimmomatic)
 
 
-def hlatyping(raw_fastq_path_first,raw_fastq_path_second,opitype_fold,opitype_out_fold,opitype_ext,prefix):
-	cmd_hla = 'python ' + opitype_fold + ' -i ' + raw_fastq_path_first + ' ' + raw_fastq_path_second + ' --dna -o ' + opitype_out_fold
+def hlatyping(raw_fastq_path_first,raw_fastq_path_second,opitype_fold,opitype_out_fold,opitype_ext,prefix,logfile_fold):
+	cmd_hla = 'python ' + opitype_fold + ' -i ' + raw_fastq_path_first + ' ' + raw_fastq_path_second + ' --dna -o ' + opitype_out_fold + ' > ' + logfile_fold + '/' +  'hla_typing.log' + ' 2>&1'
 	#print cmd_hla
 	os.system(cmd_hla)
 	result_dir=os.listdir(opitype_out_fold)
@@ -85,16 +73,16 @@ def hlatyping(raw_fastq_path_first,raw_fastq_path_second,opitype_fold,opitype_ou
 
 
 def mapping_qc_gatk_preprocess(fastq_1_path,fastq_2_path,fastq_type,CPU,BWA_INDEX,alignment_out_fold,prefix,REFERENCE,bwa_path,samtools_path,java_picard_path,GATK_path,dbsnp138,OneKG,mills,logfile_fold,bamstat_out_fold):
-	cmd_bwa=bwa_path + ' mem -t '+ str(CPU) + ' ' + BWA_INDEX + ' ' + fastq_1_path + ' ' +fastq_2_path + ' > ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.sam'
-	cmd_samtools_1=samtools_path + ' view -bhS -@ '+ str(CPU) + ' ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.sam' + ' > ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.bam'
-	cmd_samtools_sort=samtools_path + ' sort -@ ' + str(CPU) + ' -m 2G ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.bam' + ' ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type
-	cmd_samtools_index_1=samtools_path + ' index ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'.bam'
+	cmd_bwa=bwa_path + ' mem -t '+ str(CPU) + ' ' + BWA_INDEX + ' ' + fastq_1_path + ' ' +fastq_2_path + ' > ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.sam'#+ logfile_fold + '/' + fastq_type + '_bwa.log' + ' 2>&1'
+	cmd_samtools_1=samtools_path + ' view -bhS -@ '+ str(CPU) + ' ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.sam' + ' -o ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.bam > ' + logfile_fold + '/' + fastq_type + '_samtools_1.log' + ' 2>&1'
+	cmd_samtools_sort=samtools_path + ' sort -@ ' + str(CPU) + ' -m 2G ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.bam' + ' ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type + ' > ' + logfile_fold + '/' + fastq_type + '_samtools_sort.log' + ' 2>&1'
+	cmd_samtools_index_1=samtools_path + ' index ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'.bam' + ' > ' + logfile_fold + '/' + fastq_type + '_samtools_index.log' + ' 2>&1'
 	cmd_picard="java -Xmx4G -jar " + java_picard_path + ' MarkDuplicates INPUT=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'.bam' + ' OUTPUT=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter.bam' + ' METRICS_FILE=' + alignment_out_fold+'/'+prefix + '_'+fastq_type+'_dup_qc.txt ASSUME_SORTED=true VALIDATION_STRINGENCY=SILENT > ' + logfile_fold + '/' + fastq_type + '_markdup.log' + ' 2>&1'
 	cmd_samtools_index_2=samtools_path + ' index ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter.bam'
 	cmd_add_readgroup="java -Xmx4G -jar " + java_picard_path + ' AddOrReplaceReadGroups I=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter.bam' + ' O=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam' + ' SO=coordinate VALIDATION_STRINGENCY=SILENT RGID=' + fastq_type +  ' RGLB=' + fastq_type + ' RGPL=illumina RGSM='+ fastq_type + ' RGPU=NextSeq > ' + logfile_fold + '/' + fastq_type + '_addreadgroup.log' + ' 2>&1'
 	cmd_buildbamindex="java -Xmx4G -jar " + java_picard_path + ' BuildBamIndex I=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam' + ' O=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam.bai' + ' VALIDATION_STRINGENCY=SILENT > ' + logfile_fold + '/' + fastq_type + '_buildindex.log' + ' 2>&1'
-	cmd_BaseRecalibrator="java -Xmx4G -jar " + GATK_path + ' -T BaseRecalibrator -nct ' + str(CPU) + ' -R ' + REFERENCE + ' -I ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam' + ' -knownSites ' + OneKG + ' -knownSites ' + mills + ' -knownSites ' + dbsnp138 + ' -o ' + alignment_out_fold + '/' + prefix + '_'+fastq_type + '.table > ' + logfile_fold + '/' + fastq_type + '_BaseRecalibrator.log'# + ' 2>&1'
-	cmd_PrintReads="java -Xmx4G -jar " + GATK_path + ' -T PrintReads -nct 8 -dt NONE -R ' + REFERENCE + ' -I ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam' + ' -BQSR ' + alignment_out_fold + '/' + prefix + '_'+fastq_type + '.table' + ' -o ' + alignment_out_fold + '/' + prefix + '_'+fastq_type + '_recal.bam > ' + logfile_fold + '/' + fastq_type + '_PrintRead.log' #+ ' 2>&1'
+	cmd_BaseRecalibrator="java -Xmx4G -jar " + GATK_path + ' -T BaseRecalibrator -nct ' + str(CPU) + ' -R ' + REFERENCE + ' -I ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam' + ' -knownSites ' + OneKG + ' -knownSites ' + mills + ' -knownSites ' + dbsnp138 + ' -o ' + alignment_out_fold + '/' + prefix + '_'+fastq_type + '.table > ' + logfile_fold + '/' + fastq_type + '_BaseRecalibrator.log' + ' 2>&1'
+	cmd_PrintReads="java -Xmx4G -jar " + GATK_path + ' -T PrintReads -nct 8 -dt NONE -R ' + REFERENCE + ' -I ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter_add.bam' + ' -BQSR ' + alignment_out_fold + '/' + prefix + '_'+fastq_type + '.table' + ' -o ' + alignment_out_fold + '/' + prefix + '_'+fastq_type + '_recal.bam > ' + logfile_fold + '/' + fastq_type + '_PrintRead.log' + ' 2>&1'
 	#print cmd_bwa
 	os.system(cmd_bwa)
 	#print cmd_samtools_1
@@ -116,9 +104,9 @@ def mapping_qc_gatk_preprocess(fastq_1_path,fastq_2_path,fastq_type,CPU,BWA_INDE
 	#print cmd_PrintReads
 	os.system(cmd_PrintReads)
 
-def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,cosmic,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path):
-	cmd_GATK="java -Xmx4G -jar " + GATK_path + ' -T MuTect2 -nct ' + str(CPU) + ' -R ' + REFERENCE  + ' -I:tumor ' + alignment_out_fold + '/' + prefix + '_'+ 'tumor_recal.bam ' + '-I:normal ' + alignment_out_fold + '/' + prefix + '_'+ 'normal_recal.bam ' + '--dbsnp ' + dbsnp138 + ' --cosmic ' + cosmic + ' -o ' + somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf'
-	#print cmd_GATK
+def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,logfile_fold):
+	cmd_GATK="java -Xmx4G -jar " + GATK_path + ' -T MuTect2 -nct ' + str(CPU) + ' -R ' + REFERENCE  + ' -I:tumor ' + alignment_out_fold + '/' + prefix + '_'+ 'tumor_recal.bam ' + '-I:normal ' + alignment_out_fold + '/' + prefix + '_'+ 'normal_recal.bam ' + '--dbsnp ' + dbsnp138 + ' -o ' + somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf > ' + logfile_fold + '/' + prefix + '_mutect2.log' + ' 2>&1'
+	print cmd_GATK
 	os.system(cmd_GATK)
 	cmd_mutation_filter='grep ' + "\'^#\|chr[1-9]\{0,1\}[0-9XY]\\{0,1\\}\\b\'" + ' ' + somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf' + ' > ' + somatic_out_fold + '/' + prefix + '_' + 'mutect2_filter.vcf'
 	#print cmd_mutation_filter
@@ -147,10 +135,9 @@ def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,cosm
 
 
 
-
 def netMHCpan(fasta_file,hla_str,netmhc_out_file,out_dir,split_num,netMHCpan_path,tmp_dir,peptide_length):
 	str_proc=r'''
-set -x
+#set -x
 input_fasta=%s
 hla_str=%s
 netmhc_out=%s
@@ -171,7 +158,6 @@ fi
 split -l ${split_num} ${input_fasta} ${out_dir}/${tmp}/
 filelist=`ls ${out_dir}/${tmp}/`
 arr1=(${filelist})
-echo ${arr1[@]}
 OLD_IFS="$IFS" 
 IFS=","
 arr2=(${hla_str})
@@ -179,11 +165,9 @@ IFS="$OLD_IFS"
 for s in ${arr2[@]}
 do
 {
-	echo $s
 	for file_l in ${arr1[@]}
 	do
 	{
-		echo ${file_l}n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 		$netMHCpan -a $s -f ${out_dir}/${tmp}/${file_l} -l ${pep_len} -BA > ${out_dir}/${tmp}/${s}_${file_l}_tmp_netmhc.txt
 	} &
 	done
@@ -205,7 +189,7 @@ do
 }
 done
 rm -rf 	${out_dir}/${tmp}
-set +x
+#set +x
 '''%(fasta_file,hla_str,netmhc_out_file,out_dir,split_num,netMHCpan_path,tmp_dir,peptide_length)
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 def varscan_somatic_caling_drift(somatic_mutation_fold,alignment_out_fold,PREFIX,REFERENCE,vep_cache,samtools_path,varscan_path,vep_path,netmhc_out_fold,logfile_fold):
@@ -227,13 +211,13 @@ fi
 if [ ! -d ${netmhc_out} ];then
 	mkdir ${netmhc_out}	
 fi
-rm -rf ${somat_f}/*
+#rm -rf ${somat_f}/*
 cd ${somat_f}
 mkfifo ${PREFIX}_normal.fifo
 mkfifo ${PREFIX}_tumor.fifo
-$samtools mpileup -f ../../${REFERENCE} -q 5 -Q 20 -L 10000 -d 10000 ../../${alignment_fold}/${PREFIX}_normal_recal.bam  > ${PREFIX}_normal.fifo &
-$samtools mpileup -f ../../${REFERENCE} -q 5 -Q 20 -L 10000 -d 10000 ../../${alignment_fold}/${PREFIX}_tumor_recal.bam  > ${PREFIX}_tumor.fifo &
-java -jar $varscan somatic ${PREFIX}_normal.fifo ${PREFIX}_tumor.fifo ${PREFIX} #> ../../${logfile_fold}/${PREFIX}_somatic.log >2&1 #--output-vcf 1
+$samtools mpileup -f ${REFERENCE} -q 5 -Q 20 -L 10000 -d 10000 ${alignment_fold}/${PREFIX}_normal_recal.bam  > ${PREFIX}_normal.fifo &
+$samtools mpileup -f ${REFERENCE} -q 5 -Q 20 -L 10000 -d 10000 ${alignment_fold}/${PREFIX}_tumor_recal.bam  > ${PREFIX}_tumor.fifo &
+java -jar $varscan somatic ${PREFIX}_normal.fifo ${PREFIX}_tumor.fifo ${PREFIX} > ${logfile_fold}/${PREFIX}_somatic.log 2>&1
 java -jar $varscan processSomatic ${PREFIX}.snp
 grep '^chrom\|chr[1-9]\{0,1\}[0-9XY]\{0,1\}\b' ${PREFIX}.snp > ${PREFIX}_filter.snp
 rm ${PREFIX}_normal.fifo ${PREFIX}_tumor.fifo
@@ -243,7 +227,7 @@ cd ..
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 
 
-def varscan_neo(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,itunes_bin_path,peptide_length):
+def varscan_neo(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,itunes_bin_path,peptide_length):
 	netMHCpan(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_snv',peptide_length)
 	str_proc1=r'''
 PREFIX=%s
@@ -253,11 +237,12 @@ Binding_Aff_Fc_Cutoff=%d
 Binding_Aff_Cutoff=%d
 Fpkm_Cutoff=%d
 hla_str=%s
+driver_gene_path=%s
 netctl_fold=%s
 itunes_bin_path=%s
 python ${itunes_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_snv_netmhc.tsv -g ${netmhc_out}/${PREFIX}_snv.fasta -o ${netmhc_out} -s ${PREFIX}_snv -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
-python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_snv_final_neo_candidate.tsv -o ${netctl_fold} -s ${PREFIX}_snv
-'''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,netctl_fold,itunes_bin_path)
+python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_snv_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_snv
+'''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,netctl_fold,itunes_bin_path)
 	#print str_proc1
 	subprocess.call(str_proc1, shell=True, executable='/bin/bash')
 
@@ -278,16 +263,16 @@ if [ -d ${strelka_fold} ];then
 	rm -rf ${strelka_fold}
 fi
 python ${strelka_path}/configureStrelkaSomaticWorkflow.py --tumorBam=${alignment_fold}/${PREFIX}_tumor_recal.bam --normalBam=${alignment_fold}/${PREFIX}_normal_recal.bam --referenceFasta=${REFERENCE} --config=${strelka_path}/configureStrelkaSomaticWorkflow.py.ini --runDir=${strelka_fold} --exome
-python ${strelka_fold}/runWorkflow.py -m local -j $cpu -q ${PREFIX}_strelka -g 32 --quiet
+python ${strelka_fold}/runWorkflow.py -m local -j $cpu -q ${PREFIX}_strelka -g 8 --quiet
 gunzip ${strelka_fold}/results/variants/somatic.indels.vcf.gz
-$vep -i ${strelka_fold}/results/variants/somatic.indels.vcf.gz --cache --dir ${vep_cache} --dir_cache ${vep_cache} --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter "CANONICAL is YES and Consequence is coding_sequence_variant" -o ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt --force_overwrite
+$vep -i ${strelka_fold}/results/variants/somatic.indels.vcf --cache --dir ${vep_cache} --dir_cache ${vep_cache} --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter "CANONICAL is YES and Consequence is coding_sequence_variant" -o ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt --force_overwrite
 python ${itunes_bin_path}/varscandel2fasta.py -i ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt -o ${netmhc_out} -s ${PREFIX}_strelka
 python ${itunes_bin_path}/varscanins2fasta.py -i ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt  -o ${netmhc_out} -s ${PREFIX}_strelka
 '''%(strelka_out_fold,strelka_path,alignment_out_fold,PREFIX,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,itunes_bin_path)
 	#print str_proc2
 	subprocess.call(str_proc2, shell=True, executable='/bin/bash')
 	
-def indel_neo(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,itunes_bin_path,peptide_length):
+def indel_neo(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,itunes_bin_path,peptide_length):
 	str_proc1='''
 somatic_mutation=%s
 PREFIX=%s
@@ -321,11 +306,12 @@ Binding_Aff_Fc_Cutoff=%s
 Binding_Aff_Cutoff=%s
 Fpkm_Cutoff=%s
 hla_str=%s
+driver_gene_path=%s
 netctl_fold=%s
 itunes_bin_path=%s
 python ${itunes_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_indel_netmhc.tsv -g ${netmhc_out}/${PREFIX}_indel.fasta -o ${netmhc_out} -s ${PREFIX}_indel -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
-python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_neo_candidate.tsv -o ${netctl_fold} -s ${PREFIX}_indel
-'''%(PREFIX,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,netctl_fold,itunes_bin_path)
+python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_indel
+'''%(PREFIX,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,netctl_fold,itunes_bin_path)
 	subprocess.call(str_proc4, shell=True, executable='/bin/bash')
 	
 	
@@ -345,9 +331,9 @@ rm -rf ${copynumber_profile}/*
 cd ${copynumber_profile}
 mkfifo ${PREFIX}_normal.fifo
 mkfifo ${PREFIX}_tumor.fifo
-$samtools mpileup -f ../../${REFERENCE} -q 5 -Q 20 -L 10000 -d 10000 ../../${alignments}/${PREFIX}_normal_recal.bam > ${PREFIX}_normal.fifo &
-$samtools mpileup -f ../../${REFERENCE} -q 5 -Q 20 -L 10000 -d 10000 ../../${alignments}/${PREFIX}_tumor_recal.bam > ${PREFIX}_tumor.fifo &
-java -jar $varscan copynumber ${PREFIX}_normal.fifo ${PREFIX}_tumor.fifo ${PREFIX} #> ../../${logfile_fold}/${PREFIX}_copynumber.log 2>&1
+$samtools mpileup -f ${REFERENCE} -q 5 -Q 20 -L 10000 -d 10000 ${alignments}/${PREFIX}_normal_recal.bam > ${PREFIX}_normal.fifo &
+$samtools mpileup -f ${REFERENCE} -q 5 -Q 20 -L 10000 -d 10000 ${alignments}/${PREFIX}_tumor_recal.bam > ${PREFIX}_tumor.fifo &
+java -jar $varscan copynumber ${PREFIX}_normal.fifo ${PREFIX}_tumor.fifo ${PREFIX} > ${logfile_fold}/${PREFIX}_copynumber.log 2>&1
 grep '^chrom\|chr[1-9]\{0,1\}[0-9XY]\{0,1\}\b' ${PREFIX}.copynumber > ${PREFIX}_filter.copynumber
 rm ${PREFIX}_normal.fifo ${PREFIX}_tumor.fifo
 cd ..
@@ -364,11 +350,11 @@ netctl=%s
 Pyclone=%s
 logfile_fold=%s
 itunes_bin_path=%s
-Rscript ${itunes_bin_path}/sequenza_test.R ${somatic_mutation}/${PREFIX}_filter.snp ${copynumber_profile}/${PREFIX}_filter.copynumber ${copynumber_profile}/ ${PREFIX} #> ${logfile_fold}/${PREFIX}_pyclone.log 2>&1
+Rscript ${itunes_bin_path}/sequenza_test.R ${somatic_mutation}/${PREFIX}_filter.snp ${copynumber_profile}/${PREFIX}_filter.copynumber ${copynumber_profile}/ ${PREFIX} > ${logfile_fold}/${PREFIX}_sequenza.log 2>&1
 python ${itunes_bin_path}/pyclone_input.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${somatic_mutation}/${PREFIX}_SNVs_only.recode.vcf -c ${copynumber_profile}/${PREFIX}_seg_copynumber.txt -o ${pyclone} -S ${PREFIX}
 TUMOR_CONTENT=`cat ${copynumber_profile}/${PREFIX}_cellularity.txt`
 $Pyclone setup_analysis --in_files ${pyclone}/${PREFIX}_pyclone_input.tsv --tumour_contents $TUMOR_CONTENT --prior major_copy_number --working_dir ${pyclone}
-$Pyclone run_analysis --config_file ${pyclone}/config.yaml
+$Pyclone run_analysis --config_file ${pyclone}/config.yaml > ${logfile_fold}/${PREFIX}_pyclone.log 2>&1
 $Pyclone build_table --config_file ${pyclone}/config.yaml --out_file ${pyclone}/loci.tsv --table_type loci
 python ${itunes_bin_path}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
 '''%(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_fold,pyclone_path,logfile_fold,itunes_bin_path)
@@ -463,6 +449,8 @@ def get_homolog_info(mut_seq,hla_type,blastp_tmp_file,blastp_out_tmp_file,netMHC
 				continue
 		else:
 			continue
+	if len(human_pep)<pep_len:
+		human_homolog_pep=mut_seq
 	#print human_homolog_pep
 	f=open(netMHCpan_pep_tmp_file,'w')
 	f.write(human_homolog_pep+'\n')
@@ -502,7 +490,7 @@ def InVivoModelAndScoreSNV(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,
 	hy_xgb_9=joblib.load(cf_hy_model_9)
 	hy_xgb_10=joblib.load(cf_hy_model_10)
 	hy_xgb_11=joblib.load(cf_hy_model_11)
-	print hy_xgb_9
+	#print hy_xgb_9
 	data_neo=pd.read_table(neo_file,header=0,sep='\t')
 	MT_peptide=data_neo.MT_pep
 	HLA=data_neo.HLA_type
@@ -581,8 +569,10 @@ def InVivoModelAndScoreSNV(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,
 	immuno_effect_score=[tpm_score[i]*allele_frequency_score[i]*netchop_score[i]*cellular_prevalence_score[i]*data_neo.Hydrophobicity_score[i]*data_neo.Recognition_score[i]*data_neo.Self_sequence_similarity[i]*EL_mt_rank_score[i]*EL_wt_rank_score[i] for i in range(len(data_neo.MT_Binding_EL))]
 	data_neo["immuno_effect_score"]=immuno_effect_score
 	data_neo_out_sort=data_neo.sort_values(['model_pro',"immuno_effect_score"],ascending=[0,0])
+	del data_neo_out_sort["contain_X"]
+	del data_neo_out_sort["target_id"]
 	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)
-	del data_neo_out_sort["contain_X"]	
+		
 
 def InVivoModelAndScoreINDEL(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
 	iedb_seq=get_iedb_seq(iedb_file)
@@ -665,5 +655,7 @@ def InVivoModelAndScoreINDEL(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_1
 	immuno_effect_score=[tpm_score[i]*netchop_score[i]*data_neo.Hydrophobicity_score[i]*data_neo.Recognition_score[i]*data_neo.Self_sequence_similarity[i]*EL_mt_rank_score[i]*EL_wt_rank_score[i] for i in range(len(data_neo.MT_Binding_EL))]
 	data_neo["immuno_effect_score"]=immuno_effect_score
 	data_neo_out_sort=data_neo.sort_values(['model_pro',"immuno_effect_score"],ascending=[0,0])
+	del data_neo_out_sort["contain_X"]
+	del data_neo_out_sort["target_id"]
 	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)
-	del data_neo_out_sort["contain_X"]	
+		

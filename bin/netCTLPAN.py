@@ -6,14 +6,16 @@ import pandas as pd
 import time,os
 
 
-opts,args=getopt.getopt(sys.argv[1:],"hi:o:s:",["input_neo_file","out_dir","sample_id"])
+opts,args=getopt.getopt(sys.argv[1:],"hi:d:o:s:",["input_neo_file","driver_gene_path","out_dir","sample_id"])
 input_neo_file =""
+driver_gene_path=""
 out_dir=""
 sample_id=""
-USAGE='''usage: python netCTLPAN.py -i <input_neo_file> -o <outdir> -s <sample_id>
+USAGE='''usage: python netCTLPAN.py -i <input_neo_file> -d <driver_gene_path> -o <outdir> -s <sample_id>
 		required argument:
 			-i | --input_neo_file : input file,result from netMHC parse
 			-o | --out_dir : output directory
+			-d | --driver_gene_path: driver gene file path
 			-s | --sample_id : sample id
 '''
 for opt,value in opts:
@@ -24,10 +26,12 @@ for opt,value in opts:
 		input_neo_file=value
 	elif opt in ("-o","--out_dir"):
 		out_dir =value  
+	elif opt in ("-d","--driver_gene_path"):
+		driver_gene_path =value 
 	elif opt in ("-s","sample_id"):
 		sample_id=value
 #print coverage
-if (input_neo_file =="" or out_dir =="" or sample_id==""):
+if (input_neo_file =="" or out_dir =="" or driver_gene_path=="" or sample_id==""):
 	print USAGE
 	sys.exit(2)
 
@@ -73,7 +77,7 @@ pdata={'tap_prediction_score':tap_prediction_score,'cleavage_prediction_score':c
 data_pdata=pd.DataFrame(pdata) 
 data_con=pd.concat([data_neo_fil,data_pdata],axis=1)
 gene_list=data_con.Gene.drop_duplicates()
-f_drivergene=open('/home/zhouchi/database/Annotation/DriveGene.tsv','r')
+f_drivergene=open(driver_gene_path,'r')
 drivergene_list=[]
 for line in f_drivergene:
 	drivergene_list.append(line.strip())

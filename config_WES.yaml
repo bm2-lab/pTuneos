@@ -1,37 +1,14 @@
-##Fixed parameter, should not be changed.
-itunes_bin_path: bin
-reference_path: database/Fasta/human.fasta
-bwa_index_path: database/Fasta/human.fasta
-bwa_path: software/bwa
-samtools_path: software/samtools
-java_picard_path: software/picard.jar
-GATK_path: software/GenomeAnalysisTK.jar
-dbsnp138: database/VCF_annotation/dbsnp_138.hg38.vcf.gz
-hapmap: database/VCF_annotation/hapmap_3.3.hg38.vcf.gz
-OneKG: database/VCF_annotation/1000G_phase1.snps.high_confidence.hg38.vcf.gz
-omni: database/VCF_annotation/1000G_omni2.5.hg38.vcf.gz
-mills: database/VCF_annotation/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
-cosmic: /home/zhouchi/database/Annotation/hg38_vcf/CosmicCodingMuts_chr_M_sorted.vcf.gz
-varscan_path: softwarels/VarScan.v2.4.2.jar
-kallisto_path: software/kallisto
-vcftools_path: software/vcftools
-kallisto_cdna_path: database/Protein/human.cdna.all.fa
-human_peptide_path: database/Protein/human.pep.all.fa
-trimmomatic_path: software/trimmomatic-0.36.jar
-adapter_path: software/TruSeq3-PE.fa
-blast_db_path: software/blast_database/database
-iedb_file: train_data/iedb.fasta
 ##### Set path for input data, output fold, run name, thread number, 
-tumor_fastq_path_first: /your/path/to/first/tumor/exome-seq/fastq/
-tumor_fastq_path_second: /your/path/to/first/tumor/exome-seq/fastq/
-normal_fastq_path_first: /your/path/to/first/normal/exome-seq/fastq/
-normal_fastq_path_second: /your/path/to/first/normal/exome-seq/fastq/
-tumor_rna_fastq_1: /your/path/to/first/tumor/RNA-seq/fastq/
-tumor_rna_fastq_2: /your/path/to/first/tumor/RNA-seq/fastq/
-output_fold: test
-sample_name: test
-thread_number: 48
-hla_str: HLA-A02:01
+tumor_fastq_path_first: /home/zhouchi/raw_data/phs001005/fastq/SRR2673015/SRR2673015_1.fastq
+tumor_fastq_path_second: /home/zhouchi/raw_data/phs001005/fastq/SRR2673015/SRR2673015_2.fastq
+normal_fastq_path_first: /home/zhouchi/raw_data/phs001005/fastq/SRR2672887/SRR2672887_1.fastq
+normal_fastq_path_second: /home/zhouchi/raw_data/phs001005/fastq/SRR2672887/SRR2672887_2.fastq
+tumor_rna_fastq_1: /home/zhouchi/raw_data/phs001005/fastq/SRR2673065/SRR2673065_1.fastq
+tumor_rna_fastq_2: /home/zhouchi/raw_data/phs001005/fastq/SRR2673065/SRR2673065_2.fastq
+output_fold: /home/zhouchi/WES_test
+sample_name: WES_test
+thread_number: 32
+hla_str: None
 expression_file: None
 peptide_length: 9
 ##### Some filters parameter
@@ -40,11 +17,11 @@ tumor_vaf_cutoff: 0.05
 normal_vaf_cutoff: 0.03
 binding_fc_aff_cutoff: 1
 binding_aff_cutoff: 2
-fpkm_cutoff: 0
+fpkm_cutoff: 1
 ##### specify other software excutable path in your system as you have installed them.
-opitype_fold: /your/path/to/opitype python script/
-vep_cache_path: /your/path/to/vep cache data/
-vep_path: /your/path/to/vep
-netMHCpan_path: /your/path/to/netMHCpan 4.0
-pyclone_path: /your/path/to/PyClone
-strelka_path: /usr/local/bin
+opitype_fold: /home/zhouchi/software/OptiType/OptiTypePipeline.py
+vep_cache_path: /home/zhouchi/database/Annotation/vep_data/
+vep_path: /usr/local/ensembl-vep/vep
+netMHCpan_path: /home/zhouchi/bin/netMHCpan
+pyclone_path: /usr/local/bin/PyClone
+strelka_path: /home/zhouchi/strelka/bin

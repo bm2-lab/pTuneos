@@ -4,13 +4,14 @@ import shutil
 import yaml
 import time
 def PEMD(opts):
+	base_dir=os.getcwd()
 	config_file=opts.Config_file
 	f=open(config_file)
 	config_list=yaml.load(f)
 	#######read and parse parameter
 	print "Read and parse parameters..."
 	output_fold=config_list["output_fold"]
-	itunes_bin_path=config_list["itunes_bin_path"]
+	itunes_bin_path="bin"
 	normal_fastq_path_first=config_list["normal_fastq_path_first"]
 	normal_fastq_path_second=config_list["normal_fastq_path_second"]
 	tumor_fastq_path_first=config_list["tumor_fastq_path_first"]
@@ -20,23 +21,20 @@ def PEMD(opts):
 	opitype_ext=itunes_bin_path+'/optitype_ext.py'
 	prefix=config_list["sample_name"]
 	CPU=config_list["thread_number"]
-	vcftools_path=config_list["vcftools_path"]
-	REFERENCE=config_list["reference_path"]
-	BWA_INDEX=config_list["bwa_index_path"]
+	vcftools_path="software/vcftools"
+	REFERENCE=base_dir + "/" + "database/Fasta/human.fasta"
+	BWA_INDEX=base_dir + "/" + "database/Fasta/human.fasta"
 	alignment_out_fold=output_fold + '/' + 'alignments'
-	bwa_path=config_list["bwa_path"]
-	samtools_path=config_list["samtools_path"]
-	java_picard_path=config_list["java_picard_path"]
-	GATK_path=config_list["GATK_path"]
-	dbsnp138_path=config_list["dbsnp138"]
-	hapmap_path=config_list["hapmap"]
-	omni_path=config_list["omni"]
-	OneKG_path=config_list["OneKG"]
-	mills_path=config_list["mills"]
-	cosmic_path=config_list["cosmic"]
+	bwa_path="software/bwa"
+	samtools_path=base_dir + '/' + "software/samtools"
+	java_picard_path="software/picard.jar"
+	GATK_path="software/GenomeAnalysisTK.jar"
+	dbsnp138_path="database/VCF_annotation/dbsnp_138.hg38.vcf.gz"
+	OneKG_path="database/VCF_annotation/1000G_phase1.snps.high_confidence.hg38.vcf.gz"
+	mills_path="database/VCF_annotation/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
 	somatic_mutation_fold=output_fold + '/' + 'somatic_mutation'
 	vep_cache=config_list["vep_cache_path"]
-	varscan_path=config_list["varscan_path"]
+	varscan_path=base_dir + '/' + "software/VarScan.v2.4.2.jar"
 	vep_path=config_list["vep_path"]
 	clean_fastq_fold=output_fold + '/' + 'clean_fastq'
 	netmhc_out_fold=output_fold + '/' + 'netmhc'
@@ -47,7 +45,7 @@ def PEMD(opts):
 	hla_str=config_list["hla_str"]
 	indel_netmhc_out_file=netmhc_out_fold+'/'+prefix+'_indel_netmhc.tsv'
 	split_num=200
-	human_peptide_path=config_list["human_peptide_path"]
+	human_peptide_path="database/Protein/human.pep.all.fa"
 	binding_fc_aff_cutoff=int(config_list["binding_fc_aff_cutoff"])
 	binding_aff_cutoff=int(config_list["binding_aff_cutoff"])
 	fpkm_cutoff=int(config_list["fpkm_cutoff"])
@@ -61,16 +59,16 @@ def PEMD(opts):
 	strelka_path=config_list["strelka_path"]
 	rna_fastq_1_path=config_list["tumor_rna_fastq_1"]
 	rna_fastq_2_path=config_list["tumor_rna_fastq_2"]
-	kallisto_path=config_list["kallisto_path"]
+	kallisto_path="software/kallisto"
 	tumor_depth_cutoff=config_list["tumor_depth_cutoff"]
 	tumor_vaf_cutoff=config_list["tumor_vaf_cutoff"]
 	normal_vaf_cutoff=config_list["normal_vaf_cutoff"]
 	kallisto_out_fold=output_fold + '/' + 'expression'
-	kallisto_cdna_path=config_list["kallisto_cdna_path"]
+	kallisto_cdna_path="database/Protein/human.cdna.all.fa"
 	snv_final_neo_file=netctl_out_fold + '/' + prefix + '_pyclone_neo.tsv'
 	indel_final_neo_file=netctl_out_fold + '/' + prefix + '_indel_netctl_concact.tsv'
-	trimmomatic_path=config_list["trimmomatic_path"]
-	adapter_path=config_list["adapter_path"]
+	trimmomatic_path="software/trimmomatic-0.36.jar"
+	adapter_path="software/TruSeq3-PE.fa"
 	tumor_fastq_prefix=clean_fastq_fold + '/' + prefix + "_tumor_clean.fq.gz"
 	normal_fastq_prefix=clean_fastq_fold + '/' + prefix + "_normal_clean.fq.gz"
 	tumor_fastq_dir=clean_fastq_fold
@@ -79,12 +77,13 @@ def PEMD(opts):
 	normal_fastq_dir=clean_fastq_fold
 	normal_fastq_clean_first=clean_fastq_fold + '/' + prefix + "_normal_clean_1P.fq.gz"
 	normal_fastq_clean_second=clean_fastq_fold + '/' + prefix + "_normal_clean_2P.fq.gz"
-	iedb_file=config_list["iedb_file"]
+	iedb_file="train_model/iedb.fasta"
 	peptide_length=config_list["peptide_length"]
 	cf_hy_model_9="train_model/cf_hy_9_model.m"
 	cf_hy_model_10="train_model/cf_hy_10_model.m"
 	cf_hy_model_11="train_model/cf_hy_11_model.m"
 	RF_model="train_model/RF_train_model.m"
+	driver_gene_path="software/DriveGene.tsv"
 	snv_neo_model_file=netctl_out_fold + '/' + prefix + '_snv_neo_model.tsv'
 	snv_blastp_tmp_file=netctl_out_fold + '/' + prefix + '_snv_blastp_tmp.tsv'
 	snv_blastp_out_tmp_file=netctl_out_fold + '/' + prefix + '_snv_blastp_out_tmp.tsv'
@@ -95,7 +94,7 @@ def PEMD(opts):
 	indel_blastp_out_tmp_file=netctl_out_fold + '/' + prefix + '_indel_blastp_out_tmp.tsv'
 	indel_netMHCpan_pep_tmp_file=netctl_out_fold + '/' + prefix + '_indel_netMHCpan_pep_tmp.tsv'
 	indel_netMHCpan_ml_out_tmp_file=netctl_out_fold + '/' + prefix + '_indel_netMHCpan_ml_out_tmp.tsv'
-	blast_db_path=config_list['blast_db_path']
+	blast_db_path="database/Protein/peptide_database/peptide"
 	time.sleep(5)
 	print "Read and parse parameters done..."
 	print "Check reference file path and input file path..."
@@ -201,7 +200,7 @@ def PEMD(opts):
 		os.mkdir(clean_fastq_fold)	
 	print "ALL file paths are correct!"	
 	time.sleep(5)
-	print "start fastq quality control"
+	print "start stage 0: sequence quality control."
 	processes_0=[]
 	q1=multiprocessing.Process(target=read_trimmomatic,args=(tumor_fastq_path_first,tumor_fastq_path_second,trimmomatic_path,adapter_path,tumor_fastq_prefix,logfile_out_fold,"tumor",CPU,))
 	processes_0.append(q1)
@@ -212,11 +211,11 @@ def PEMD(opts):
 		p.start()
 	for p in processes_0:
 		p.join()
-
-	print "start stage 1"
+	print "stage 0 finished!"
+	print "start stage 1: hla typing, sequence mapping and expression profiling!"
 	processes_1=[]
 	if hla_str=="None":
-		d1=multiprocessing.Process(target=hlatyping,args=(tumor_fastq_path_first,tumor_fastq_path_second,opitype_fold,opitype_out_fold,opitype_ext,prefix,))
+		d1=multiprocessing.Process(target=hlatyping,args=(tumor_fastq_path_first,tumor_fastq_path_second,opitype_fold,opitype_out_fold,opitype_ext,prefix,logfile_out_fold,))
  		processes_1.append(d1)
  	else:
  		print "hla type provided!"
@@ -234,7 +233,7 @@ def PEMD(opts):
 		p.start()
 	for p in processes_1:
 		p.join()
-	print 'stage 1 done.'
+	print 'stage 1 finished!'
 	if exp_file!="None" and os.path.exists(exp_file):
 		print "check expression file done."
 	elif exp_file=="no_exp":
@@ -242,9 +241,9 @@ def PEMD(opts):
 	else:
 		print "please check your expression file path!"
 		os._exit(1)
-	print 'start stage 2'
+	print 'start stage 2: mutation calling using Mutect2, strelka and varscan; copynumber profiling.'
 	processes_2=[]
-	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,cosmic_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,))
+	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,logfile_out_fold))
 	processes_2.append(h0)
 	h1=multiprocessing.Process(target=varscan_somatic_caling_drift,args=(somatic_mutation_fold,alignment_out_fold,prefix,REFERENCE,vep_cache,samtools_path,varscan_path,vep_path,netmhc_out_fold,logfile_out_fold,))
 	processes_2.append(h1)
@@ -259,19 +258,20 @@ def PEMD(opts):
 		p.join()
 	if hla_str=="None":
  		hla_str=open(opitype_out_fold+'/'+prefix+"_optitype_hla_type").readlines()[0]
-	print 'start stage 3'
+	print 'stage 2 finished!'
+	print 'start stage 3: neoantigens identification.'
 	processes_3=[]
-	t2=multiprocessing.Process(target=varscan_neo,args=(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,peptide_length,))
+	t2=multiprocessing.Process(target=varscan_neo,args=(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,peptide_length,))
 	processes_3.append(t2)
-	t3=multiprocessing.Process(target=indel_neo,args=(somatic_mutation_fold,prefix,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,peptide_length,))
+	t3=multiprocessing.Process(target=indel_neo,args=(somatic_mutation_fold,prefix,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,peptide_length,))
 	processes_3.append(t3)
 	for p in processes_3:
 		p.daemon = True
 		p.start()
 	for p in processes_3:
 		p.join()
-	print "stage 3 done."
-	print 'start stage 4.'
+	print "stage 3 finished."
+	print 'start stage 4: mutation clonal cellularity calculation.'
 	processes_4=[]
 	l1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_out_fold,pyclone_path,logfile_out_fold,itunes_bin_path,))
 	processes_4.append(l1)	
@@ -280,8 +280,8 @@ def PEMD(opts):
 		p.start()
 	for p in processes_4:
 		p.join()
-	print 'stage 4 done.'
-	print 'start stage 5.'
+	print 'stage 4 finished.'
+	print 'start stage 5: neoantigen filtering using invitro model and invivo score scheme.'
 	processes_5=[]
 	r1=multiprocessing.Process(target=InVivoModelAndScoreSNV,args=(snv_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,snv_neo_model_file,snv_blastp_tmp_file,snv_blastp_out_tmp_file,snv_netMHCpan_pep_tmp_file,snv_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
 	processes_5.append(r1)
@@ -292,8 +292,7 @@ def PEMD(opts):
 		p.start()
 	for p in processes_5:
 		p.join()		
-	print 'stage 5 done.'
-	print 'Done!'
+	print 'stage 5 finished.'
 	#if os.path.exists(alignment_out_fold):
 	#	shutil.rmtree(alignment_out_fold)
 	#if os.path.exists(clean_fastq_fold):
