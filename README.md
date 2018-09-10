@@ -59,8 +59,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 
         git clone https://github.com/bm2-lab/iTunes.git
 
-3. Obtain the reference files from GRCh38. These include cDNA, peptide and COSMIC
-files; see the References section in the [user manual](/doc/iTunes_User_Manual.md)
+3. Obtain the reference files from GRCh38. These include cDNA, peptide; see the References section in the [user manual](/doc/iTunes_User_Manual.md)
 for a detailed description.
 
 
