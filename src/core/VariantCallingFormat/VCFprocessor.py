@@ -10,8 +10,6 @@ from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from matplotlib import pyplot as plt
 from sklearn.semi_supervised import label_propagation
-import itertools
-from scipy import linalg
 import matplotlib as mpl
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
@@ -20,7 +18,6 @@ from Bio.Blast import NCBIXML
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
 from math import log, exp
-from scipy import interp
 from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 import xgboost as xgb

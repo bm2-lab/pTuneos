@@ -1,6 +1,5 @@
 import os,sys,time
 import multiprocessing
-import shutil 
 import subprocess
 import pandas as pd
 import math
@@ -11,7 +10,6 @@ from sklearn.decomposition import PCA
 from matplotlib import pyplot as plt
 from sklearn.semi_supervised import label_propagation
 import itertools
-from scipy import linalg
 import matplotlib as mpl
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
@@ -20,7 +18,6 @@ from Bio.Blast import NCBIXML
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
 from math import log, exp
-from scipy import interp
 from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
 import xgboost as xgb
@@ -137,7 +134,7 @@ def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,soma
 
 def netMHCpan(fasta_file,hla_str,netmhc_out_file,out_dir,split_num,netMHCpan_path,tmp_dir,peptide_length):
 	str_proc=r'''
-#set -x
+set -e
 input_fasta=%s
 hla_str=%s
 netmhc_out=%s
@@ -189,7 +186,6 @@ do
 }
 done
 rm -rf 	${out_dir}/${tmp}
-#set +x
 '''%(fasta_file,hla_str,netmhc_out_file,out_dir,split_num,netMHCpan_path,tmp_dir,peptide_length)
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 def varscan_somatic_caling_drift(somatic_mutation_fold,alignment_out_fold,PREFIX,REFERENCE,vep_cache,samtools_path,varscan_path,vep_path,netmhc_out_fold,logfile_fold):
@@ -233,6 +229,7 @@ cd ..
 def varscan_neo(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,itunes_bin_path,peptide_length,netchop_path):
 	netMHCpan(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_snv',peptide_length)
 	str_proc1=r'''
+set -e
 PREFIX=%s
 netmhc_out=%s
 Exp_file=%s
@@ -280,6 +277,7 @@ python ${itunes_bin_path}/varscanins2fasta.py -i ${strelka_fold}/${PREFIX}_strel
 	
 def indel_neo(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,itunes_bin_path,peptide_length,netchop_path,REFERENCE,human_peptide_path):
 	str_proc1=r'''
+set -e
 somatic_mutation=%s
 PREFIX=%s
 vep_cache=%s
@@ -326,6 +324,7 @@ python ${itunes_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_ne
 	
 def varscan_copynumber_calling(varscan_copynumber_fold,prefix,alignment_out_fold,REFERENCE,samtools_path,varscan_path,logfile_fold):
 	str_proc=r'''
+set -e
 copynumber_profile=%s
 PREFIX=%s
 alignments=%s

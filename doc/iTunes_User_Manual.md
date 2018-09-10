@@ -34,11 +34,11 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 * [R 3.2.3](https://cran.r-project.org/src/base/R-3/R-3.2.3.tar.gz)
 * [NetMHCpan 4.0](http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?netMHCpan)
 * [Variant Effect Predictor (VEP)](https://github.com/Ensembl/ensembl-vep)
-* [bwa](https://github.com/lh3/bwa)
+* [BWA](https://github.com/lh3/bwa)
 * [samtools](https://github.com/samtools)
 * [strelka](https://github.com/Illumina/strelka)
-* [opitype](https://github.com/FRED-2/OptiType)
-* [pyclone](https://bitbucket.org/aroth85/pyclone/wiki/Tutorial)
+* [Optitype](https://github.com/FRED-2/OptiType)
+* [Pyclone](https://bitbucket.org/aroth85/pyclone/wiki/Tutorial)
 * [GATK 3.8](https://software.broadinstitute.org/gatk/best-practices/)
 * [Picard tools](https://broadinstitute.github.io/picard/)
 * [Java 8](https://java.com/en/download/help/linux_x64rpm_install.xml)
@@ -48,22 +48,32 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 * [vcftools](http://vcftools.sourceforge.net/)
 * [blast](http://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
 * [tabix](http://www.htslib.org/doc/tabix.html)
+* [gawk]()
+
+#### Required Python package:
+* [yaml](https://pypi.org/project/yaml-1.3/)
+* [XGboost](https://pypi.org/project/xgboost/)
+* [biopython](https://pypi.org/project/biopython/)
+* [scikit-learn==0.19.1](https://pypi.org/project/scikit-learn/)
+* [pandas](https://pypi.org/project/pandas/)
+* [numpy](https://pypi.org/project/numpy/)
+* [imblearn](https://pypi.org/project/imblearn/)
+* [Pyomo](https://pypi.org/project/Pyomo/)
+* [tables](https://pypi.org/project/tables/)
+* [pysam](https://pypi.org/project/pysam/)
+* [PypeR](https://pypi.org/project/PypeR/)
+* [multiprocessing](https://pypi.org/project/multiprocessing/)
+* [subprocess](https://pypi.org/project/subprocess/)
+* [math](https://pypi.org/project/math/)
+* [matplotlib](https://pypi.org/project/matplotlib/)
+* [collections](https://pypi.org/project/collections/)
 
 
-#### Python packages:
-    multiprocessing
-    pyper
-    yaml
-    XGBoost
-    Bio
-    sklearn
-    pandas
-    numpy
-    
-#### R packages:
-    squenza
-    copynumebr
-    squash
+#### Required R package:
+* [cpynumber](http://www.bioconductor.org/packages/release/bioc/html/copynumber.html)
+* [sequenza](https://cran.r-project.org/web/packages/sequenza/index.html)
+* [squash](https://CRAN.R-project.org/package=squash)
+
 
 ## Installation via Docker
 Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
@@ -74,7 +84,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 3. Run the image with interactive mode with your dataset:
         
-		docker run -it -v /your/path/to/data/:/home/bioworker bm2lab/itunes /bin/bash
+		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/itunes /bin/bash
 
 4. Change directory into /home/bioworker/project/iTunes:
 
@@ -84,7 +94,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 		bash data_download.sh
 
-6. Edit example.yaml and fill the exome and RNA sequencing data path with proper filepath.
+6. Edit `config_WES.yaml` or `config_VCF.yaml` and fill the needed parameters with proper filepath.
 
 7. Run the program with follow command:
 
@@ -95,8 +105,8 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 ## Installation from source
 
-1. Install all software listed above. 
-2. Install multiprocessing, pyper and other packages with the `pip` command:
+1. Install all software, python packages and R packages listed above, and make sure each software and package could be used in your system. 
+2. Install multiprocessing and other packages with the `pip` command:
 
         pip install -U multiprocessing
         pip install -U pyper
@@ -110,7 +120,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
    
         install.package('squash')
  
-4. Download or clone the iTuNEs repository to your local system:
+4. Download or clone the iTunes repository to your local system:
 
         git clone https://github.com/bm2-lab/iTunes.git
 
@@ -140,36 +150,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
         This fold contains the reference cDNA and protein sequence of human:
         human.cdna.all.fa
         human.pep.all.fa
-	
-    Moreover,the Catalogue of Somatic Mutations In Cancer (COSMIC) provides a variant file (VCF) of all coding mutations in 
-    COSMIC. This VCF file is called CosmicCodingMuts.vcf.gz and can be found under the "Download" tab on the COSMIC website 
-    (click the "VCF files" dropdown menu after loading the Download tab). You will need to register before gaining access to 
-    the file. Note: to our knowledge COSMIC uses b38 which does not contain the 'chr' before the chromosome names like the 
-    UCSC hg38. Thus, we provide scripts to convert the file into the correct format.
-    1. Click [here](https://cancer.sanger.ac.uk/cosmic/register) to register
-    2. Wait for the verification email (can take more than 24 hours) and follow instructions to create an account
-    3. After you are registered, login to [COSMIC](https://cancer.sanger.ac.uk/cosmic/login)
-    4. Click the "Download" tab
-    5. Click the "VCF files" dropdown menu
-    6. Click the "CosmicCodingMuts.vcf.gz" file name ([direct link] (https://cancer.sanger.ac.uk/files/cosmic/current_release/VCF/CosmicCodingMuts.vcf.gz)
-    7. After you have downloaded the file, you will need to decompress it: `gunzip CosmicCodingMuts.vcf.gz` and put it in directory database/VCF_annotation.
-    8. We need to convert it to be compatible to Mutect2 using the script  `cosmic_process.sh`
-    make sure you are in iTunes-dev fold and run this command on your downloaded file:
-```
-    	bash cosmic_process.sh -i database/VCF_annotation/CosmicCodingMuts.vcf /
-        -o database/VCF_annotation/CosmicCodingMuts_chr_M_sorted.vcf /
-        -p software/picard.jar /
-        -d database/Fasta/human.dict
-```
-    The usage statement from `cosmic_process.sh`:
-```
-    cosmic_process.sh: A tool to format the COSMIC VCF file compatible for Mutect2
- 	Usage: bash cosmic_process.sh -i <CosmicCodingMuts.vcf> -o <FormattedCosmicMuts.vcf> -p <picard path> -d <Homo_sapiens_assembly38.dic>
-	-i  Input CosmicCodingMuts.vcf file as downloaded from COSMIC
-	-o  Output formatted COSMIC VCF file
-	-p  Your path to picard
-	-d  Path to the GATK hg19 bundle's sequence dictionary file
-```
+
 
 6. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blastp and  VarScan.v2.4.2 were prepared in software directory, other softwares should be installed by user own due to complexity, please refer to the software links above.
 
@@ -247,16 +228,11 @@ match in release version (e.g. release-89)).
         [EnsemblVEP]
         homo_sapiens_vep_89_GRCh38.tar.gz
 
-* Cosmic consencus gene 
-TSV file containing known cancer driver genes. The cancer gene census can be
-downloaded from the [COSMIC](http://cancer.sanger.ac.uk/census) website.  
-
-* Cosmic VCF file.
 
 ## Setting parameters
-User should set all the parameters in the configration file `config_WES.yaml` or `config_VCF.yaml`. The config file contains four part of parameters:
+User should set all the parameters in the configration file `config_WES.yaml` or `config_VCF.yaml`. The config file contains three parts of parameters:
 
-* Fixed parameters, user should not change it.
+
 * Input data parameters, including path of DNA/RNA sequencing data, output fold, run name, hla alleles, expression file and thread number(for WES mode).
 (Note: user could specific hla allele throught `hla_str`, otherwise set it to `None`, the pipeline will make the prediction utilizing sequencing data. If RNA sequencing data is provided, please also set expression file to `None`.)
 * Some filter parameter including mutation sequence depth, mutation variant allele fraction(vaf), binding affinity rank and expression FPKM.
