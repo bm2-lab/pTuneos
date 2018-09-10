@@ -23,14 +23,20 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 * [Variant Effect Predictor (VEP)](https://github.com/Ensembl/ensembl-vep)
 * [BWA](https://github.com/lh3/bwa)
 * [samtools](https://github.com/samtools)
-* [kallisto](https://github.com/pachterlab/kallisto)
-* [Strelka](https://github.com/Illumina/strelka)
+* [strelka](https://github.com/Illumina/strelka)
 * [Optitype](https://github.com/FRED-2/OptiType)
 * [Pyclone](https://bitbucket.org/aroth85/pyclone/wiki/Tutorial)
 * [GATK 3.8](https://software.broadinstitute.org/gatk/best-practices/)
 * [Picard tools](https://broadinstitute.github.io/picard/)
 * [Java 8](https://java.com/en/download/help/linux_x64rpm_install.xml)
-* [blast](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
+* [Varscan2](http://varscan.sourceforge.net/)
+* [kallisto](http://pachterlab.github.io/kallisto/)
+* [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
+* [vcftools](http://vcftools.sourceforge.net/)
+* [blast](http://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
+* [tabix](http://www.htslib.org/doc/tabix.html)
+* [gawk]()
+
 #### Required Python package:
 * [yaml](https://pypi.org/project/yaml-1.3/)
 * [XGboost](https://pypi.org/project/xgboost/)
@@ -43,6 +49,11 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 * [tables](https://pypi.org/project/tables/)
 * [pysam](https://pypi.org/project/pysam/)
 * [PypeR](https://pypi.org/project/PypeR/)
+* [multiprocessing](https://pypi.org/project/multiprocessing/)
+* [subprocess](https://pypi.org/project/subprocess/)
+* [math](https://pypi.org/project/math/)
+* [matplotlib](https://pypi.org/project/matplotlib/)
+* [collections](https://pypi.org/project/collections/)
 
 
 #### Required R package:
