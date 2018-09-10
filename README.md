@@ -30,7 +30,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 * [GATK 3.8](https://software.broadinstitute.org/gatk/best-practices/)
 * [Picard tools](https://broadinstitute.github.io/picard/)
 * [Java 8](https://java.com/en/download/help/linux_x64rpm_install.xml)
-* [blastp](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ )
+* [blast](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
 #### Required Python package:
 * [yaml](https://pypi.org/project/yaml-1.3/)
 * [XGboost](https://pypi.org/project/xgboost/)
