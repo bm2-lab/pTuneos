@@ -1,0 +1,40 @@
+#! /bin/tcsh -f
+
+# This the main NetMHCpan 2.0 script. It only acts as the frontend to the
+# software proper, a compiled binary.
+# 
+# VERSION:	2007 Nov 25	launch
+# 
+
+###############################################################################
+#               GENERAL SETTINGS: CUSTOMIZE TO YOUR SITE
+###############################################################################
+
+# full path to the NetMHCpan directory (mandatory)
+setenv	NMHOME2	$NMHOME/netMHCpan-2.3
+
+# determine where to store temporary files (must be writable to all users)
+setenv	TMPDIR	$TMPDIR
+
+# determine platform (do not change this unless you don't have 'uname'!)
+setenv	UNIX	`uname -s`
+setenv	AR	`uname -m`
+
+###############################################################################
+#               NOTHING SHOULD NEED CHANGING BELOW THIS LINE!
+###############################################################################
+
+# other settings
+set PLATFORM = `echo $UNIX $AR | awk '{print $1"_"$2}'`
+#setenv NETMHCpan $NMHOME2/$PLATFORM
+setenv NETMHCpan $NMHOME2
+
+
+# main ========================================================================
+if ( -x $NETMHCpan/bin/netMHCpan ) then
+   $NETMHCpan/bin/netMHCpan $*
+else
+   echo netMHCpan: no binaries found for $PLATFORM $NETMHCpan/bin/netMHCpan
+endif
+
+# end of script ===============================================================

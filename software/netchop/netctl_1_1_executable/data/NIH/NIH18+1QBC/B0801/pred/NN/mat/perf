@@ -1,0 +1,8 @@
+cat ../data/B_0801.log50k | cl2pred -w 1,3,3,1,3,1,1,1,3 -mat gibbsmat -o 2 -- | xC | args 5,4 | xycorr | xC
+Pearson coefficient for N= 41 data:  0.48152
+cat ../data/B_0801.log50k | cl2pred -w 1,1,3,1,3,1,1,1,3 -mat gibbsmat -o 2 -- | xC | args 5,4 | xycorr | xC
+Pearson coefficient for N= 41 data:  0.56989
+cat ../data/B_0801.log50k | cl2pred -w 1,3,1,1,1,1,1,1,3 -mat gibbsmat -o 2 -- | xC | args 5,4 | xycorr | xC
+Pearson coefficient for N= 41 data:  0.39307
+cat ../data/B_0801.log50k | cl2pred -mat gibbsmat -o 2 -- | xC | args 5,4 | xycorr | xC
+Pearson coefficient for N= 41 data:  0.48937

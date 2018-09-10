@@ -1,0 +1,91 @@
+
+
+   NetChop 3.1              INSTALLATION INSTRUCTIONS
+
+
+   NetChop 3.1 software produces predictions of proteasome  cleavage sites by
+   neural networks. The method is described in detail in the article:
+
+   The role of the proteasome in generating cytotoxic T cell epitopes:
+   Insights obtained from improved predictions of proteasomal cleavage.
+   M. Nielsen, C. Lundegaard, S. Brunak, O. Lund, and C. Kesmir.
+   Immunogenetics., 57(1-2):33-41, 2005.
+
+   More information about the method can be found at:
+   
+      http://www.cbs.dtu.dk/services/NetChop/
+
+
+   DOWNLOAD
+
+   The NetChop 3.1 package  is a  property of  Center for Biological Sequence
+   Analysis.  It may be downloaded  only  by special agreement.  For academic
+   users there is a download site at:
+
+        http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?netchop
+
+   Other users are requested to contact software@cbs.dtu.dk.
+
+
+   PRE-INSTALLATION
+
+   NetChop 3.1 will run on the most common  UNIX platforms e.g.  Linux, SunOS
+   etc. The package consists of two files:
+  
+       netchop-3.1.readme        this file
+       netchop-3.1.<unix>.tar.Z  compressed TAR archive
+
+   where 'unix' is the UNIX platform on which you are about to install. After
+   installation the software will occupy less than 5 Mb of diskspace.
+
+
+   INSTALLATION
+
+   1. Uncompress and untar the package:
+
+      cat netchop-3.1.<unix>.tar.Z | uncompress | tar xvf -
+
+      This will produce a directory 'netchop-3.1'.
+
+   2. In your shell set the following two environment variables:
+
+      NETCHOP	full path to the 'netchop-3.1' directory
+      TMPDIR	e.g. /var/tmp or the 'tmp' directory in 'netchop-3.1'
+
+      Make sure  that TMPDIR has the sticky bit set  (the long listing should
+      render 'drwxrwxrwt ...'). If not, set it:
+
+      chmod 1777 $TMPDIR
+
+   3. In the 'netchop-3.1' directory test the software:
+
+      bin/netchop test/test.fsa > test.out
+
+      The resulting file 'test.out'  must be identical to the file 'test.out'
+      in 'netchop-3.1/test'
+
+   4. a. Copy or link 'netchop-3.1/bin/netchop' to a directory  in the users'
+         path.
+      b. Make the variable settings above (NETCHOP and TMPDIR)  permanent for
+         all users.
+      c. copy the  'netchop-3.1/netchop.1' file to a location  in your manual
+         system. If you need a compiled version try running:
+
+         man -d netchop.1 | compress >netchop.Z
+
+         or:
+
+         neqn netchop.1 | tbl | nroff -man | col | compress >netchop.Z
+
+   5. Enjoy ...
+
+
+   PROBLEMS
+
+   Contact packages@cbs.dtu.dk in case of problems.
+   
+   Questions on the scientific aspects  of the NetChop method  should be sent
+   to Morten Nielsen, mniel@cbs.dtu.dk.
+
+   CBS, 5 Mar 2007
+   K. Rapacki

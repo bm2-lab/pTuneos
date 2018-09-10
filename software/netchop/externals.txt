@@ -1,0 +1,4 @@
+netctlpan_1_1_executable https://epitope3.liai.org/svn/iedbtools/djangotools-deps/netctlpan-1.1-executable/tags/v1.1.0.7/netctlpan_1_1_executable
+netctl_1_1_executable https://epitope3.liai.org/svn/iedbtools/djangotools-deps/netctl-1.1-executable/tags/v1.1.0.9/netctl_1_1
+netchop_3_1_executable https://epitope3.liai.org/svn/iedbtools/djangotools-deps/netchop-3.1-executable/tags/v3.1.0.7/netchop_3_1_executable
+allele_info https://epitope3.liai.org/svn/iedbtools/djangotools-deps/allele-info/tags/v3.8.2/allele_info

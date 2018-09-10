@@ -6,17 +6,19 @@ import pandas as pd
 import time,os
 
 
-opts,args=getopt.getopt(sys.argv[1:],"hi:d:o:s:",["input_neo_file","driver_gene_path","out_dir","sample_id"])
+opts,args=getopt.getopt(sys.argv[1:],"hi:d:o:s:n:",["input_neo_file","driver_gene_path","out_dir","sample_id","netchop_path"])
 input_neo_file =""
 driver_gene_path=""
 out_dir=""
 sample_id=""
-USAGE='''usage: python netCTLPAN.py -i <input_neo_file> -d <driver_gene_path> -o <outdir> -s <sample_id>
+netchop_path=""
+USAGE='''usage: python netCTLPAN.py -i <input_neo_file> -d <driver_gene_path> -o <outdir> -s <sample_id> -n <netchop_path>
 		required argument:
 			-i | --input_neo_file : input file,result from netMHC parse
 			-o | --out_dir : output directory
 			-d | --driver_gene_path: driver gene file path
 			-s | --sample_id : sample id
+			-n | --netchop_path : netchop fold path
 '''
 for opt,value in opts:
 	if opt =="h":
@@ -30,8 +32,10 @@ for opt,value in opts:
 		driver_gene_path =value 
 	elif opt in ("-s","sample_id"):
 		sample_id=value
+	elif opt in ("-n","netchop_path"):
+		netchop_path=value
 #print coverage
-if (input_neo_file =="" or out_dir =="" or driver_gene_path=="" or sample_id==""):
+if (input_neo_file =="" or out_dir =="" or driver_gene_path=="" or sample_id=="" or netchop_path==""):
 	print USAGE
 	sys.exit(2)
 
@@ -48,7 +52,7 @@ for hla,gene,aa,mt_pep in zip(data_neo_fil['HLA_type'],data_neo_fil.Gene,data_ne
     hla_type=hla.replace("*","")
     f=open(out_dir+'/'+sample_id+'_tmp.txt','w')
     f.write(line)
-    str_pro='python /home/zhouchi/software/netchop/predict.py --method netctlpan --allele ' + hla_type + ' --length ' +  str(pep_len)+ ' --threshold -99.9 --cleavage_weight 0.225 --tap_weight 0.025 --epitope_threshold 1.0 --noplot ' + out_dir+'/' + sample_id + '_tmp.txt' + ' > '+ out_dir+'/'+sample_id+'_tmp_netCLT.txt'
+    str_pro='python ' + netchop_path + '/predict.py --method netctlpan --allele ' + hla_type + ' --length ' +  str(pep_len)+ ' --threshold -99.9 --cleavage_weight 0.225 --tap_weight 0.025 --epitope_threshold 1.0 --noplot ' + out_dir+'/' + sample_id + '_tmp.txt' + ' > '+ out_dir+'/'+sample_id+'_tmp_netCLT.txt'
     f.close()
     subprocess.call(str_pro,shell = True,executable = '/bin/bash')
     flag=1

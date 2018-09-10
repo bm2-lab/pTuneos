@@ -1,0 +1,12 @@
+# ./netChop test/test.fsa
+# Tue Apr 17 13:49:52 2007
+# root
+# /opt/netchop-3.1/bin
+# Linux tools-int-01.liai.org 2.6.9-5.ELsmp x86_64
+# Command line parameters set to:
+#	[-t float]           0.500000             Threshold for assigned cleavage site
+#	[-d filename]        /opt/netchop-3.1     Directory for executables and data
+#	[-v int]             0                    [0] Cterm3.0 [1] 20S-3.0
+#	[-verbose]           0                    Verbose
+#	[-s]                 0                    Short format (default long)
+#	[-tdir filename]     /tmp                 Directory for temporaty files

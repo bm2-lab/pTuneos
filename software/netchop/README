@@ -1,0 +1,113 @@
+
+NetChop/NetCTL/NetCTLpan Predictions tool
+=========================================
+
+Introduction:
+-------------
+The distributions 'IEDB_NetChop-1.0.tar.gz' contains methods for NetChop, NetCTL and NetCTLpan.
+NetChop is a predictor of proteasomal processing based upon a neural network. NetCTL is a predictor 
+of T cell epitopes along a protein sequence. It also employs a neural network architecture. NetCTLpan 
+is an update to the original NetCTL server that allows for prediction of CTL epitope with restriction 
+to any MHC molecules of known protein sequence.
+
+Prerequisites:
+--------------
++ Python 2.5 or higher
+  * http://www.python.org/
+
++ Python-tk
+  * You may also need to install python-tk
+    - sudo apt-get install python-tk
+    
++ Matplotlib
+  * http://matplotlib.org/
+    - Under Ubuntu: sudo apt-get install python-matplotlib
+    - Under RedHat: sudo pip install matplotlib
+
+Virtualenv:
+--------------
+Virtualenv is a tool to create isolated Python environments. Every environments has its own installation directories, that doesn’t share libraries with other virtualenv environments (and optionally doesn’t access the globally installed libraries either). You may use this to manage different python and libraries versions on your machine.
+  * https://virtualenv.pypa.io/
+    - sudo pip install virtualenv
+
+Installation:
+-------------
+Unpack the tar.gz files (IEDB_NetChop-1.0.tar.gz)
+
+  $ tar -zxvf IEDB_NetChop-1.0.tar.gz
+  $ cd netchop
+  
+Available prediction methods are:
+---------------------------------
+netchop, netctl, netctlpan
+
+Available commands: 
+-------------------
+python predict.py -m <method-name> input-file
+python predict.py -m <method-name> [options] input-file
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -m METHOD, --method=METHOD
+                        Select a method from available method options.
+  -t THRESHOLD, --threshold=THRESHOLD
+                        Threshold value(default: netchop=0.5).
+  -w TAP_WEIGHT, --tap_weight=TAP_WEIGHT
+                        NetCTL/NetCTLpan specific: weight on TAP transport
+                        efficiency (default=0.050000/0.025).
+  -c CLEAVAGE_WEIGHT, --cleavage_weight=CLEAVAGE_WEIGHT
+                        NetCTL/NetCTLpan specific: weight on C terminal
+                        cleavage (default: netctl=0.100000, netctlpan=0.225).
+  -p PRED_METHOD, --pred_method=PRED_METHOD
+                        Prediction method for NetChop (default=0).
+  -s SUPERTYPE, --supertype=SUPERTYPE
+                        NetCTL specific: supertype(default=A1).
+  -a ALLELE, --allele=ALLELE
+                        NetCTLpan specific: allele(default=HLA-A02:01).
+  -l LENGTH, --length=LENGTH
+                        NetCTLpan specific: length(default=9).
+  -e EPITOPE_THRESHOLD, --epitope_threshold=EPITOPE_THRESHOLD
+                        NetCTLpan specific:
+                        epitope_threshold(default=1.000000).
+  -n, --noplot          Do not generate a plot.
+  -o PLOT_NAME, --outputplot=PLOT_NAME
+                        The plot output path/name(default=plot).
+
+Example:
+--------
+python predict.py -m netchop example/test.fsa
+python predict.py --method=netchop example/test.fsa
+
+Example regarding options:
+--------
+python predict.py --method netchop example/test.fsa
+python predict.py --method netchop --threshold 0.7 example/test.fsa
+python predict.py --method netchop --threshold 0.7 --pred_method 0 example/test.fsa
+python predict.py --method netchop --threshold 0.7 --pred_method 1 example/test.fsa
+python predict.py --method netchop --threshold 0.7 --pred_method 20S example/test.fsa
+
+python predict.py -m netctl example/test.fsa
+python predict.py -m netctl -c 0.15 example/test.fsa
+python predict.py -m netctl -c 0.15 -w 0.05 example/test.fsa
+python predict.py -m netctl -c 0.15 -w 0.05 -s B39 example/test.fsa
+python predict.py -m netctl -c 0.15 -w 0.05 -s B39 -t 0.75 example/test.fsa
+
+python predict.py --method netctlpan example/test.fsa
+python predict.py --method netctlpan --allele HLA-A01:01 example/test.fsa
+python predict.py --method netctlpan --allele HLA-A01:01 --length 8 example/test.fsa
+python predict.py --method netctlpan --allele HLA-A01:01 --length 8 --threshold -99.9 example/test.fsa
+python predict.py --method netctlpan --allele HLA-A01:01 --length 8 --threshold -99.9 --cleavage_weight 0.225 example/test.fsa
+python predict.py --method netctlpan --allele HLA-A01:01 --length 8 --threshold -99.9 --cleavage_weight 0.225 --tap_weight 0.025 example/test.fsa
+python predict.py --method netctlpan --allele HLA-A01:01 --length 8 --threshold -99.9 --cleavage_weight 0.225 --tap_weight 0.025 --epitope_threshold 1.0 example/test.fsa
+
+Example to change plot output path/name:
+--------
+python predict.py --method netchop example/test.fsa --outputplot plot2
+python predict.py -m netctl -o plot2 example/test.fsa
+
+Example to output prediction text to file:
+--------
+python predict.py --method netchop example/test.fsa >prediction.txt
+python predict.py --method netchop example/test.fsa >prediction.txt --outputplot plot2
+python predict.py -m netctl -o plot2 example/test.fsa  >prediction.txt
+python predict.py -m netctl -o result/plot2 example/test.fsa  >result/prediction.txt

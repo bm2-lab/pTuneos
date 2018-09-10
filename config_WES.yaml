@@ -5,9 +5,9 @@ normal_fastq_path_first: /home/zhouchi/raw_data/phs001005/fastq/SRR2672887/SRR26
 normal_fastq_path_second: /home/zhouchi/raw_data/phs001005/fastq/SRR2672887/SRR2672887_2.fastq
 tumor_rna_fastq_1: /home/zhouchi/raw_data/phs001005/fastq/SRR2673065/SRR2673065_1.fastq
 tumor_rna_fastq_2: /home/zhouchi/raw_data/phs001005/fastq/SRR2673065/SRR2673065_2.fastq
-output_fold: /home/zhouchi/WES_test
+output_fold: WES_test
 sample_name: WES_test
-thread_number: 32
+thread_number: 64
 hla_str: None
 expression_file: None
 peptide_length: 9

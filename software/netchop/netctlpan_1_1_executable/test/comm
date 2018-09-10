@@ -1,0 +1,3 @@
+../netCTLpan test.fsa > test.fsa.out
+../netCTLpan -hlaseq B0702.fsa test.fsa > test.fsa_HLASEQ.out
+

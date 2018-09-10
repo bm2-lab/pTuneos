@@ -1,0 +1,123 @@
+NetCTL predictions using MHC supertype A1. Threshold 0.750000
+
+  55 ID gi|33331470| pep ISERILSTY aff   0.5324 aff_rescale   3.6156 cle 0.9988 tap   2.8980 COMB   3.8604 <-E
+  67 ID gi|33331470| pep STEPVPLQL aff   0.1399 aff_rescale   0.9503 cle 0.9953 tap   0.9740 COMB   1.0985 <-E
+  15 ID gi|33331470| pep AVRIIKILY aff   0.0730 aff_rescale   0.4960 cle 0.9988 tap   3.3570 COMB   0.7637 <-E
+  20 ID gi|33331470| pep KILYKSNPY aff   0.0351 aff_rescale   0.2384 cle 0.9933 tap   3.1870 COMB   0.4971 
+  51 ID gi|33331470| pep QIDSISERI aff   0.0435 aff_rescale   0.2951 cle 0.9308 tap   0.6320 COMB   0.4198 
+ 109 ID gi|33331470| pep ISVESPVIL aff   0.0226 aff_rescale   0.1532 cle 0.9936 tap   1.0470 COMB   0.3049 
+   4 ID gi|33331470| pep RSGDNDEEL aff   0.0252 aff_rescale   0.1714 cle 0.7596 tap   1.0460 COMB   0.2997 
+  24 ID gi|33331470| pep KSNPYPEPK aff   0.0239 aff_rescale   0.1627 cle 0.9913 tap   0.4660 COMB   0.2851 
+  96 ID gi|33331470| pep QSQGVETGV aff   0.0247 aff_rescale   0.1676 cle 0.9795 tap   0.2870 COMB   0.2799 
+  42 ID gi|33331470| pep RRRWRARQR aff   0.0102 aff_rescale   0.0695 cle 0.8457 tap   2.1160 COMB   0.2598 
+  27 ID gi|33331470| pep PYPEPKGSR aff   0.0119 aff_rescale   0.0806 cle 0.9734 tap   1.3950 COMB   0.2477 
+  14 ID gi|33331470| pep KAVRIIKIL aff   0.0123 aff_rescale   0.0833 cle 0.9895 tap   1.2400 COMB   0.2442 
+  37 ID gi|33331470| pep ARKNRRRRW aff   0.0117 aff_rescale   0.0793 cle 0.9721 tap   1.1840 COMB   0.2358 
+  65 ID gi|33331470| pep GRSTEPVPL aff   0.0117 aff_rescale   0.0798 cle 0.9990 tap   1.0260 COMB   0.2310 
+  72 ID gi|33331470| pep PLQLPPLER aff   0.0124 aff_rescale   0.0845 cle 0.9409 tap   1.0390 COMB   0.2306 
+  56 ID gi|33331470| pep SERILSTYL aff   0.0120 aff_rescale   0.0812 cle 0.9989 tap   0.9300 COMB   0.2276 
+   5 ID gi|33331470| pep SGDNDEELL aff   0.0176 aff_rescale   0.1198 cle 0.7167 tap   0.6970 COMB   0.2263 
+  50 ID gi|33331470| pep RQIDSISER aff   0.0121 aff_rescale   0.0820 cle 0.5255 tap   1.8240 COMB   0.2257 
+  73 ID gi|33331470| pep LQLPPLERL aff   0.0118 aff_rescale   0.0800 cle 0.9990 tap   0.9070 COMB   0.2253 
+  16 ID gi|33331470| pep VRIIKILYK aff   0.0113 aff_rescale   0.0768 cle 0.9963 tap   0.9560 COMB   0.2242 
+  90 ID gi|33331470| pep GTSGTQQSQ aff   0.0346 aff_rescale   0.2349 cle 0.0355 tap  -0.3170 COMB   0.2226 
+  58 ID gi|33331470| pep RILSTYLGR aff   0.0123 aff_rescale   0.0832 cle 0.4889 tap   1.7080 COMB   0.2175 
+ 108 ID gi|33331470| pep QISVESPVI aff   0.0181 aff_rescale   0.1231 cle 0.6261 tap   0.5270 COMB   0.2121 
+ 112 ID gi|33331470| pep ESPVILGSR aff   0.0157 aff_rescale   0.1065 cle 0.3623 tap   1.3530 COMB   0.2104 
+  70 ID gi|33331470| pep PVPLQLPPL aff   0.0127 aff_rescale   0.0865 cle 0.9947 tap   0.4310 COMB   0.2075 
+  13 ID gi|33331470| pep LKAVRIIKI aff   0.0127 aff_rescale   0.0863 cle 0.8803 tap   0.6530 COMB   0.2070 
+  75 ID gi|33331470| pep LPPLERLHL aff   0.0112 aff_rescale   0.0761 cle 0.9987 tap   0.5900 COMB   0.2055 
+  34 ID gi|33331470| pep SRQARKNRR aff   0.0109 aff_rescale   0.0738 cle 0.4750 tap   1.6820 COMB   0.2054 
+  30 ID gi|33331470| pep EPKGSRQAR aff   0.0109 aff_rescale   0.0742 cle 0.8718 tap   0.8290 COMB   0.2028 
+  47 ID gi|33331470| pep ARQRQIDSI aff   0.0112 aff_rescale   0.0761 cle 0.7433 tap   0.9850 COMB   0.1997 
+ 103 ID gi|33331470| pep GVGRPQISV aff   0.0132 aff_rescale   0.0893 cle 0.9906 tap   0.1210 COMB   0.1944 
+ 114 ID gi|33331470| pep PVILGSRTK aff   0.0119 aff_rescale   0.0807 cle 0.9986 tap   0.2460 COMB   0.1929 
+  63 ID gi|33331470| pep YLGRSTEPV aff   0.0130 aff_rescale   0.0885 cle 0.9535 tap   0.1610 COMB   0.1919 
+  92 ID gi|33331470| pep SGTQQSQGV aff   0.0114 aff_rescale   0.0773 cle 0.9833 tap   0.0750 COMB   0.1794 
+  52 ID gi|33331470| pep IDSISERIL aff   0.0133 aff_rescale   0.0905 cle 0.5756 tap   0.6170 COMB   0.1789 
+  66 ID gi|33331470| pep RSTEPVPLQ aff   0.0236 aff_rescale   0.1603 cle 0.0978 tap   0.1130 COMB   0.1757 
+  35 ID gi|33331470| pep RQARKNRRR aff   0.0117 aff_rescale   0.0794 cle 0.0223 tap   1.8750 COMB   0.1754 
+  12 ID gi|33331470| pep LLKAVRIIK aff   0.0153 aff_rescale   0.1040 cle 0.5301 tap   0.3190 COMB   0.1730 
+  40 ID gi|33331470| pep NRRRRWRAR aff   0.0103 aff_rescale   0.0701 cle 0.0845 tap   1.8780 COMB   0.1724 
+  54 ID gi|33331470| pep SISERILST aff   0.0176 aff_rescale   0.1198 cle 0.8496 tap  -0.6670 COMB   0.1715 
+  36 ID gi|33331470| pep QARKNRRRR aff   0.0117 aff_rescale   0.0795 cle 0.0230 tap   1.7310 COMB   0.1684 
+  33 ID gi|33331470| pep GSRQARKNR aff   0.0133 aff_rescale   0.0904 cle 0.0245 tap   1.4960 COMB   0.1677 
+ 107 ID gi|33331470| pep PQISVESPV aff   0.0120 aff_rescale   0.0813 cle 0.8075 tap   0.1110 COMB   0.1676 
+  38 ID gi|33331470| pep RKNRRRRWR aff   0.0109 aff_rescale   0.0742 cle 0.0119 tap   1.8380 COMB   0.1673 
+  99 ID gi|33331470| pep GVETGVGRP aff   0.0165 aff_rescale   0.1120 cle 0.5976 tap  -0.1290 COMB   0.1653 
+  86 ID gi|33331470| pep REDCGTSGT aff   0.0161 aff_rescale   0.1096 cle 0.9021 tap  -0.7800 COMB   0.1608 
+   6 ID gi|33331470| pep GDNDEELLK aff   0.0132 aff_rescale   0.0897 cle 0.6930 tap  -0.0620 COMB   0.1559 
+  78 ID gi|33331470| pep LERLHLDCR aff   0.0108 aff_rescale   0.0732 cle 0.1932 tap   1.2570 COMB   0.1553 
+  31 ID gi|33331470| pep PKGSRQARK aff   0.0109 aff_rescale   0.0741 cle 0.9524 tap  -0.2960 COMB   0.1545 
+ 101 ID gi|33331470| pep ETGVGRPQI aff   0.0154 aff_rescale   0.1046 cle 0.2959 tap   0.1930 COMB   0.1439 
+  98 ID gi|33331470| pep QGVETGVGR aff   0.0104 aff_rescale   0.0708 cle 0.0270 tap   1.3630 COMB   0.1417 
+   9 ID gi|33331470| pep DEELLKAVR aff   0.0129 aff_rescale   0.0873 cle 0.0132 tap   1.0300 COMB   0.1401 
+  44 ID gi|33331470| pep RWRARQRQI aff   0.0104 aff_rescale   0.0706 cle 0.0241 tap   1.2060 COMB   0.1333 
+  28 ID gi|33331470| pep YPEPKGSRQ aff   0.0164 aff_rescale   0.1116 cle 0.5299 tap  -0.7190 COMB   0.1286 
+  60 ID gi|33331470| pep LSTYLGRST aff   0.0233 aff_rescale   0.1585 cle 0.0126 tap  -0.6880 COMB   0.1253 
+  23 ID gi|33331470| pep YKSNPYPEP aff   0.0129 aff_rescale   0.0875 cle 0.2816 tap   0.1780 COMB   0.1245 
+  11 ID gi|33331470| pep ELLKAVRII aff   0.0115 aff_rescale   0.0781 cle 0.2778 tap   0.2010 COMB   0.1160 
+  21 ID gi|33331470| pep ILYKSNPYP aff   0.0127 aff_rescale   0.0862 cle 0.0793 tap   0.4350 COMB   0.1158 
+  93 ID gi|33331470| pep GTQQSQGVE aff   0.0293 aff_rescale   0.1987 cle 0.0131 tap  -1.7440 COMB   0.1128 
+  43 ID gi|33331470| pep RRWRARQRQ aff   0.0113 aff_rescale   0.0767 cle 0.0176 tap   0.6490 COMB   0.1109 
+  41 ID gi|33331470| pep RRRRWRARQ aff   0.0119 aff_rescale   0.0809 cle 0.0294 tap   0.5350 COMB   0.1105 
+  39 ID gi|33331470| pep KNRRRRWRA aff   0.0126 aff_rescale   0.0853 cle 0.4497 tap  -0.4000 COMB   0.1103 
+  62 ID gi|33331470| pep TYLGRSTEP aff   0.0118 aff_rescale   0.0805 cle 0.0779 tap   0.4200 COMB   0.1093 
+  77 ID gi|33331470| pep PLERLHLDC aff   0.0186 aff_rescale   0.1266 cle 0.0290 tap  -0.7350 COMB   0.0927 
+   8 ID gi|33331470| pep NDEELLKAV aff   0.0143 aff_rescale   0.0972 cle 0.0411 tap  -0.2390 COMB   0.0893 
+   7 ID gi|33331470| pep DNDEELLKA aff   0.0215 aff_rescale   0.1459 cle 0.0207 tap  -1.2100 COMB   0.0875 
+  19 ID gi|33331470| pep IKILYKSNP aff   0.0106 aff_rescale   0.0721 cle 0.0148 tap   0.2550 COMB   0.0863 
+  74 ID gi|33331470| pep QLPPLERLH aff   0.0148 aff_rescale   0.1004 cle 0.0595 tap  -0.4700 COMB   0.0829 
+  81 ID gi|33331470| pep LHLDCREDC aff   0.0106 aff_rescale   0.0720 cle 0.0107 tap   0.1760 COMB   0.0818 
+  10 ID gi|33331470| pep EELLKAVRI aff   0.0105 aff_rescale   0.0710 cle 0.0385 tap   0.0740 COMB   0.0786 
+ 110 ID gi|33331470| pep SVESPVILG aff   0.0179 aff_rescale   0.1217 cle 0.2277 tap  -1.3390 COMB   0.0775 
+  68 ID gi|33331470| pep TEPVPLQLP aff   0.0109 aff_rescale   0.0740 cle 0.0128 tap  -0.0130 COMB   0.0747 
+ 106 ID gi|33331470| pep RPQISVESP aff   0.0106 aff_rescale   0.0723 cle 0.0208 tap  -0.0180 COMB   0.0735 
+  87 ID gi|33331470| pep EDCGTSGTQ aff   0.0115 aff_rescale   0.0779 cle 0.1822 tap  -0.4760 COMB   0.0724 
+ 113 ID gi|33331470| pep SPVILGSRT aff   0.0105 aff_rescale   0.0715 cle 0.4875 tap  -1.0460 COMB   0.0680 
+  64 ID gi|33331470| pep LGRSTEPVP aff   0.0106 aff_rescale   0.0723 cle 0.0129 tap  -0.1610 COMB   0.0655 
+  88 ID gi|33331470| pep DCGTSGTQQ aff   0.0146 aff_rescale   0.0994 cle 0.0190 tap  -0.7310 COMB   0.0648 
+ 100 ID gi|33331470| pep VETGVGRPQ aff   0.0112 aff_rescale   0.0758 cle 0.0110 tap  -0.2450 COMB   0.0647 
+  69 ID gi|33331470| pep EPVPLQLPP aff   0.0102 aff_rescale   0.0692 cle 0.1075 tap  -0.3160 COMB   0.0641 
+  29 ID gi|33331470| pep PEPKGSRQA aff   0.0109 aff_rescale   0.0738 cle 0.4377 tap  -1.2180 COMB   0.0567 
+  94 ID gi|33331470| pep TQQSQGVET aff   0.0131 aff_rescale   0.0892 cle 0.0241 tap  -0.7130 COMB   0.0560 
+  61 ID gi|33331470| pep STYLGRSTE aff   0.0159 aff_rescale   0.1081 cle 0.0171 tap  -1.2990 COMB   0.0449 
+  22 ID gi|33331470| pep LYKSNPYPE aff   0.0148 aff_rescale   0.1006 cle 0.0129 tap  -1.2900 COMB   0.0374 
+  18 ID gi|33331470| pep IIKILYKSN aff   0.0125 aff_rescale   0.0852 cle 0.0108 tap  -1.0340 COMB   0.0345 
+  82 ID gi|33331470| pep HLDCREDCG aff   0.0164 aff_rescale   0.1116 cle 0.0200 tap  -1.5950 COMB   0.0338 
+  85 ID gi|33331470| pep CREDCGTSG aff   0.0136 aff_rescale   0.0927 cle 0.1669 tap  -1.5130 COMB   0.0337 
+ 115 ID gi|33331470| pep VILGSRTKN aff   0.0113 aff_rescale   0.0765 cle 0.1675 tap  -1.2520 COMB   0.0307 
+  76 ID gi|33331470| pep PPLERLHLD aff   0.0102 aff_rescale   0.0694 cle 0.8409 tap  -2.5340 COMB   0.0268 
+  83 ID gi|33331470| pep LDCREDCGT aff   0.0107 aff_rescale   0.0729 cle 0.0143 tap  -1.0230 COMB   0.0232 
+  57 ID gi|33331470| pep ERILSTYLG aff   0.0105 aff_rescale   0.0713 cle 0.1522 tap  -1.2700 COMB   0.0230 
+  59 ID gi|33331470| pep ILSTYLGRS aff   0.0181 aff_rescale   0.1230 cle 0.0333 tap  -2.0750 COMB   0.0226 
+  95 ID gi|33331470| pep QQSQGVETG aff   0.0118 aff_rescale   0.0804 cle 0.0642 tap  -1.3010 COMB   0.0217 
+  49 ID gi|33331470| pep QRQIDSISE aff   0.0117 aff_rescale   0.0796 cle 0.0145 tap  -1.2460 COMB   0.0187 
+  91 ID gi|33331470| pep TSGTQQSQG aff   0.0140 aff_rescale   0.0951 cle 0.0183 tap  -1.5690 COMB   0.0184 
+   3 ID gi|33331470| pep GRSGDNDEE aff   0.0123 aff_rescale   0.0834 cle 0.0130 tap  -1.3880 COMB   0.0153 
+ 111 ID gi|33331470| pep VESPVILGS aff   0.0147 aff_rescale   0.0995 cle 0.2364 tap  -2.2690 COMB   0.0097 
+  17 ID gi|33331470| pep RIIKILYKS aff   0.0122 aff_rescale   0.0830 cle 0.1251 tap  -1.7570 COMB   0.0076 
+  45 ID gi|33331470| pep WRARQRQID aff   0.0116 aff_rescale   0.0791 cle 0.0195 tap  -1.4870 COMB   0.0067 
+  80 ID gi|33331470| pep RLHLDCRED aff   0.0108 aff_rescale   0.0734 cle 0.1738 tap  -1.6890 COMB   0.0064 
+  48 ID gi|33331470| pep RQRQIDSIS aff   0.0131 aff_rescale   0.0891 cle 0.0120 tap  -1.7230 COMB   0.0042 
+  97 ID gi|33331470| pep SQGVETGVG aff   0.0108 aff_rescale   0.0732 cle 0.0100 tap  -1.4790 COMB   0.0002 
+  25 ID gi|33331470| pep SNPYPEPKG aff   0.0100 aff_rescale   0.0681 cle 0.0128 tap  -1.4090 COMB  -0.0011 
+  79 ID gi|33331470| pep ERLHLDCRE aff   0.0104 aff_rescale   0.0707 cle 0.0204 tap  -1.4970 COMB  -0.0021 
+   2 ID gi|33331470| pep AGRSGDNDE aff   0.0110 aff_rescale   0.0746 cle 0.0104 tap  -1.6030 COMB  -0.0046 
+  32 ID gi|33331470| pep KGSRQARKN aff   0.0109 aff_rescale   0.0738 cle 0.0125 tap  -1.6240 COMB  -0.0062 
+   1 ID gi|33331470| pep MAGRSGDND aff   0.0124 aff_rescale   0.0845 cle 0.0098 tap  -1.8810 COMB  -0.0086 
+ 104 ID gi|33331470| pep VGRPQISVE aff   0.0109 aff_rescale   0.0740 cle 0.0103 tap  -1.7510 COMB  -0.0126 
+  46 ID gi|33331470| pep RARQRQIDS aff   0.0122 aff_rescale   0.0827 cle 0.0107 tap  -1.9560 COMB  -0.0140 
+  53 ID gi|33331470| pep DSISERILS aff   0.0148 aff_rescale   0.1006 cle 0.0100 tap  -2.4430 COMB  -0.0206 
+ 105 ID gi|33331470| pep GRPQISVES aff   0.0114 aff_rescale   0.0772 cle 0.1081 tap  -2.1860 COMB  -0.0213 
+  71 ID gi|33331470| pep VPLQLPPLE aff   0.0108 aff_rescale   0.0734 cle 0.0156 tap  -1.9350 COMB  -0.0218 
+  84 ID gi|33331470| pep DCREDCGTS aff   0.0118 aff_rescale   0.0804 cle 0.0515 tap  -2.4440 COMB  -0.0367 
+  26 ID gi|33331470| pep NPYPEPKGS aff   0.0100 aff_rescale   0.0676 cle 0.0407 tap  -2.2720 COMB  -0.0419 
+  89 ID gi|33331470| pep CGTSGTQQS aff   0.0126 aff_rescale   0.0855 cle 0.0650 tap  -2.7280 COMB  -0.0444 
+ 102 ID gi|33331470| pep TGVGRPQIS aff   0.0102 aff_rescale   0.0692 cle 0.0102 tap  -2.6220 COMB  -0.0609 
+
+----------------------------
+
+Number of MHC ligands 3 identified. Number of peptides 115. Protein name gi|33331470|
+
+----------------------------

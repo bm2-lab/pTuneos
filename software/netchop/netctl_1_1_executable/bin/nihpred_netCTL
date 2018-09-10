@@ -1,0 +1,58 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+use Getopt::Long;
+
+use vars qw($opt_s $opt_h $opt_n $opt_a $opt_f $opt_pa $aff $opt_x);
+
+GetOptions('X' => \$opt_x, 'h' => \$opt_h, 's' =>\$opt_s, 'a=s' => \$opt_a, 'f=s' =>\$opt_f, 'n=s' => \$opt_n, 'pa' => \$opt_pa, 'aff' => \$aff)||usage();
+
+sub usage{
+  print("\nUsage: $0 \[-h\] \[-n NIH-version] \[-f peptide file\] \[-a allele\]\n\n");
+  print("If no inputfiles are given data is read from standard in\n");
+  print("Command line options:\n\n");
+  print("\t-h:\tPrint this meassage\n");
+  print("\t-a:\tAllele (default A0201)\n");
+  print("\t-n:\tNIH version (default newest)\n");
+  print("\t-s:\toutput standard deviation\n");
+  print("\t-f:\tinput file, default stdin\n");
+  print("\t-pa:\tprint all predictions\n");
+  print("\t-aff:\toutput predicted affinity in nM\n");
+  print("\t-x:\trun on Altix architecture\n");
+  print("\n");
+  exit;
+}
+
+if(defined($opt_h)){
+  usage();
+}
+
+my $nih="NIH18"; #newest NIH
+if(defined($opt_n)){
+  $nih=$opt_n; #optional NIH
+}
+my $allele="A0201"; # Default allele
+if(defined($opt_a)){
+  $allele=$opt_a; # optional allele
+}
+my $wwwpath = "$ENV{NETCTL}";
+my $dir="$wwwpath/data/NIH/$nih/$allele";
+my $bindir="$wwwpath/bin";
+my $tdir = "$ENV{TMPDIR}/$$";
+
+my $cmd;
+if(defined($opt_f)){
+  $cmd=" $bindir/epipred2.0 -bdir $bindir/ -tdir $tdir -seq2inp seq2inp -hmmpred seq2hmm -blsyn $dir/pred/NN/bl50+hmm/synlist -seqsyn $dir/pred/NN/sparse+hmm/synlist -hmmmat $dir/pred/NN/mat/gibbsmat $opt_f";
+  #printf STDERR "#\t$cmd";
+  system($cmd);
+}
+else{
+  $cmd="$bindir/epipred2.0 -bdir $bindir/ -tdir $tdir -seq2inp seq2inp -hmmpred seq2hmm -blsyn $dir/pred/NN/bl50+hmm/synlist -seqsyn $dir/pred/NN/sparse+hmm/synlist -hmmmat $dir/pred/NN/mat/gibbsmat -- ";
+  #printf STDERR "#\t$cmd";
+  open(OUT, "| $cmd");
+  while(<STDIN>){
+    print OUT $_;
+  }
+  close OUT;
+}

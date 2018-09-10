@@ -1,17 +1,21 @@
 from pyfasta import Fasta
 import pandas as pd
 import sys,getopt
-opts,args=getopt.getopt(sys.argv[1:],"hi:o:s:",["input_ins_vep_file","out_dir","sample_id"])
+opts,args=getopt.getopt(sys.argv[1:],"hi:o:s:r:p:",["input_ins_vep_file","out_dir","sample_id","reference","human_peptide_path"])
 input_ins_vep_file =""
 out_dir=""
 sample_id=""
+reference=""
+human_peptide_path=""
 USAGE='''
 	This script convert insertion VCF derived VEP result to fasta format file for netMHC
-	usage: python insertion2fasta.py -i <input_vep_file> -o <outdir> -s <sample_id>
+	usage: python insertion2fasta.py -i <input_vep_file> -o <outdir> -s <sample_id> -r <reference> -p <human_peptide_path>
 		required argument:
 			-i | --input_ins_vep_file : input file,result from VEP
 			-o | --out_dir : output directory
 			-s | --sample_id : sample id
+			-r | --reference : reference fasta file
+			-p | --human_peptide_path : human_peptide_path
 '''
 for opt,value in opts:
 	if opt =="h":
@@ -20,17 +24,20 @@ for opt,value in opts:
 	elif opt in ("-i","--input_ins_vep_file"):
 		input_ins_vep_file=value
 	elif opt in ("-o","--out_dir"):
-		out_dir =value
+		out_dir=value
 	elif opt in ("-s","--sample_id"):
-		sample_id =value  
-	
+		sample_id=value  
+	elif opt in ("-r","--reference"):
+		reference=value 
+	elif opt in ("-p","--human_peptide_path"):
+		human_peptide_path=value 	
 #print coverage
-if (input_ins_vep_file =="" or out_dir =="" or sample_id==""):
+if (input_ins_vep_file =="" or out_dir =="" or sample_id=="" or reference=="" or human_peptide_path==""):
 	print USAGE
 	sys.exit(2)	
 
 ####
-f_fasta=Fasta('/home/zhouchi/database/Annotation/Fasta/human.fasta')
+f_fasta=Fasta(reference)
 codon_dic={ 'TTT':'F','TTC':'F',
             'TTA':'L','TTG':'L','CTT':'L','CTC':'L','CTA':'L','CTG':'L',
             'TCT':'S','TCC':'S','TCA':'S','TCG':'S','AGT':'S','AGC':'S',
@@ -55,7 +62,7 @@ codon_dic={ 'TTT':'F','TTC':'F',
 
 #############
 transcript_aa={}
-for line in open("/home/zhouchi/database/Annotation/protein/Homo_sapiens.GRCh38.pep.all.fa",'r'):
+for line in open(human_peptide_path,'r'):
 	if line.startswith(">"):
 		transcript_name = line.strip().split(' ')[4][11:26]
 		transcript_aa[transcript_name] = '' 

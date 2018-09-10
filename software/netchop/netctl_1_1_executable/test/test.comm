@@ -1,0 +1,1 @@
+bin/netCTL -thr 0.75 -sort 0 test/test.fsa > test.out

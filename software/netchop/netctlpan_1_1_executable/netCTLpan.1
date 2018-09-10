@@ -1,0 +1,131 @@
+.de Id
+.ds Rv \\$3
+.ds Dt \\$4
+..
+.Id $Header: example.1,v 1.2 94/02/15 13:28:25 rapacki Exp $
+.TH NetCTLpan 1 \" -*- nroff -*-
+.SH NAME
+NetCTLpan \- Pan-specific prediction of CTL epitopes
+.SH SYNOPSIS
+.B NetCTLpan
+[\fB\-a\fP \fIval\fP]
+[\fB\-c\fP \fIfile\fP]
+[\fB\-dirty\fP]
+[\fB\-ethr\fP \fIval\fP]]
+[\fB\-f\fP \fIfile\fP]
+[\fB\-h\fP]
+[\fB\-hlaseq\fP \fIval\fP]
+[\fB\-l\fP \fIval\fP]
+[\fB\-listMHC\fP]
+[\fB\-c\mP \fIfile\fP]
+[\fB\-rdir\fP \fIdir\fP]
+[\fB\-s\fP]
+[\fB\-t\fP \fIfile\fP]
+[\fB\-tdir\fP \fIdir\fP]
+[\fB\-thrfmt\fP \fIfilefmt\fP]
+[\fB\-v\fP]
+[\fB\-wt\fP \fIval\fP]
+[\fB\-wc\fP \fIval\fP]
+[\fB\-xls\fP]
+[\fB\-xlsfile\fP \fIfile\fP]
+
+.SH DESCRIPTION
+.B The NetCTLpan 1.0 method predicts CTL epitopes in protein sequences. The method allows for 
+prediction of CTL epitope with restriction to any MHC molecules of known protein sequence.
+Predictions can be made for 8-11mer peptides. Note that all non 9mer predictions are made 
+using approximations. The method integrates prediction of peptide MHC class I binding, 
+proteasomal C terminal cleavage and TAP transport efficiency. MHC class I binding and 
+proteasomal cleavage is performed using artificial neural networks. TAP transport efficiency is 
+predicted using weight matrix.  The prediction values are calculated as a weighted average of the 
+MHC, TAP and C terminal cleavage scores. and as %-Rank to a set of 200.000 random natural peptides.
+
+The input is taken from \fIfile\fP(s). Use \fB--\fP for
+\fIstdin\fP. The output is plain text; it will go to \fIstdout\fP.
+The required input format is \fBFASTA\fP.
+
+.SH OPTIONS
+.TP
+.B "\-a value"
+MHC allele name (use comman separate names without spaces for multiple allele).
+.TP
+.B "\-c file"
+Cleavage prediction code.
+.TP
+.B "\-dirty"
+Dirty mode. Keeps all temporary files.
+.TP
+.B "\-ethr value"
+Threshold for epitopes.
+.TP
+.BI "\-f file"
+Take the input from \fIfile\fP. The default is \fIfile\fP (without any
+option flag).
+.TP
+.B "-h"
+Help
+.TP
+.BI "\-hlaseq file"
+File with full length MHC protien sequence.
+.TP
+.BI "\-l value"
+Peptide length (8-11). Default is 9.
+.TP
+.BI "\-listMHC"
+Print list of alleles included in netMHCpan.
+.TP
+.B "\-m MHC binding prediction code"
+.TP
+.BI "-rdir dir"
+netCTLpan directory
+.TP
+.B "\-s value"
+Sort output score: 0 [comb], 1 [MHC], 2 [Cle], 3 [TAP]. Default is no sorting.
+.TP
+.B "\-t file"
+Tap prediciton code.
+.TP
+.BI "\-tdir dir"
+Temporary directory
+.TP
+.B "\-thr value"
+Threshold for output.
+.TP
+.BI "\-thrfmt filefmt"
+Format for threshold filenames.
+.TP
+.B "\-v"
+Use verbose mode.
+.TP
+.B "\-wc value" 
+Weight on Clevage. Default is 0.225.
+.TP
+.B "\-wt value" 
+Weight on TAP. Default is 0.025.
+.TP
+.B "\-xls"
+Save output to xls file.
+.TP
+.B "\-xlsfile file"
+Filename of xls dump. Default is NETCTLpan_out.xls
+
+.SH AUTHOR
+
+Morten Nielsen, mniel@cbs.dtu.dk, October 2009.
+.br
+Last updated in Sept 2009 (v. 2.2).
+
+.SH REFERENCE 
+The method is described in detail in the following article:
+
+NetCTLpan. Pan-specific MHC class I pathway epitope predictions. 
+.br
+Thomas Stranzl, Mette Voldby Larsen, Claus Lundegaard, and Morten Nielsen
+.br
+Submitted, October, 2009
+
+.SH FILES
+\fB/usr/cbs/bio/bin/netCTLpan\fP           executable
+.br
+\fB/usr/cbs/bio/src/netCTLpan-1.0\fP       software home
+.SH SEE ALSO
+fasta (1),

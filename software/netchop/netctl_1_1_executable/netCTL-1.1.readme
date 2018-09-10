@@ -1,0 +1,95 @@
+
+
+   NetCTL 1.1               INSTALLATION INSTRUCTIONS
+
+
+   DESCRIPTION
+
+   NetCTL 1.0 software predicts CTL epitopes in protein sequences integrating
+   prediction of peptide MHC binding, proteasomal C terminal cleavage and TAP
+   transport efficiency.  The method is described in detail  in the following
+   article:
+
+   An integrative approach to CTL epitope prediction. A combined
+   algorithm integrating MHC-I binding, TAP transport efficiency,
+   and proteasomal cleavage predictions.
+   Larsen M.V., Lundegaard C., Kasper Lamberth, Buus S,. Brunak S.,
+   Lund O., and Nielsen M.
+   Accepted for publication in European Journal of Immunology May 2005
+
+   More information about the method can be found at:
+   
+      http://www.cbs.dtu.dk/services/NetCTL/
+
+
+   DOWNLOAD
+
+   The NetCTL 1.1 package  is a  property of  Center for  Biological Sequence
+   Analysis.  It may be downloaded  only  by special agreement.  For academic
+   users there is a download site at:
+
+        http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?netCTL
+
+   Other users are requested to contact software@cbs.dtu.dk.
+
+
+   PRE-INSTALLATION
+
+   NetCTL 1.1 will run on the most common  UNIX platforms e.g.  Linux, SunOS
+   etc. The package consists of two files:
+
+        netCTL-1.1.readme	 this file
+        netCTL-1.1.<unix>.tar.Z	 compressed TAR archive
+
+   where  'unix'  is one of the UNIX platforms above.  After installation the
+   software will occupy less than 5 Mb of diskspace.
+
+
+   INSTALLATION
+
+   1. Uncompress and untar the package:
+
+      cat netCTL-1.1.<unix>.tar.Z | uncompress | tar xvf -
+
+      This will produce a directory 'netCTL-1.1'.
+
+   2. In your shell set the following two environment variables:
+
+      NETCTL	full path to the 'netCTL-1.1' directory
+      TMPDIR	e.g. /var/tmp or the 'tmp'directory in 'netCTL-1.1'
+
+      Make sure  that TMPDIR has the sticky bit set  (the long listing should
+      render 'drwxrwxrwt ...'). If not, set it:
+
+      chmod 1777 $TMPDIR
+
+   3. In the 'netCTL-1.1' directory test the software:
+
+      bin/netCTL -thr 0.75 -sort 0 test/test.fsa > test.out
+
+      The resulting file 'test.out'  must be identical to the file 'test.out'
+      in 'netCTL-1.1/test'
+
+   4. Copy or link 'netCTL-1.1/bin/netCTL' to a directory in the users' path.
+      Make the variable settings above (NETCTL and TMPDIR)  permanent for all
+      the users.  Finally,  copy the 'netCTL-1.1/netCTL.1' file to a location
+      in your manual system. If you need a compiled version try running:
+
+      man -d netCTL.1 | compress >netCTL.Z
+
+      or:
+
+      neqn netCTL.1 | tbl | nroff -man | col | compress >netCTL.Z
+
+   5. Enjoy ...
+
+
+   PROBLEMS
+
+   Contact packages@cbs.dtu.dk in case of problems.
+   
+   Questions on the scientific aspects of the NetCTL method should be sent to
+   Morten Nielsen, mniel@cbs.dtu.dk.
+
+   CBS, 7 Feb 2007
+   K. Rapacki

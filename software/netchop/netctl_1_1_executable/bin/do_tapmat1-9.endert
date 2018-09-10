@@ -1,0 +1,16 @@
+#! /bin/tcsh
+
+set TMPDIR=$1
+
+$NETCTL/bin/fasta2pep -x -l 10 $2 | grep -v "#" > $TMPDIR/$$.pep
+
+cat $TMPDIR/$$.pep | awk '{print substr($1,2,9)}' > $TMPDIR/$$.pep2
+
+$NETCTL/bin/tappred_mat -mat $NETCTL/lib/data/tap.logodds.mat $TMPDIR/$$.pep | grep -v "#" | awk '{print -$4}' > $TMPDIR/$$.pred
+
+set N = `wc $TMPDIR/$$.pred | awk '{print $1}'`
+
+paste $TMPDIR/$$.pep2 $TMPDIR/$$.pred | awk -v N=$N '{if ( NR<4 || NR>N-5 ) { next } else {print $0}}'
+
+rm -f $TMPDIR/$$.*
+

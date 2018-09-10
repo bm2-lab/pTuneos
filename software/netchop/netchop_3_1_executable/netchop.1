@@ -1,0 +1,69 @@
+.de Id
+.ds Rv \\$3
+.ds Dt \\$4
+..
+.Id $Header: example.1,v 1.2 94/02/15 13:28:25 rapacki Exp $
+.TH netchop 1 \" -*- nroff -*-
+.SH NAME
+netchop \- predict cleavage sites for human proteasome.
+.SH SYNOPSIS
+.B netchop
+[\fB\-d\fP \fIdir\fP]
+[\fB\-s\fP]
+[\fB\-t\fP \fI#\fP]
+[\fB\-tdir\fP \fIfile\fP]
+[\fB\-v\fP \fI#\fP]
+[\fB\-verbose\fP]
+.SH DESCRIPTION
+.B netchop
+produces neural network predictions for cleavage sites of the human proteasome.
+netchop has been trained on human data only, and will therefore
+presumably have better performance for prediction of the cleavage sites
+of the human proteasome. However, since the proteasome structure is
+quite conserved, we believe that the server is able to produce reliable
+predictions for at least the other mammalian proteasomes.
+
+.B netchop
+is an update to the netchop 2.0 prediction method. 
+It has been trained using a novel sequence encoding scheme, and an
+improved neural network training strategy. The netchop 3.0 version has
+two different network methods that can be used for prediction. 
+Cterm-3.0 and 20S-3.0.
+
+The input is taken from \fIfile\fP(s). Use \fB--\fP for
+\fIstdin\fP. The output is plain text; it will go to \fIstdout\fP.
+The required input format is \fBFASTA\fB.
+
+.SH OPTIONS
+.TP
+.BI "\-d " dir"
+Use \fIdir\f as home for netchop software package.
+.TP
+.BI "\-s"
+Use short format for output.
+.TP
+.BI "\-t " value"
+Use \fIvalue\f. as threshold for cleavage sites.
+.TP
+.BI "\-tdir " dir"
+Use \fIdir\f as temporary directory.
+.TP
+.B "\-v" value"
+\fIvalue\f = 0 use Cterm-3.0. \fIvalue\f = 1 use 20S-3.0. Default 0.
+.TP
+.B "\-verbose"
+Use verbose mode.
+.TP
+.I file ...
+The sequence file(s) to process, in \fBFASTA\fP
+format. If no file is specified, \fIstdin\fP will be used instead.
+.SH AUTHOR
+Morten Nielsen, mniel@cbs.dtu.dk, July 2005.
+.br
+Last updated in Dec 2005 (v. 1.1?).
+.SH FILES
+\fB/usr/cbs/bio/bin/netchop\fP           executable
+.br
+\fB/usr/cbs/bio/src/netchop-3.1\fP       software home
+.SH SEE ALSO
+fasta (1),

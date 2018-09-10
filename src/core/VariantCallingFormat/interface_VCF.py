@@ -14,10 +14,10 @@ def Vcf(opts):
 	output_fold=config_list["output_fold"]
 	itunes_bin_path="bin"
 	vcf_file=config_list["vcf_file"]
+	REFERENCE=base_dir + "/" + "database/Fasta/human.fasta"
 	somatic_out_fold=output_fold + '/' + 'somatic_mutation'
 	logfile_out_fold=output_fold + '/' + 'logfile'
 	prefix=config_list["sample_name"]
-	REFERENCE=base_dir + "/" + "database/Fasta/human.fasta"
 	tumor_depth_cutoff=config_list["tumor_depth_cutoff"]
 	tumor_vaf_cutoff=config_list["tumor_vaf_cutoff"]
 	normal_vaf_cutoff=config_list["normal_vaf_cutoff"]
@@ -27,6 +27,7 @@ def Vcf(opts):
 	indel_fasta_file=netmhc_out_fold+'/'+prefix+'_indel.fasta'
 	hla_str=config_list["hla_str"]
 	split_num=200
+	netchop_path="software/netchop"
 	human_peptide_path="database/Protein/human.pep.all.fa"
 	exp_file=config_list["expression_file"]
 	binding_fc_aff_cutoff=int(config_list["binding_fc_aff_cutoff"])
@@ -44,6 +45,7 @@ def Vcf(opts):
 	copynumber_profile=config_list["copynumber_profile"]
 	tumor_cellularity=float(config_list["tumor_cellularity"])
 	snv_final_neo_file=netctl_out_fold + '/' + prefix + '_pyclone_neo.tsv'
+	indel_final_neo_file=netctl_out_fold + '/' + prefix + '_indel_netctl_concact.tsv'
 	iedb_file="train_model/iedb.fasta"
 	cf_hy_model_9="train_model/cf_hy_9_model.m"
 	cf_hy_model_10="train_model/cf_hy_10_model.m"
@@ -63,35 +65,28 @@ def Vcf(opts):
 	blast_db_path="database/Protein/peptide_database/peptide"
 	#####check input file,tool path and reference file#####
 	if os.path.exists(vcf_file):
-		print "check vcf file done."
+		print "Check inuput mutation vcf file...  OK"
 	else:
-		print "please check your input vcf file!"
+		print "Please check your input vcf file!"
 		os._exit(1)
 	if os.path.exists(vep_path):
-		print "check vep path done."
+		print "Check vep path...  OK"
 	else:
-		print "please check your vep path!"
+		print "Please check your vep path!"
 		os._exit(1)	
 	if os.path.exists(vep_cache):
-		print "check vep cache path done."
+		print "Check vep cache path...  OK"
 	else:
-		print "please check your vep cache path!"
+		print "Please check your vep cache path!"
 		os._exit(1)	
-	if exp_file!="no_exp" and os.path.exists(exp_file):
-		print "check expression file done."
-	elif exp_file=="no_exp":
-		print "no expression file provided."
+	if os.path.exists(exp_file):
+		print "Check expression file...  OK"
 	else:
-		print "please check your expression file path!"
-		os._exit(1)	
-	if os.path.exists(REFERENCE):
-		print "check REFERENCE file path done."
-	else:
-		print "please check your REFERENCE file path!"
-		os._exit(1)	
+		print "Please check your expression file path!"
+		os._exit(1)		
 	time.sleep(5)
 	#####check output directory###
-	print "check output directory"
+	print "Check output directory"
 	if not os.path.exists(output_fold):
 		os.mkdir(output_fold)
 	if not os.path.exists(somatic_out_fold):
@@ -102,10 +97,12 @@ def Vcf(opts):
 		os.mkdir(netctl_out_fold)
 	if not os.path.exists(logfile_out_fold):
 		os.mkdir(logfile_out_fold)
+	if not os.path.exists(pyclone_fold):
+		os.mkdir(pyclone_fold)
 	if hla_str=="None":
-		print "please provied hla type, seperate by comma."		
+		print "please provied hla type, seperate by comma,eg:HLiA-A02:01,HLA-A01:01,HLA-B15:17,HLA-B13:02,HLA-C07:01,HLA-C06:02"		
  	else:
- 		print "hla type provided!"
+ 		print "Check hla alleles...  OK"
  	print "Start preprocessing VCF file..."
   	processes_0=[]
 	h1=multiprocessing.Process(target=VCF_process,args=(prefix,vcf_file,somatic_out_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,logfile_out_fold,))
@@ -118,17 +115,17 @@ def Vcf(opts):
 	print "Preprocessing VCF file done!"
 	print "Start neoantigen prediction..."
  	processes_1=[]
-	d1=multiprocessing.Process(target=snv_neo,args=(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,peptide_length,itunes_bin_path,))
+	d1=multiprocessing.Process(target=snv_neo,args=(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,peptide_length,itunes_bin_path,netchop_path,))
  	processes_1.append(d1)
- 	d2=multiprocessing.Process(target=indel_neo,args=(indel_fasta_file,somatic_out_fold,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,netMHCpan_path,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netmhc_out_fold,peptide_length,itunes_bin_path,))
+ 	d2=multiprocessing.Process(target=indel_neo,args=(indel_fasta_file,somatic_out_fold,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,netMHCpan_path,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netmhc_out_fold,peptide_length,itunes_bin_path,netchop_path,REFERENCE,human_peptide_path,))
  	processes_1.append(d2)
- 	#q.put('tumor_qc')
  	for p in processes_1:
 		p.daemon = True
 		p.start()
 	for p in processes_1:
 		p.join()
 	print "Neoantigen prediciton done!"
+
 	print "Neoantigen annotation..."
  	processes_2=[]
 	m1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,pyclone_path,itunes_bin_path,logfile_out_fold,))
@@ -143,8 +140,11 @@ def Vcf(opts):
 	processes_3=[]
 	r1=multiprocessing.Process(target=InVivoModelAndScoreSNV,args=(snv_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,snv_neo_model_file,snv_blastp_tmp_file,snv_blastp_out_tmp_file,snv_netMHCpan_pep_tmp_file,snv_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
 	processes_3.append(r1)
-	#r2=multiprocessing.Process(target=InVivoModelAndScoreINDEL,args=(indel_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,indel_neo_model_file,indel_blastp_tmp_file,indel_blastp_out_tmp_file,indel_netMHCpan_pep_tmp_file,indel_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
-	#processes_3.append(r2)
+	if os.path.exists(indel_final_neo_file):
+		r2=multiprocessing.Process(target=InVivoModelAndScoreINDEL,args=(indel_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,indel_neo_model_file,indel_blastp_tmp_file,indel_blastp_out_tmp_file,indel_netMHCpan_pep_tmp_file,indel_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
+		processes_3.append(r2)
+	else:
+		print "No neoantigen from Indels is identified!"
 	for p in processes_3:
 		p.daemon = True
 		p.start()

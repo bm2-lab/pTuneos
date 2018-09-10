@@ -1,0 +1,125 @@
+.de Id
+.ds Rv \\$3
+.ds Dt \\$4
+..
+.Id $Header: example.1,v 1.2 94/02/15 13:28:25 rapacki Exp $
+.TH netCTL 1 \" -*- nroff -*-
+.SH NAME
+netCTL \- predict CTL epitopes in protein sequences.
+.SH SYNOPSIS
+.B netCTL 
+[\fB\-bdir\fP \fIdir\fP]
+[\fB\-c\fP \fIfile\fP]
+[\fB\-dirty\fP]
+[\fB\-h\fP]
+[\fB\-l\fP \fIfile\fP]
+       [\fB\-longid\fP]
+[\fB\-m\fP \fIfile\fP]
+[\fB\-nihbin\fP \fIfile\fP]
+[\fB\-s\fP \fIfile\fP]
+       [\fB\-sort\fP \fI#\fP]
+[\fB\-t\fP \fIfile\fP]
+[\fB\-tdir\fP \fIdir\fP]
+[\fB\-thr\fP \fIval\fP]
+[\fB\-q\fP]
+[\fB\-v\fP]
+       [\fB\-wc\fP \fI#\fP]
+[\fB\-we\fP \fI#\fP]
+[\fB\-wt\fP \fI#\fP] [\fIfile\fP ...] 
+.SH DESCRIPTION
+.B netCTL
+predicts CTL epitopes in protein sequences. The method integrates prediction of
+peptide MHC binding, proteasomal C terminal cleavage and TAP transport
+efficiency. The server allows for predictions of CTL epitopes restricted to 12
+MHC supertype. MHC binding and proteasomal cleavage is performed using
+artificial neural networks. TAP transport efficiency is predictied using weight
+matrix.
+
+The input is taken from \fIfile\fP(s). Use \fB--\fP for
+\fIstdin\fP. The output is plain text; it will go to \fIstdout\fP.
+The required input format is \fBFASTA\fB.
+
+.SH OPTIONS
+.TP
+.BI "\-bdir " dir"
+Use \fIdir\f for auxiliary programs.
+.TP
+.BI "\-c " file"
+Use \fIfile\f for proteasomal cleavage predictions.
+.TP
+.B "\-dirty"
+Dirty mode.
+.TP
+.B "-h"
+Help
+.TP
+.BI "\-l " dir"
+Use \fIdir\f as home for NetCTL package.
+.TP
+.B "\-longid "
+Use long sequence id in output.
+.TP
+.BI "\-m " file"
+Use \fIfile\f as method file for NetCTL.
+Format for \fImethod file\fP is
+
+A1  NN A0101    NIH18+2QBC   0.147239
+.br
+A2  NN A0201    NIH18+1QBC   0.417854
+.br
+.I ...
+.br
+B39 MAT  B39    B39.mat.lmer 7.1
+
+where the first column give the supertype, the second column the
+prediction type (NN or MAT), the thrid column the allele representing the supertype,
+the fourth column the predictor used for the allele, and the fifth
+column the 1% fractile rescaling threshold for MHC binding predictions.
+.TP
+.BI "\-nihbin "  file"
+Use \fIfile\f for MHC binding predictions.
+.TP
+.B "\-q"
+Include QBC in output.
+.TP
+.BI "\-s " value"
+Use \fIvalue\f as supertype. Included supertypes are
+A1, A2, A3, A24, A26, B7, B8, B27, B39, B44, B58, and B62.
+.TP
+.BI "\-sort " value"
+Sort output on prediction score: 0 [comb], 1 [MHC], 2 [Cle], 3 [TAP] <0 No sort.
+.TP
+.BI "\-t " file"
+Use \fIfile\f for TAP transport predictions.
+.TP
+.BI "\-tdir " dir"
+Use \fIdir\f as directory for temporary files.
+.TP
+.BI "\-thr " value"
+Use  \fIvalue\f as threshold for epitope identification.
+.TP
+.B "\-v"
+Use verbose mode.
+.TP
+.BI "\-wc " value"
+Set weight on proteasomal cleavage to \fIvalue\f..
+.TP
+.BI "\-we " value"
+Set weight on MHC binding to \fIvalue\f..
+.TP
+.BI "\-wt " value"
+Set weight on TAP to \fIvalue\f..
+.TP
+.I file ...
+The sequence file(s) to process, in \fBFASTA\fP
+format. If no file is specified, \fIstdin\fP will be used instead.
+.SH AUTHOR
+Morten Nielsen, mniel@cbs.dtu.dk, July 2005.
+.br
+Last updated in Dec 2005 (v. 1.1?).
+.SH FILES
+\fB/usr/cbs/bio/bin/netCTL\fP           executable
+.br
+\fB/usr/cbs/bio/src/netCTL-1.1\fP       software home
+.SH SEE ALSO
+fasta (1),

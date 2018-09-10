@@ -1,0 +1,31 @@
+cat $2 | awk -v l=$1 'BEGIN{n=0}{
+	if ( $1 >= n ) {
+		aa[n] = $2;
+		cl[n] = $5;
+		n++;
+	} else {
+		for ( i=0; i<n-l+1; i++ ) {
+			for ( j=0; j<l; j++ ) {
+				printf( "%c", aa[i+j] );
+			}
+			for ( j=0; j<l; j++ ) {
+				printf( " %6.4f ", cl[i+j] );
+			}
+			printf( "\n" );
+		}
+		n=0;
+		aa[n] = $2;
+		cl[n] = $5;
+		n++;
+	}
+}END{
+	for ( i=0; i<n-l+1; i++ ) {
+                        for ( j=0; j<l; j++ ) {
+                                printf( "%c", aa[i+j] );
+                        }
+			for ( j=0; j<l; j++ ) {
+				printf( " %6.4f ", cl[i+j] );
+			}
+			printf( "\n" );
+                }      
+}'

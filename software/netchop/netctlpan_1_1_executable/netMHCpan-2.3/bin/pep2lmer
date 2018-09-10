@@ -1,0 +1,17 @@
+cat $1 | gawk '{
+	l=length($1);
+	if ( l<9 ) {
+	}
+	else if ( l == 9 ) {
+		printf( "%s\n",$0);
+	}
+	else {
+		for ( i=3; i<=9-1; i++ ) {
+			s1 = substr( $1,1,i);
+			s2 = substr( $1,l-9+i+1,9-i);
+			printf( "%s%s %i %s\n", s1, s2, i, $0);
+			s1 = "";
+			s2 = "";
+		}
+	}
+}'

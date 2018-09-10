@@ -1,0 +1,44 @@
+#! /bin/tcsh -f
+
+# This the main NetCTLpan 1.1 script. It only acts as the frontend to the
+# software proper, a compiled binary.
+# 
+# VERSION:	2009 Oct 01	launch
+# 
+
+###############################################################################
+#               GENERAL SETTINGS: CUSTOMIZE TO YOUR SITE
+###############################################################################
+
+# full path to the NetCTLpan 1.1 directory (mandatory)
+#setenv	NMHOME	/usr/cbs/bio/src/netCTLpan-1.1/download_Linux_i686
+set  DIR1 = `dirname $0` 
+setenv	NMHOME	`readlink -f "$DIR1"`
+
+# determine where to store temporary files (must be writable to all users)
+#setenv	TMPDIR	/scratch
+setenv	TMPDIR	/tmp
+
+# determine platform (do not change this unless you don't have 'uname'!)
+setenv	UNIX	`uname -s`
+setenv	AR	`uname -m`
+
+###############################################################################
+#               NOTHING SHOULD NEED CHANGING BELOW THIS LINE!
+###############################################################################
+
+# other settings
+set PLATFORM = `echo $UNIX $AR | awk '{print $1"_"$2}'`
+#setenv NETCTLpan $NMHOME/$PLATFORM
+setenv NETCTLpan $NMHOME/
+setenv NETMHCpan $NMHOME/netMHCpan-2.3/
+
+
+# main ========================================================================
+if ( -x $NETCTLpan/bin/netCTLpan ) then
+   $NETCTLpan/bin/netCTLpan $*
+else
+   echo netCTLpan: no binaries found for $PLATFORM $NETCTLpan/bin/netCTLpan
+endif
+
+# end of script ===============================================================

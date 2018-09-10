@@ -1,0 +1,39 @@
+foreach nih (`lt -d * | args 9`)
+	echo "LOOP_A"
+	set pdir = $PWD
+	cd $nih
+	set ndir = $PWD
+	foreach al (`lt -d * | args 9`)
+		echo "LOOP_B"
+		cd $al/pred/NN/sparse+hmm
+		mkdir NYSYN
+		foreach syn (`cat synlist | args 1`)
+			echo "LOOP1"
+			cp $syn NYSYN/
+			set post = $syn:t
+			echo '$NETCTL/data/NIH/'$nih/$al"/pred/NN/sparse+hmm/SYN/"$post >> nysynlist
+		end
+		rm -rf SYN
+		mv NYSYN SYN
+		rm synlist
+		mv nysynlist synlist
+		rm -f *.*
+		cd ../bl50+hmm
+		mkdir NYSYN
+                foreach syn (`cat synlist | args 1`)
+			echo "LOOP2"
+                        cp $syn NYSYN/
+                        set post = $syn:t
+                        echo '$NETCTL/data/NIH/'$nih/$al"/pred/NN/bl50+hmm/SYN/"$post >> nysynlist
+                end
+                rm -rf SYN
+                mv NYSYN SYN
+                rm synlist
+                mv nysynlist synlist
+		rm -f *.*
+		cd $ndir
+	end
+	cd $pdir
+end
+
+		
