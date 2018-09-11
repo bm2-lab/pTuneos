@@ -27,7 +27,7 @@ iTunes is the state-of-the-art computational pipeline for identifying personaliz
 ## Dependencies  
 
 #### Hardware:
-iTunes currently test on x86_64 on ubuntu 16.04.
+iTunes currently tested on x86_64 on ubuntu 16.04.
 
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
@@ -82,7 +82,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 2. Call docker `pull bm2lab/itunes` which will download the Docker image.
 
-3. Run the image with interactive mode with your dataset:
+3. Run the image in interactive mode with your dataset:
         
 		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/itunes /bin/bash
 
@@ -96,16 +96,18 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 6. Edit `config_WES.yaml` or `config_VCF.yaml` and fill the needed parameters with proper filepath.
 
-7. Run the program with follow command:
+7. Run the program with follow commands:
 
 		python iTunes.py WES -i config_WES.yaml
-		or
+
+or
+
 		python iTunes.py VCF -i config_VCF.yaml
 
 
 ## Installation from source
 
-1. Install all software, python packages and R packages listed above, and make sure each software and package could be used in your system. 
+1. Install all software, python packages and R packages listed above, and make sure each software and package works in your system. 
 2. Install multiprocessing and other packages with the `pip` command:
 
         pip install -U multiprocessing
@@ -119,12 +121,13 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
    Install R package `squash` and `sequenza`:
    
         install.package('squash')
+        install.package('sequenza')
  
 4. Download or clone the iTunes repository to your local system:
 
         git clone https://github.com/bm2-lab/iTunes.git
 
-5. Reference data includes genome fasta, cDNA, peptide, cosmic reference(GRCh38 build) could be downloaded through:
+5. Reference data includes genome fasta, cDNA, peptide(GRCh38 build) could be downloaded and processed through:
 
         bash data_download.sh
         
@@ -152,7 +155,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
         human.pep.all.fa
 
 
-6. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blastp and  VarScan.v2.4.2 were prepared in software directory, other softwares should be installed by user own due to complexity, please refer to the software links above.
+6. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blast and  VarScan.v2.4.2 were prepared in software directory, other softwares should be installed by user own due to complexity, please refer to the software links above.
 
 7. Fill in the `config_WES.yaml` file with your local path, make sure you have installed all above software and have downloaded reference data.You should be aware that the version of VEP library you use should match the references used (peptide and cDNA). E.g. in the example above used version/release 89 of GRCh38.
 
@@ -185,16 +188,11 @@ You should specify the right path to the sequencing file in `config_WES.yaml` li
     normal_fastq_path_first: ~/ncbi/dbGaP-14145/sra/SRR2669057_1.fastq.gz
     #your path to second normal fastq file
     normal_fastq_path_second: ~/ncbi/dbGaP-14145/sra/SRR2669057_2.fastq.gz
-
-It is optional, but preferable, to provide RNA sequencing data for evaluating the expression level of neoantigens or you 
-could provide expression file derived from killasto or other tools. The files should be tab separated and include Ensembl transcript ID (ENST) and mean expression(tpm).
-
-    target_id	length	eff_length	est_counts	tpm
-    ENST00000434970.2	9	3.5	0	0
-    ENST00000448914.1	13	7.5	0	0
-    ENST00000415118.1	8	2.5	0	0
-    ENST00000631435.1	12	6.5	0	0
-    ENST00000632684.1	12	6.5	0	0
+    #your path to first RNA-seq fastq file
+    tumor_rna_fastq_1: ~/ncbi/dbGaP-14145/sra/SRR2673065/SRR2673065_1.fastq.gz
+    #your path to second RNA-seq fastq file
+    tumor_rna_fastq_2: ~/ncbi/dbGaP-14145/sra/SRR2673065/SRR2673065_2.fastq.gz
+    
 
 ### Input Files (VCF mode)
 Input file for `VCF` mode contains:
