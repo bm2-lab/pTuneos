@@ -131,7 +131,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
         bash data_download.sh
         
-    a few reference data would be in the fold `database` and processed by coustom script in order to run the pipeline, including:
+    a few reference data would be in the fold `database` and processed by custom script in order to run the pipeline, including:
 
         [Fasta] 
 	
@@ -155,7 +155,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
         human.pep.all.fa
 
 
-6. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blast and  VarScan.v2.4.2 were prepared in software directory, other softwares should be installed by user own due to complexity, please refer to the software links above.
+6. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blast and  VarScan.v2.4.2 were prepared in software directory, other software should be installed by user own due to complexity, please refer to the software links above.
 
 7. Fill in the `config_WES.yaml` file with your local path, make sure you have installed all above software and have downloaded reference data.You should be aware that the version of VEP library you use should match the references used (peptide and cDNA). E.g. in the example above used version/release 89 of GRCh38.
 
@@ -176,8 +176,7 @@ You can use these two modes by:
 ## Input Files
 
 ### Input Files (WES mode) 
-Pair-end matched tumor-normal whole exome sequencing file should be provied for basic neoantigens identification, expression
-profile file or raw RNA sequnencing file is optional if you want to get expressed neoantigen. iTunes accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
+Pair-end matched tumor-normal whole exome sequencing file should be provided for basic neoantigens identification, expression profile file or raw RNA sequencing file is optional if you want to get expressed neoantigen. iTunes accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
 You should specify the right path to the sequencing file in `config_WES.yaml` like:
 
     #your path to first tumor fastq file
@@ -189,15 +188,15 @@ You should specify the right path to the sequencing file in `config_WES.yaml` li
     #your path to second normal fastq file
     normal_fastq_path_second: ~/ncbi/dbGaP-14145/sra/SRR2669057_2.fastq.gz
     #your path to first RNA-seq fastq file
-    tumor_rna_fastq_1: ~/ncbi/dbGaP-14145/sra/SRR2673065/SRR2673065_1.fastq.gz
+    tumor_rna_fastq_1: ~/ncbi/dbGaP-14145/sra/SRR2673065_1.fastq.gz
     #your path to second RNA-seq fastq file
-    tumor_rna_fastq_2: ~/ncbi/dbGaP-14145/sra/SRR2673065/SRR2673065_2.fastq.gz
+    tumor_rna_fastq_2: ~/ncbi/dbGaP-14145/sra/SRR2673065_2.fastq.gz
     
 
 ### Input Files (VCF mode)
 Input file for `VCF` mode contains:
 * mutaiton file in vcf format from mutect2.
-* expression profile in the format same as mentioned in WES mode(recommend obtain from `kallisto`).
+* expression profile in the format same as mentioned in WES mode (recommend obtain from `kallisto`).
 * copynumber profile (recommend obtain from `sequenza`).
 * tumor cellularity (bewteen 0 and 1) (also recommend obtain from `sequenza`).
 
@@ -205,7 +204,7 @@ We give the example data of these files in fold `VCF_example_data/`.
 
 ### References 
 The following references are required for iTunes to run:
-* Snp: These files are used in somatic variant calling process.
+* Reference DNA sequence and its annotation file. These files are used in somatic variant calling process.
 
         [Genome reference]
         human.fasta
@@ -228,16 +227,16 @@ match in release version (e.g. release-89)).
 
 
 ## Setting parameters
-User should set all the parameters in the configration file `config_WES.yaml` or `config_VCF.yaml`. The config file contains three parts of parameters:
+User should set all the parameters in the configuration file `config_WES.yaml` or `config_VCF.yaml`. The configuration file contains three parts of parameters:
 
 
-* Input data parameters, including path of DNA/RNA sequencing data, output fold, run name, hla alleles, expression file and thread number(for WES mode).
+* Input data parameters, including path of DNA/RNA sequencing data, output fold, run name, hla alleles, expression file and thread number (for WES mode).
 (Note: user could specific hla allele throught `hla_str`, otherwise set it to `None`, the pipeline will make the prediction utilizing sequencing data. If RNA sequencing data is provided, please also set expression file to `None`.)
 * Some filter parameter including mutation sequence depth, mutation variant allele fraction(vaf), binding affinity rank and expression FPKM.
 * Software excutable path of opitype, vep, netMHCpan, PyClone and strelka.
 
 ## Output Files 
-iTunes output four result files contains information of identified neoantigens corresponding to nonsynonymous point mutation and INDEL mutation.
+iTunes output four result files contain information of identified neoantigens corresponding to nonsynonymous point mutation and INDEL mutation.
 
 The output files are the following: 
 1.  snv_neo_model.tsv 
@@ -253,7 +252,7 @@ The output files are the following:
 
 ### Column explanation
 
-The prediction output (snv_model.tsv/indel_model.tsv) for each peptide pair consists of the following columns:
+The prediction output (snv_neo_model.tsv/indel_neo_model.tsv) for each peptide pair consists of the following columns:
 
 | Column Name           | Description |
 | -----------           | ----------- |
