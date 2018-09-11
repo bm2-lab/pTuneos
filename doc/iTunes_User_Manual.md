@@ -260,25 +260,25 @@ The prediction output (snv_neo_model.tsv/indel_neo_model.tsv) for each peptide p
 | HLA_type              | HLA allele name. |
 | Gene                  | HUGO symbol name of mutatied gene. |
 | WT_pep                | The extracted normal peptide. |
-| WT_Binding_EL         | %Rank of prediction score for nomal peptides use NetMHCpan4.0(defalut model). |
-| WT_Binding_Rank       | %Rank of prediction score for nomal peptides use NetMHCpan4.0(-ba model). |
+| WT_Binding_EL         | %Rank of prediction score for nomal peptides use NetMHCpan4.0 (defalut model). |
+| WT_Binding_Rank       | %Rank of prediction score for nomal peptides use NetMHCpan4.0 (-ba model). |
 | MT_pep                | The extracted mutant peptide. |
 | MT_Binding_EL         | %Rank of prediction score for mutated peptides use NetMHCpan4.0(defalut model). |
-| MT_Binding_Rank       | %Rank of prediction score for mutant peptides use NetMHCpan4.0(-ba model). |
+| MT_Binding_Rank       | %Rank of prediction score for mutant peptides use NetMHCpan4.0 (-ba model). |
 | Transcript_name       | Ensembl transcript ID |
-| Mutation              | necleotide change of mutated gene |
+| Mutation              | Necleotide change of mutated gene |
 | AA_change             | Amino acid change annotated in VEP file. |
 | Variant_allele_frequency  | Genomic allele frequency detected by MuTect2. |
 | DriverGene_Lable      | TRUE if the HUGO symbol is in the cosmic reference list, FALSE if it is not. |
 | MT_Binding_level_des  | Binding level description of mutated peptide. |
 | WT_Binding_level_des  | Binding level description of normal peptide. |
 | Homolog_pep           | The extracted homologous peptide of neo-peptide in human protein. |
-| Homolog_Binding_EL    | %Rank of prediction score for homologous peptides use NetMHCpan4.0(defalut model).|
+| Homolog_Binding_EL    | %Rank of prediction score for homologous peptides use NetMHCpan4.0 (defalut model).|
 | Recognition_score     | T cell recognition score calculated based on TCR cross reactivity. |
 | Hydrophobicity_score  | Neo-peptide immunity mesurement based on animo acid hydrophobicity. |
 | Self_sequence_similarity | Sequence similarity bewteen mutated peptide and normal(homglogous) peptide, We select the bigger one as final score |
-| Model_pro       | Model prediction score for neoantigen in vitro immunogenicty denpend on Recognition_score, Hydrophobicity_score, Self_sequence_similarity, WT_Binding_EL, MT_Binding_EL . |
-| Immuno_effect_score	| In vivo immunogenicty score for neoantigens.
+| Model_pro       | Model prediction score for neoantigen in vitro immunogenicty denpend on Recognition_score, Hydrophobicity_score, Self_sequence_similarity, WT_Binding_EL, MT_Binding_EL. |
+| Immuno_effect_score	| In vivo immunogenicty score for neoantigens. |
 
 
 ## Contact   
