@@ -64,6 +64,11 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 
 ## Installation
 
+### Install via Docker
+Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
+see the [user manual](/doc/iTunes_User_Manual.md) for a detailed description of docker usage.
+
+### Install from source
 1. Install all software listed above.
 
 2. Download or clone the iTunes repository to your local system
