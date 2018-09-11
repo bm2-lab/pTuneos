@@ -94,7 +94,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 		bash data_download.sh
 
-6. Edit `config_WES.yaml` or `config_VCF.yaml` and fill the needed parameters with proper filepath.
+6. Edit `config_WES.yaml` or `config_VCF.yaml` and fill the proper path of input files.
 
 7. Run the program with follow commands:
 
