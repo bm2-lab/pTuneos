@@ -1,10 +1,10 @@
 ##### Set path for input data, output fold, run name, thread number, 
-tumor_fastq_path_first: /home/zhouchi/raw_data/phs001005/fastq/SRR2673015/SRR2673015_1.fastq
-tumor_fastq_path_second: /home/zhouchi/raw_data/phs001005/fastq/SRR2673015/SRR2673015_2.fastq
-normal_fastq_path_first: /home/zhouchi/raw_data/phs001005/fastq/SRR2672887/SRR2672887_1.fastq
-normal_fastq_path_second: /home/zhouchi/raw_data/phs001005/fastq/SRR2672887/SRR2672887_2.fastq
-tumor_rna_fastq_1: /home/zhouchi/raw_data/phs001005/fastq/SRR2673065/SRR2673065_1.fastq
-tumor_rna_fastq_2: /home/zhouchi/raw_data/phs001005/fastq/SRR2673065/SRR2673065_2.fastq
+tumor_fastq_path_first: ~/raw_data/phs001005/fastq/SRR2673015/SRR2673015_1.fastq
+tumor_fastq_path_second: ~/raw_data/phs001005/fastq/SRR2673015/SRR2673015_2.fastq
+normal_fastq_path_first: ~/raw_data/phs001005/fastq/SRR2672887/SRR2672887_1.fastq
+normal_fastq_path_second: ~/raw_data/phs001005/fastq/SRR2672887/SRR2672887_2.fastq
+tumor_rna_fastq_1: ~/raw_data/phs001005/fastq/SRR2673065/SRR2673065_1.fastq
+tumor_rna_fastq_2: ~/raw_data/phs001005/fastq/SRR2673065/SRR2673065_2.fastq
 output_fold: WES_test
 sample_name: WES_test
 thread_number: 64
@@ -19,9 +19,9 @@ binding_fc_aff_cutoff: 1
 binding_aff_cutoff: 2
 fpkm_cutoff: 1
 ##### specify other software excutable path in your system as you have installed them.
-opitype_fold: /home/zhouchi/software/OptiType/OptiTypePipeline.py
-vep_cache_path: /home/zhouchi/database/Annotation/vep_data/
-vep_path: /usr/local/ensembl-vep/vep
-netMHCpan_path: /home/zhouchi/bin/netMHCpan
-pyclone_path: /usr/local/bin/PyClone
-strelka_path: /home/zhouchi/strelka/bin
+opitype_fold: your/path/to/OptiType/OptiTypePipeline.py
+vep_cache_path: your/path/to/vep_cache_data/
+vep_path: your/path/to/vep
+netMHCpan_path: your/path/to/netMHCpan
+pyclone_path: your/path/to/PyClone
+strelka_path: your/path/to/strelka/bin
