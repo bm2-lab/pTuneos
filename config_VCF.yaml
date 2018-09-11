@@ -17,7 +17,7 @@ binding_aff_cutoff: 2
 fpkm_cutoff: 0
 
 ##### specify other software excutable path in your system as you have installed them.
-vep_cache_path: /home/zhouchi/database/Annotation/vep_data/
-vep_path: /usr/local/ensembl-vep/vep
-netMHCpan_path: /home/zhouchi/bin/netMHCpan
-pyclone_path: /usr/local/bin/PyClone
+vep_cache_path: your/path/to/vep_cache_data/
+vep_path: your/path/to/vep
+netMHCpan_path: your/path/to/netMHCpan
+pyclone_path: your/path/to/PyClone
