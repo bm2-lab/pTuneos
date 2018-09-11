@@ -167,8 +167,8 @@ iTunes has two modes: `WES` mode and `VCF` mode.
 
 You can use these two modes by:
 
-        /path/to/iTunes.py WES -i config_WES.yaml
-        /path/to/iTunes.py VCF -i config_VCF.yaml
+        python iTunes.py WES -i config_WES.yaml
+        python iTunes.py VCF -i config_VCF.yaml
 
 ## Input Files
 
