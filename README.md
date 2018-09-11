@@ -66,17 +66,16 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 
 ### Install via Docker
 Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
-see the [user manual](/doc/iTunes_User_Manual.md) for a detailed description of docker usage.
+see the [user manual](/doc/iTunes_User_Manual.md) for a detailed description usage.
 
 ### Install from source
 1. Install all software listed above.
 
-2. Download or clone the iTunes repository to your local system
+2. Download or clone the iTunes repository to your local system:
 
         git clone https://github.com/bm2-lab/iTunes.git
 
-3. Obtain the reference files from GRCh38. These include cDNA, peptide; see the References section in the [user manual](/doc/iTunes_User_Manual.md)
-for a detailed description.
+3. Obtain the reference files from GRCh38. These include cDNA, peptide; please refer to [user manual](/doc/iTunes_User_Manual.md) for a detailed description.
 
 
 ## Usage
@@ -89,6 +88,9 @@ iTunes has two modes, `WES` mode and `VCF` mode.
 You can use these two mode by:
 
         python iTunes.py WES -i config_WES.yaml
+
+or
+
         python iTunes.py VCF -i config_VCF.yaml
         
 ## User Manual 
