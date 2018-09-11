@@ -100,7 +100,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 		python iTunes.py WES -i config_WES.yaml
 
-or
+	or
 
 		python iTunes.py VCF -i config_VCF.yaml
 
