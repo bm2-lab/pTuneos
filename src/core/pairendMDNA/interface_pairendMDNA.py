@@ -293,6 +293,7 @@ def PEMD(opts):
 	for p in processes_5:
 		p.join()		
 	print 'Stage 5 finished.'
+	
 	if os.path.exists(snv_blastp_tmp_file):
 		os.remove(snv_blastp_tmp_file)
 	if os.path.exists(snv_blastp_out_tmp_file):
@@ -309,4 +310,16 @@ def PEMD(opts):
 		os.remove(indel_netMHCpan_pep_tmp_file)
 	if os.path.exists(indel_netMHCpan_ml_out_tmp_file):
 		os.remove(indel_netMHCpan_ml_out_tmp_file)
+	if os.path.exists(snv_neo_model_file):
+		if os.path.getsize(snv_neo_model_file):
+			shutil.rmtree(alignment_out_fold)
+			shutil.rmtree(clean_fastq_fold)
+			shutil.rmtree(somatic_mutation_fold)
+			shutil.rmtree(varscan_copynumber_fold)
+			shutil.rmtree(netmhc_out_fold)
+			shutil.rmtree(pyclone_fold)
+			shutil.rmtree(kallisto_out_fold)
+			shutil.rmtree(opitype_out_fold)
+			shutil.rmtree(strelka_out_fold)
+			shutil.rmtree(logfile_out_fold)
 	print "ALL finished! Please check result files 'snv_neo_model.tsv' and 'indel_neo_model.tsv' in netctl fold"
