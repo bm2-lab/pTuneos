@@ -1,24 +1,42 @@
 ##### Set path for input data, output fold, run name, thread number, 
+# The input sequencing file could be in .fastq or fastq.gz(compressed file)
 tumor_fastq_path_first: ~/raw_data/phs001005/fastq/SRR2673015/SRR2673015_1.fastq
 tumor_fastq_path_second: ~/raw_data/phs001005/fastq/SRR2673015/SRR2673015_2.fastq
 normal_fastq_path_first: ~/raw_data/phs001005/fastq/SRR2672887/SRR2672887_1.fastq
 normal_fastq_path_second: ~/raw_data/phs001005/fastq/SRR2672887/SRR2672887_2.fastq
 tumor_rna_fastq_1: ~/raw_data/phs001005/fastq/SRR2673065/SRR2673065_1.fastq
 tumor_rna_fastq_2: ~/raw_data/phs001005/fastq/SRR2673065/SRR2673065_2.fastq
+# Output directory, it could be in absolute path (eg: /home/test)or relative path(eg: test/).
 output_fold: WES_test
+# Sample name for your run
 sample_name: WES_test
+# Thread number for running, set it based on your system and your requirement.
 thread_number: 64
+# Set hla allele for neoantigen identification, separated by comma and up to six hla type eg:HLA-A02:01,HLA-A24:02,HLA-B44:02,HLA-B15:01,HLA-C05:01,HLA-C07:02
+# If set to None, hla typing process would be run automatically.
 hla_str: None
+# Expression profile, format described in mannual, if your provide tumor RNA-seq sequencing data, iTunes would do it using Kallisto automatically.
 expression_file: None
-peptide_length: 9
+# Set neoantigen peptide length, separatd by comma, eg: 9,10,11.
+peptide_length: 9,10
+
+
 ##### Some filters parameter
+#Minimal read depth for altenative allele
 tumor_depth_cutoff: 7
+#Minimal variant allele frequency for altenative allele
 tumor_vaf_cutoff: 0.05
+#Minimal variant allele frequency for reference allele
 normal_vaf_cutoff: 0.03
+# Fold change between MHC-mutant-peptide-binding-affinity and MHC-normal-peptide-binding-affinity, 1 means they are equal.
 binding_fc_aff_cutoff: 1
+# MHC-mutant-peptide binding affinity rank cutoff, usually set to 2.
 binding_aff_cutoff: 2
+# Expression value cutoff of neo-peptide, usually set to 1.
 fpkm_cutoff: 1
-##### specify other software excutable path in your system as you have installed them.
+
+
+##### specify other software excutable path in your system as you have installed them, make sure each tools could run.
 opitype_fold: your/path/to/OptiType/OptiTypePipeline.py
 vep_cache_path: your/path/to/vep_cache_data/
 vep_path: your/path/to/vep
