@@ -1,22 +1,35 @@
 ##### Set path for input data 
+# Output directory, it could be in absolute path (eg: /home/test)or relative path(eg: test/).
 output_fold: VCF_test
+# mutation file ,obtained from mutect2.
 vcf_file: VCF_example_data/example_mutect2.vcf
 sample_name: test
+# Set hla allele for neoantigen identification, separated by comma and up to six hla types, eg:HLA-A02:01,HLA-A24:02,HLA-B44:02,HLA-B15:01,HLA-C05:01,HLA-C07:02
 hla_str: HLA-A02:01
+# Expression profile, obtained from Kallisto
 expression_file: VCF_example_data/example_abundance.tsv
+# copynumber profile, obtained from sequenza
 copynumber_profile: VCF_example_data/example_seg_copynumber.txt
+# tumor cellularity, also obtained from sequenza
 tumor_cellularity: 0.33
+# Set neoantigen peptide length, separatd by comma, eg: 9,10,11.
 peptide_length: 9
 
 ##### Some filters parameter
+#Minimal read depth for altenative allele
 tumor_depth_cutoff: 7
+#Minimal variant allele frequency for altenative allele
 tumor_vaf_cutoff: 0.05
+#Minimal variant allele frequency for reference allele
 normal_vaf_cutoff: 0.03
+# Fold change between MHC-mutant-peptide-binding-affinity and MHC-normal-peptide-binding-affinity, 1 means they are equal.
 binding_fc_aff_cutoff: 1
+# MHC-mutant-peptide binding affinity rank cutoff, usually set to 2.
 binding_aff_cutoff: 2
-fpkm_cutoff: 0
+# Expression value cutoff of neo-peptide, usually set to 1.
+fpkm_cutoff: 1
 
-##### specify other software excutable path in your system as you have installed them.
+##### specify other software excutable path in your system as you have installed them, make sure each tools could run.
 vep_cache_path: your/path/to/vep_cache_data/
 vep_path: your/path/to/vep
 netMHCpan_path: your/path/to/netMHCpan
