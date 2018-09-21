@@ -154,6 +154,30 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
         human.cdna.all.fa
         human.pep.all.fa
 
+    Moreover,the Catalogue of Somatic Mutations In Cancer (COSMIC) provides a variant file (VCF) of all coding mutations in 
+    COSMIC. This VCF file is called CosmicCodingMuts.vcf.gz and can be found under the "Download" tab on the COSMIC website 
+    (click the "VCF files" dropdown menu after loading the Download tab). You will need to register before gaining access to 
+    the file. Note: to our knowledge COSMIC uses b38 which does not contain the 'chr' before the chromosome names like the 
+    UCSC hg38. Thus, we provide scripts to convert the file into the correct format.
+    1. Click [here](https://cancer.sanger.ac.uk/cosmic/register) to register
+    2. Wait for the verification email (can take more than 24 hours) and follow instructions to create an account
+    3. After you are registered, login to [COSMIC](https://cancer.sanger.ac.uk/cosmic/login)
+    4. Click the "Download" tab
+    5. Click the "VCF files" dropdown menu
+    6. Click the "CosmicCodingMuts.vcf.gz" file name ([direct link] (https://cancer.sanger.ac.uk/files/cosmic/current_release/VCF/CosmicCodingMuts.vcf.gz))
+    7. After you have downloaded the file, you will need to decompress it: `gunzip CosmicCodingMuts.vcf.gz`
+    8. we need to convert it to be compatible to Mutect2 using the script  `cosmic_process.sh`
+    
+    The usage statement from `cosmic_process.sh`:
+```
+    cosmic_process.sh: A tool to format the COSMIC VCF file compatible for Mutect2
+ 	Usage: bash cosmic_process.sh <-i CosmicCodingMuts.vcf> <-o FormattedCosmicMuts.vcf> <-d Homo_sapiens_assembly38.dic>
+	-i  Input CosmicCodingMuts.vcf file as downloaded from COSMIC
+	-o  Output formatted COSMIC VCF file
+	-p  Your path to picard
+	-d  Path to the GATK hg19 bundle's sequence dictionary file
+```
+   Run this on your downloaded file.
 
 6. Among the required software listed above, BWA, GATK 3.8, kallisto, picard, samtools, tabix, trimmomatic-0.36, blast and  VarScan.v2.4.2 were prepared in software directory, other software should be installed by user own due to complexity, please refer to the software links above.
 
