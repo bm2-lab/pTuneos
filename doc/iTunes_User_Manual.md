@@ -175,7 +175,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 	-i  Input CosmicCodingMuts.vcf file as downloaded from COSMIC
 	-o  Output formatted COSMIC VCF file
 	-p  Your path to picard
-	-d  Path to the GATK hg19 bundle's sequence dictionary file
+	-d  Path to the GATK hg38 bundle's sequence dictionary file
 ```
    Run this on your downloaded file.
 
