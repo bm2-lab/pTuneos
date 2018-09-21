@@ -36,6 +36,7 @@ def PEMD(opts):
 	dbsnp138_path="database/VCF_annotation/dbsnp_138.hg38.vcf.gz"
 	OneKG_path="database/VCF_annotation/1000G_phase1.snps.high_confidence.hg38.vcf.gz"
 	mills_path="database/VCF_annotation/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+	cosmic_path="database/VCF_annotation/CosmicCodingMuts_chr_M_sorted.vcf.gz"
 	somatic_mutation_fold=output_fold + '/' + 'somatic_mutation'
 	vep_cache=config_list["vep_cache_path"]
 	varscan_path=base_dir + '/' + "software/VarScan.v2.4.2.jar"
@@ -243,7 +244,7 @@ def PEMD(opts):
 	print 'Stage 1 finished!'
 	print 'Start stage 2: mutation calling using Mutect2, strelka and varscan; copynumber profiling.'
 	processes_2=[]
-	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,logfile_out_fold))
+	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,cosmic_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,logfile_out_fold))
 	processes_2.append(h0)
 	h1=multiprocessing.Process(target=varscan_somatic_caling_drift,args=(somatic_mutation_fold,alignment_out_fold,prefix,REFERENCE,vep_cache,samtools_path,varscan_path,vep_path,netmhc_out_fold,logfile_out_fold,))
 	processes_2.append(h1)

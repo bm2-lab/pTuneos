@@ -72,7 +72,7 @@ def hlatyping(raw_fastq_path_first,raw_fastq_path_second,opitype_fold,opitype_ou
 def mapping_qc_gatk_preprocess(fastq_1_path,fastq_2_path,fastq_type,CPU,BWA_INDEX,alignment_out_fold,prefix,REFERENCE,bwa_path,samtools_path,java_picard_path,GATK_path,dbsnp138,OneKG,mills,logfile_fold,bamstat_out_fold):
 	cmd_bwa=bwa_path + ' mem -t '+ str(CPU) + ' ' + BWA_INDEX + ' ' + fastq_1_path + ' ' +fastq_2_path + ' > ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.sam'#+ logfile_fold + '/' + fastq_type + '_bwa.log' + ' 2>&1'
 	cmd_samtools_1=samtools_path + ' view -bhS -@ '+ str(CPU) + ' ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.sam' + ' -o ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.bam > ' + logfile_fold + '/' + fastq_type + '_samtools_1.log' + ' 2>&1'
-	cmd_samtools_sort=samtools_path + ' sort -@ ' + str(CPU) + ' -m 2G ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.bam' + ' ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type + ' > ' + logfile_fold + '/' + fastq_type + '_samtools_sort.log' + ' 2>&1'
+	cmd_samtools_sort=samtools_path + ' sort -@ ' + '4 -m 2G ' + alignment_out_fold+'/'+'tmp_'+ prefix +'_'+fastq_type+'.bam' + ' ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type + ' > ' + logfile_fold + '/' + fastq_type + '_samtools_sort.log' + ' 2>&1'
 	cmd_samtools_index_1=samtools_path + ' index ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'.bam' + ' > ' + logfile_fold + '/' + fastq_type + '_samtools_index.log' + ' 2>&1'
 	cmd_picard="java -Xmx4G -jar " + java_picard_path + ' MarkDuplicates INPUT=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'.bam' + ' OUTPUT=' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter.bam' + ' METRICS_FILE=' + alignment_out_fold+'/'+prefix + '_'+fastq_type+'_dup_qc.txt ASSUME_SORTED=true VALIDATION_STRINGENCY=SILENT > ' + logfile_fold + '/' + fastq_type + '_markdup.log' + ' 2>&1'
 	cmd_samtools_index_2=samtools_path + ' index ' + alignment_out_fold+'/'+ prefix + '_'+fastq_type+'_mkdup_filter.bam'
@@ -101,10 +101,37 @@ def mapping_qc_gatk_preprocess(fastq_1_path,fastq_2_path,fastq_type,CPU,BWA_INDE
 	#print cmd_PrintReads
 	os.system(cmd_PrintReads)
 
-def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,logfile_fold):
-	cmd_GATK="java -Xmx4G -jar " + GATK_path + ' -T MuTect2 -nct ' + str(CPU) + ' -R ' + REFERENCE  + ' -I:tumor ' + alignment_out_fold + '/' + prefix + '_'+ 'tumor_recal.bam ' + '-I:normal ' + alignment_out_fold + '/' + prefix + '_'+ 'normal_recal.bam ' + '--dbsnp ' + dbsnp138 + ' -o ' + somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf > ' + logfile_fold + '/' + prefix + '_mutect2.log' + ' 2>&1'
-	#print cmd_GATK
-	os.system(cmd_GATK)
+def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,cosmic,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,logfile_fold):
+	str_proc_gatk=r'''
+set -e
+GATK_path=%s
+REFERENCE=%s
+alignment=%s
+logfile_fold=%s
+somatic=%s
+prefix=%s
+dbsnp=%s
+cosmic=%s
+chr=(`seq 1 22` X Y)
+for i in ${chr[@]}
+do
+{
+	java -Xmx4G -jar ${GATK_path} -T MuTect2 -L chr${i} -R $REFERENCE -I:tumor ${alignment}/${prefix}_tumor_recal.bam -I:normal ${alignment}/${prefix}_normal_recal.bam --dbsnp $dbsnp --cosmic $cosmic -o ${alignment}/${i}.vcf > ${logfile_fold}/${prefix}_mutect2_${i}.log 2>&1
+}&
+done
+wait
+bcftools concat -o ${somatic}/${prefix}_mutect2.vcf \
+${alignment}/1.vcf ${alignment}/2.vcf ${alignment}/3.vcf ${alignment}/4.vcf ${alignment}/5.vcf ${alignment}/6.vcf ${alignment}/7.vcf ${alignment}/8.vcf ${alignment}/9.vcf ${alignment}/10.vcf \
+${alignment}/11.vcf ${alignment}/12.vcf ${alignment}/13.vcf ${alignment}/14.vcf ${alignment}/15.vcf ${alignment}/16.vcf ${alignment}/17.vcf ${alignment}/18.vcf \
+${alignment}/19.vcf ${alignment}/20.vcf ${alignment}/21.vcf ${alignment}/22.vcf ${alignment}/X.vcf ${alignment}/Y.vcf
+rm ${alignment}/1.vcf ${alignment}/2.vcf ${alignment}/3.vcf ${alignment}/4.vcf ${alignment}/5.vcf ${alignment}/6.vcf ${alignment}/7.vcf ${alignment}/8.vcf ${alignment}/9.vcf ${alignment}/10.vcf \
+${alignment}/11.vcf ${alignment}/12.vcf ${alignment}/13.vcf ${alignment}/14.vcf ${alignment}/15.vcf ${alignment}/16.vcf ${alignment}/17.vcf ${alignment}/18.vcf \
+${alignment}/19.vcf ${alignment}/20.vcf ${alignment}/21.vcf ${alignment}/22.vcf ${alignment}/X.vcf ${alignment}/Y.vcf
+rm -rf {alignment}/*.idx
+rm -rf {alignment}/*.vcf
+	'''%(GATK_path,REFERENCE,alignment_out_fold,logfile_fold,somatic_out_fold,prefix,dbsnp138,cosmic)
+	print str_proc_gatk
+	subprocess.call(str_proc_gatk, shell=True, executable='/bin/bash')
 	cmd_mutation_filter='grep ' + "\'^#\|chr[1-9]\{0,1\}[0-9XY]\\{0,1\\}\\b\'" + ' ' + somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf' + ' > ' + somatic_out_fold + '/' + prefix + '_' + 'mutect2_filter.vcf'
 	#print cmd_mutation_filter
 	os.system(cmd_mutation_filter)
