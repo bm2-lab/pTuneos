@@ -58,7 +58,7 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 
 #### Required R package:
 * [cpynumber](http://www.bioconductor.org/packages/release/bioc/html/copynumber.html)
-* [sequenza](https://cran.r-project.org/web/packages/sequenza/index.html)
+* [sequenza 2.1.2](https://cran.r-project.org/src/contrib/Archive/sequenza/sequenza_2.1.2.tar.gz)
 * [squash](https://CRAN.R-project.org/package=squash)
 
 
