@@ -22,7 +22,7 @@
 
 ## General Description
 
-iTunes is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTunes calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (OptimizedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
+iTunes is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTunes calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (RefinedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
 
 ## Dependencies  
 
@@ -302,7 +302,7 @@ The prediction output (snv_neo_model.tsv/indel_neo_model.tsv) for each peptide p
 | Hydrophobicity_score  | Neo-peptide immunity mesurement based on animo acid hydrophobicity. |
 | Self_sequence_similarity | Sequence similarity bewteen mutated peptide and normal(homglogous) peptide, We select the bigger one as final score |
 | Model_pro       | Model prediction score (probability) for neoepitope recognized by T cell denpend on Recognition_score, Hydrophobicity_score, Self_sequence_similarity, WT_Binding_EL, MT_Binding_EL. |
-| Immuno_effect_score	| Optimized immunogenicty score for neoepitopes. |
+| Immuno_effect_score	| Refined immunogenicty score for neoepitopes. |
 
 
 ## Contact   
