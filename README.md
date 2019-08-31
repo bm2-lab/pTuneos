@@ -6,7 +6,7 @@ iTunes is the state-of-the-art computational pipeline for identifying personaliz
 Chi Zhou and Qi Liu
 
 #### Citation:
-iTunes: identification of personalized Tumor neoantigens from next-generation sequencing data, Submitted, 2018.
+iTunes: identification of personalized Tumor neoantigens from next-generation sequencing data, Submitted, 2019.
 
 #### Web sever:
 TBD
