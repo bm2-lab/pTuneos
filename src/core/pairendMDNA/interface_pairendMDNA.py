@@ -282,7 +282,7 @@ def PEMD(opts):
 	for p in processes_4:
 		p.join()
 	print 'Stage 4 finished.'
-	print 'Start stage 5: neoantigen filtering using invitro model and invivo score scheme.'
+	print 'Start stage 5: neoantigen filtering using Pre&RecNeo model and refined immunogenicity score scheme.'
 	processes_5=[]
 	r1=multiprocessing.Process(target=InVivoModelAndScoreSNV,args=(snv_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,snv_neo_model_file,snv_blastp_tmp_file,snv_blastp_out_tmp_file,snv_netMHCpan_pep_tmp_file,snv_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
 	processes_5.append(r1)
