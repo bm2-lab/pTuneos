@@ -136,7 +136,7 @@ def Vcf(opts):
 	for p in processes_2:
 		p.join()
 	print "Neoantigen annotation done!"
-	print "Calculate neoantigen in-vitro and in-vivo immunogenicity score..."
+	print "Neoantigen filtering using Pre&RecNeo model and refined immunogenicity score scheme."
 	processes_3=[]
 	r1=multiprocessing.Process(target=InVivoModelAndScoreSNV,args=(snv_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,snv_neo_model_file,snv_blastp_tmp_file,snv_blastp_out_tmp_file,snv_netMHCpan_pep_tmp_file,snv_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
 	processes_3.append(r1)
