@@ -116,7 +116,7 @@ chr=(`seq 1 22` X Y)
 for i in ${chr[@]}
 do
 {
-	java -Xmx4G -jar ${GATK_path} -T MuTect2 -L chr${i} -R $REFERENCE -I:tumor ${alignment}/${prefix}_tumor_recal.bam -I:normal ${alignment}/${prefix}_normal_recal.bam --dbsnp $dbsnp --cosmic $cosmic -o ${alignment}/${i}.vcf > ${logfile_fold}/${prefix}_mutect2_${i}.log 2>&1
+	java -Xmx4G -jar ${GATK_path} -T MuTect2 -L chr${i} -R $REFERENCE -I:tumor ${alignment}/${prefix}_tumor_recal.bam -I:normal ${alignment}/${prefix}_normal_recal.bam --dbsnp $dbsnp -o ${alignment}/${i}.vcf > ${logfile_fold}/${prefix}_mutect2_${i}.log 2>&1
 }&
 done
 wait

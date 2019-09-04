@@ -18,8 +18,9 @@ hla_str: None
 # Expression profile, format described in mannual, if your provide tumor RNA-seq sequencing data, iTunes would do it using Kallisto automatically.
 expression_file: None
 # Set neoantigen peptide length, separatd by comma, eg: 9,10,11.
-peptide_length: 9,10
-
+peptide_length: 8,9,10
+# Keep temporal file (0 means no and 1 means yes, default: 0).
+tmp: 0
 
 ##### Some filters parameter
 #Minimal read depth for altenative allele
@@ -33,7 +34,7 @@ binding_fc_aff_cutoff: 1
 # MHC-mutant-peptide binding affinity rank cutoff, usually set to 2.
 binding_aff_cutoff: 2
 # Expression value cutoff of neo-peptide, usually set to 1.
-fpkm_cutoff: 1
+fpkm_cutoff: 0
 
 
 ##### specify other software excutable path in your system as you have installed them, make sure each tools could run.
