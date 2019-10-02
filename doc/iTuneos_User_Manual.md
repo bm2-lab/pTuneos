@@ -1,4 +1,4 @@
-# iTunes User Manual 
+# iTuneos User Manual 
 
 
 ## Table of Contents
@@ -22,12 +22,12 @@
 
 ## General Description
 
-iTunes is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTunes calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (RefinedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
+iTuneos is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTuneos calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (RefinedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
 
 ## Dependencies  
 
 #### Hardware:
-iTunes currently tested on x86_64 on ubuntu 16.04.
+iTuneos currently tested on x86_64 on ubuntu 16.04.
 
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
@@ -76,19 +76,19 @@ iTunes currently tested on x86_64 on ubuntu 16.04.
 
 
 ## Installation via Docker
-Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
+Docker image of iTuneos is at https://cloud.docker.com/u/bm2lab/repository/docker/bm2lab/ituneos.
 
 1. Install Docker on your computer and make sure it works.
 
-2. Call docker `pull bm2lab/itunes` which will download the Docker image.
+2. Call docker `pull bm2lab/iTuneos` which will download the Docker image.
 
 3. Run the image in interactive mode with your dataset:
         
-		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/itunes /bin/bash
+		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/iTuneos /bin/bash
 
-4. Change directory into /home/bioworker/project/iTunes:
+4. Change directory into /home/bioworker/project/iTuneos:
 
-		cd /home/bioworker/project/iTunes
+		cd /home/bioworker/project/iTuneos
 
 5. Download reference data:
 
@@ -98,11 +98,11 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 7. Run the program with follow commands:
 
-		python iTunes.py WES -i config_WES.yaml
+		python iTuneos.py WES -i config_WES.yaml
 
 	or
 
-		python iTunes.py VCF -i config_VCF.yaml
+		python iTuneos.py VCF -i config_VCF.yaml
 
 
 ## Installation from source
@@ -123,9 +123,9 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
         install.package('squash')
         install.package('sequenza')
  
-4. Download or clone the iTunes repository to your local system:
+4. Download or clone the iTuneos repository to your local system:
 
-        git clone https://github.com/bm2-lab/iTunes.git
+        git clone https://github.com/bm2-lab/iTuneos.git
 
 5. Reference data includes genome fasta, cDNA, peptide(GRCh38 build) could be downloaded and processed through:
 
@@ -161,7 +161,7 @@ Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
 
 ## Usage
 
-iTunes has two modes: `WES` mode and `VCF` mode.
+iTuneos has two modes: `WES` mode and `VCF` mode.
 
 `WES` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutation calling, hla typing, expression profiling and neoepitope prediction, filtering, annotation.
 
@@ -169,13 +169,13 @@ iTunes has two modes: `WES` mode and `VCF` mode.
 
 You can use these two modes by:
 
-        python iTunes.py WES -i config_WES.yaml
-        python iTunes.py VCF -i config_VCF.yaml
+        python iTuneos.py WES -i config_WES.yaml
+        python iTuneos.py VCF -i config_VCF.yaml
 
 ## Input Files
 
 ### Input Files (WES mode) 
-Pair-end matched tumor-normal whole exome sequencing file should be provided for basic neoepitopes identification, expression profile file or raw RNA sequencing file is optional if you want to get expressed neoepitope. iTunes accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
+Pair-end matched tumor-normal whole exome sequencing file should be provided for basic neoepitopes identification, expression profile file or raw RNA sequencing file is optional if you want to get expressed neoepitope. iTuneos accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
 You should specify the right path to the sequencing file in `config_WES.yaml` like:
 
     #your path to first tumor fastq file
@@ -202,7 +202,7 @@ Input file for `VCF` mode contains:
 We give the example data of these files in fold `VCF_example_data/`.
 
 ### References 
-The following references are required for iTunes to run:
+The following references are required for iTuneos to run:
 * Reference DNA sequence and its annotation file. These files are used in somatic variant calling process.
 
         [Genome reference]
@@ -235,7 +235,7 @@ User should set all the parameters in the configuration file `config_WES.yaml` o
 * Software excutable path of opitype, vep, netMHCpan, PyClone and strelka.
 
 ## Output Files 
-iTunes output four result files contain information of identified neoepitopes corresponding to nonsynonymous point mutation and INDEL mutation.
+iTuneos output four result files contain information of identified neoepitopes corresponding to nonsynonymous point mutation and INDEL mutation.
 
 The output files are the following: 
 1.  snv_neo_model.tsv 
@@ -289,4 +289,4 @@ Tongji University
 
 ## Algorithmic Flow Chart
 
-![](ITUNES_flow_chart.jpg)
+![](iTuneos_flow_chart.jpg)
