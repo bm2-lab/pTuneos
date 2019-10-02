@@ -65,7 +65,7 @@ iTuneos currently test on x86_64 on ubuntu 16.04.
 ## Installation
 
 ### Install via Docker
-Docker image of iTuneos is at https://hub.docker.com/r/bm2lab/iTuneos/.
+Docker image of iTuneos is at https://cloud.docker.com/u/bm2lab/repository/docker/bm2lab/ituneos.
 See the [user manual](/doc/iTuneos_User_Manual.md) for a detailed description usage.
 
 ### Install from source
