@@ -15,14 +15,14 @@ def PEMD(opts):
 		output_fold=output_fold_abs
 	else:
 		output_fold=base_dir+'/'+output_fold_abs
-	itunes_bin_path="bin"
+	iTuneos_bin_path="bin"
 	normal_fastq_path_first=config_list["normal_fastq_path_first"]
 	normal_fastq_path_second=config_list["normal_fastq_path_second"]
 	tumor_fastq_path_first=config_list["tumor_fastq_path_first"]
 	tumor_fastq_path_second=config_list["tumor_fastq_path_second"]
 	opitype_fold=config_list["opitype_fold"]
 	opitype_out_fold=output_fold + '/' + 'hlatyping'
-	opitype_ext=itunes_bin_path+'/optitype_ext.py'
+	opitype_ext=iTuneos_bin_path+'/optitype_ext.py'
 	prefix=config_list["sample_name"]
 	CPU=config_list["thread_number"]
 	vcftools_path="software/vcftools"
@@ -245,11 +245,11 @@ def PEMD(opts):
 	print 'Stage 1 finished!'
 	print 'Start stage 2: mutation calling using Mutect2, strelka and varscan; copynumber profiling.'
 	processes_2=[]
-	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,logfile_out_fold))
+	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,iTuneos_bin_path,human_peptide_path,logfile_out_fold))
 	#processes_2.append(h0)
 	h1=multiprocessing.Process(target=varscan_somatic_caling_drift,args=(somatic_mutation_fold,alignment_out_fold,prefix,REFERENCE,vep_cache,samtools_path,varscan_path,vep_path,netmhc_out_fold,logfile_out_fold,))
 	processes_2.append(h1)
-	h2=multiprocessing.Process(target=indel_calling_drift,args=(strelka_out_fold,strelka_path,alignment_out_fold,prefix,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,itunes_bin_path,logfile_out_fold,human_peptide_path,))
+	h2=multiprocessing.Process(target=indel_calling_drift,args=(strelka_out_fold,strelka_path,alignment_out_fold,prefix,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,iTuneos_bin_path,logfile_out_fold,human_peptide_path,))
 	processes_2.append(h2)
 	h3=multiprocessing.Process(target=varscan_copynumber_calling,args=(varscan_copynumber_fold,prefix,alignment_out_fold,REFERENCE,samtools_path,varscan_path,logfile_out_fold))
 	processes_2.append(h3)
@@ -263,9 +263,9 @@ def PEMD(opts):
 	print 'Stage 2 finished!'
 	print 'Start stage 3: neoantigens identification.'
 	processes_3=[]
-	t2=multiprocessing.Process(target=varscan_neo,args=(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,peptide_length,netchop_path,))
+	t2=multiprocessing.Process(target=varscan_neo,args=(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,iTuneos_bin_path,peptide_length,netchop_path,))
 	processes_3.append(t2)
-	t3=multiprocessing.Process(target=indel_neo,args=(somatic_mutation_fold,prefix,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,itunes_bin_path,peptide_length,netchop_path,REFERENCE,human_peptide_path,))
+	t3=multiprocessing.Process(target=indel_neo,args=(somatic_mutation_fold,prefix,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,iTuneos_bin_path,peptide_length,netchop_path,REFERENCE,human_peptide_path,))
 	processes_3.append(t3)
 	#for p in processes_3:
 	#	p.daemon = True
@@ -275,7 +275,7 @@ def PEMD(opts):
 	print "Stage 3 finished."
 	print 'Start stage 4: mutation clonal cellularity calculation.'
 	processes_4=[]
-	l1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_out_fold,pyclone_path,logfile_out_fold,itunes_bin_path,))
+	l1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_out_fold,pyclone_path,logfile_out_fold,iTuneos_bin_path,))
 	processes_4.append(l1)	
 	#for p in processes_4:
 	#	p.daemon = True

@@ -12,7 +12,7 @@ def Vcf(opts):
 	print "Start reading and parsing parameter..."
 	time.sleep(5)
 	output_fold=config_list["output_fold"]
-	itunes_bin_path="bin"
+	ituneos_bin_path="bin"
 	vcf_file=config_list["vcf_file"]
 	REFERENCE=base_dir + "/" + "database/Fasta/human.fasta"
 	somatic_out_fold=output_fold + '/' + 'somatic_mutation'
@@ -105,7 +105,7 @@ def Vcf(opts):
  		print "Check hla alleles...  OK"
  	print "Start preprocessing VCF file..."
   	processes_0=[]
-	h1=multiprocessing.Process(target=VCF_process,args=(prefix,vcf_file,somatic_out_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,itunes_bin_path,human_peptide_path,logfile_out_fold,))
+	h1=multiprocessing.Process(target=VCF_process,args=(prefix,vcf_file,somatic_out_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,ituneos_bin_path,human_peptide_path,logfile_out_fold,))
  	processes_0.append(h1)
  	for p in processes_0:
 		p.daemon = True
@@ -115,9 +115,9 @@ def Vcf(opts):
 	print "Preprocessing VCF file done!"
 	print "Start neoantigen prediction..."
  	processes_1=[]
-	d1=multiprocessing.Process(target=snv_neo,args=(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,peptide_length,itunes_bin_path,netchop_path,))
+	d1=multiprocessing.Process(target=snv_neo,args=(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,peptide_length,ituneos_bin_path,netchop_path,))
  	processes_1.append(d1)
- 	d2=multiprocessing.Process(target=indel_neo,args=(indel_fasta_file,somatic_out_fold,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,netMHCpan_path,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netmhc_out_fold,peptide_length,itunes_bin_path,netchop_path,REFERENCE,human_peptide_path,))
+ 	d2=multiprocessing.Process(target=indel_neo,args=(indel_fasta_file,somatic_out_fold,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,netMHCpan_path,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netmhc_out_fold,peptide_length,ituneos_bin_path,netchop_path,REFERENCE,human_peptide_path,))
  	processes_1.append(d2)
  	for p in processes_1:
 		p.daemon = True
@@ -128,7 +128,7 @@ def Vcf(opts):
 
 	print "Neoantigen annotation..."
  	processes_2=[]
-	m1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,pyclone_path,itunes_bin_path,logfile_out_fold,))
+	m1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,pyclone_path,ituneos_bin_path,logfile_out_fold,))
  	processes_2.append(m1)
  	for p in processes_2:
 		p.daemon = True

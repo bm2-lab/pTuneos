@@ -6,8 +6,8 @@ import shutil
 
 def main():
 	
-	str_prog = 'iTuNES'
-	str_usage = 'python iTuNES.py <command> [options]'
+	str_prog = 'iTuneos'
+	str_usage = 'python iTuneos.py <command> [options]'
 	str_desc = r'''
 identification of personalized Tumor neoantigens from next-generation sequencing data
 '''
@@ -23,12 +23,12 @@ identification of personalized Tumor neoantigens from next-generation sequencing
 
 	p_PairMatchDna = sp.add_parser('WES',
 						description='detecting tumor neoantigens using matched pair-end WGS/WES sequencing data',
-						usage='python iTuNES.py WES [options]',
+						usage='python iTuneos.py WES [options]',
 						help='detecting tumor neoantigens using pair-end WGS/WES sequencing data')
 	ui.ParsePAIRMATCHDNA(p_PairMatchDna)
 	p_VCF = sp.add_parser('VCF',
                          description='detecting tumor neoantigens using somatic mutaion data in VCF file format',
-                         usage='python iTuNES.py VCF [options]',
+                         usage='python iTuneos.py VCF [options]',
                          help='detecting tumor neoantigens using somatic mutaion data in VCF file format')
 	ui.ParseVCF(p_VCF)
 	if len(sys.argv) == 1:

@@ -1,12 +1,12 @@
-# iTunes: identification of personalized Tumor neoantigens from next-generation sequencing data #
+# iTuneos: identification of personalized Tumor neoantigens from next-generation sequencing data #
 
-iTunes is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTunes calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (RefinedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
+iTuneos is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTuneos calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (RefinedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
 
 #### Authors:
 Chi Zhou and Qi Liu
 
 #### Citation:
-iTunes: identification of personalized Tumor neoantigens from next-generation sequencing data, Submitted, 2019.
+iTuneos: identification of personalized Tumor neoantigens from next-generation sequencing data, Submitted, 2019.
 
 #### Web sever:
 TBD
@@ -14,7 +14,7 @@ TBD
 ## Dependencies
 
 #### Hardware:
-iTunes currently test on x86_64 on ubuntu 16.04.
+iTuneos currently test on x86_64 on ubuntu 16.04.
 
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
@@ -65,21 +65,21 @@ iTunes currently test on x86_64 on ubuntu 16.04.
 ## Installation
 
 ### Install via Docker
-Docker image of iTunes is at https://hub.docker.com/r/bm2lab/itunes/.
-See the [user manual](/doc/iTunes_User_Manual.md) for a detailed description usage.
+Docker image of iTuneos is at https://hub.docker.com/r/bm2lab/iTuneos/.
+See the [user manual](/doc/iTuneos_User_Manual.md) for a detailed description usage.
 
 ### Install from source
 1. Install all software listed above.
 
-2. Download or clone the iTunes repository to your local system:
+2. Download or clone the iTuneos repository to your local system:
 
-        git clone https://github.com/bm2-lab/iTunes.git
+        git clone https://github.com/bm2-lab/iTuneos.git
 
-3. Obtain the reference files from GRCh38. These include cDNA, peptide; please refer to [user manual](/doc/iTunes_User_Manual.md) for a detailed description.
+3. Obtain the reference files from GRCh38. These include cDNA, peptide; please refer to [user manual](/doc/iTuneos_User_Manual.md) for a detailed description.
 
 
 ## Usage
-iTunes has two modes, `WES` mode and `VCF` mode.
+iTuneos has two modes, `WES` mode and `VCF` mode.
 
 `PairMatchDna` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutation calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
 
@@ -87,15 +87,15 @@ iTunes has two modes, `WES` mode and `VCF` mode.
 
 You can use these two mode by:
 
-        python iTunes.py WES -i config_WES.yaml
+        python iTuneos.py WES -i config_WES.yaml
 
 or
 
-        python iTunes.py VCF -i config_VCF.yaml
+        python iTuneos.py VCF -i config_VCF.yaml
         
 ## User Manual 
 For detailed information about usage, input and output files, test examples and data
-preparation please refer to the [iTunes User Manual](/doc/iTunes_User_Manual.md)
+preparation please refer to the [iTuneos User Manual](/doc/iTuneos_User_Manual.md)
 
 
 ## Contact   
