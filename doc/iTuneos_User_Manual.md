@@ -84,7 +84,7 @@ Docker image of iTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
 
 3. Run the image in interactive mode with your dataset:
         
-		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/iTuneos /bin/bash
+		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/ituneos /bin/bash
 
 4. Change directory into /home/bioworker/project/iTuneos:
 
