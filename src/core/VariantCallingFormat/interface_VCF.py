@@ -9,7 +9,7 @@ def Vcf(opts):
 	base_dir=os.getcwd()
 	config_file=opts.Config_file
 	f=open(config_file)
-	config_list=yaml.load(f,Loader=yaml.FullLoader)
+	config_list=yaml.load(f)
 	#######read and parse parameter
 	print "Start reading and parsing parameter..."
 	time.sleep(5)
