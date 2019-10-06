@@ -31,6 +31,8 @@ from imblearn.over_sampling import SMOTE
 from collections import Counter
 from sklearn.model_selection import cross_val_score
 from sklearn.externals import joblib
+import warnings
+warnings.filterwarnings("ignore")
 a=26
 k=4.86936
 M=1. #default concentration of mutant peptides
@@ -323,7 +325,7 @@ def InVivoModelAndScoreSNV(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,
 	hy_xgb_9=joblib.load(cf_hy_model_9)
 	hy_xgb_10=joblib.load(cf_hy_model_10)
 	hy_xgb_11=joblib.load(cf_hy_model_11)
-	data_neo=pd.read_table(neo_file,header=0,sep='\t')
+	data_neo=pd.read_csv(neo_file,header=0,sep='\t')
 	MT_peptide=data_neo.MT_pep
 	HLA=data_neo.HLA_type
 	WT_peptide=data_neo.WT_pep

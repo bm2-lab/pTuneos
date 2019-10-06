@@ -31,7 +31,8 @@ from imblearn.over_sampling import SMOTE
 from collections import Counter
 from sklearn.model_selection import cross_val_score
 from sklearn.externals import joblib
-
+import warnings
+warnings.filterwarnings("ignore")
 a=26
 k=4.86936
 M=1. #default concentration of mutant peptides
@@ -101,7 +102,7 @@ def mapping_qc_gatk_preprocess(fastq_1_path,fastq_2_path,fastq_type,CPU,BWA_INDE
 	#print cmd_PrintReads
 	os.system(cmd_PrintReads)
 
-def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,cosmic,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,iTuneos_bin_path,human_peptide_path,logfile_fold):
+def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,iTuneos_bin_path,human_peptide_path,logfile_fold):
 	str_proc_gatk=r'''
 set -e
 GATK_path=%s
@@ -111,7 +112,6 @@ logfile_fold=%s
 somatic=%s
 prefix=%s
 dbsnp=%s
-cosmic=%s
 chr=(`seq 1 22` X Y)
 for i in ${chr[@]}
 do
@@ -129,7 +129,7 @@ ${alignment}/11.vcf ${alignment}/12.vcf ${alignment}/13.vcf ${alignment}/14.vcf 
 ${alignment}/19.vcf ${alignment}/20.vcf ${alignment}/21.vcf ${alignment}/22.vcf ${alignment}/X.vcf ${alignment}/Y.vcf
 rm -rf {alignment}/*.idx
 rm -rf {alignment}/*.vcf
-	'''%(GATK_path,REFERENCE,alignment_out_fold,logfile_fold,somatic_out_fold,prefix,dbsnp138,cosmic)
+	'''%(GATK_path,REFERENCE,alignment_out_fold,logfile_fold,somatic_out_fold,prefix,dbsnp138)
 	print str_proc_gatk
 	subprocess.call(str_proc_gatk, shell=True, executable='/bin/bash')
 	cmd_mutation_filter='grep ' + "\'^#\|chr[1-9]\{0,1\}[0-9XY]\\{0,1\\}\\b\'" + ' ' + somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf' + ' > ' + somatic_out_fold + '/' + prefix + '_' + 'mutect2_filter.vcf'
@@ -526,7 +526,7 @@ def InVivoModelAndScoreSNV(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,
 	hy_xgb_10=joblib.load(cf_hy_model_10)
 	hy_xgb_11=joblib.load(cf_hy_model_11)
 	#print hy_xgb_9
-	data_neo=pd.read_table(neo_file,header=0,sep='\t')
+	data_neo=pd.read_csv(neo_file,header=0,sep='\t')
 	MT_peptide=data_neo.MT_pep
 	HLA=data_neo.HLA_type
 	WT_peptide=data_neo.WT_pep
@@ -614,7 +614,7 @@ def InVivoModelAndScoreINDEL(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_1
 	hy_xgb_9=joblib.load(cf_hy_model_9)
 	hy_xgb_10=joblib.load(cf_hy_model_10)
 	hy_xgb_11=joblib.load(cf_hy_model_11)
-	data_neo=pd.read_table(neo_file,header=0,sep='\t')
+	data_neo=pd.read_csv(neo_file,header=0,sep='\t')
 	MT_peptide=data_neo.MT_pep
 	HLA=data_neo.HLA_type
 	WT_peptide=data_neo.WT_pep

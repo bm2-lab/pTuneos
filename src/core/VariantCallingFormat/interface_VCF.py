@@ -3,11 +3,13 @@ from VCFprocessor import *
 import shutil
 import yaml
 import time
+import warnings
+warnings.filterwarnings("ignore")
 def Vcf(opts):
 	base_dir=os.getcwd()
 	config_file=opts.Config_file
 	f=open(config_file)
-	config_list=yaml.load(f)
+	config_list=yaml.load(f,Loader=yaml.FullLoader)
 	#######read and parse parameter
 	print "Start reading and parsing parameter..."
 	time.sleep(5)
