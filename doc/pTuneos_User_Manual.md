@@ -1,4 +1,4 @@
-# iTuneos User Manual 
+# pTuneos User Manual 
 
 
 ## Table of Contents
@@ -22,12 +22,12 @@
 
 ## General Description
 
-iTuneos is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTuneos calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (RefinedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
+pTuneos is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, pTuneos calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (RefinedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
 
 ## Dependencies  
 
 #### Hardware:
-iTuneos currently tested on x86_64 on ubuntu 16.04.
+pTuneos currently tested on x86_64 on ubuntu 16.04.
 
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
@@ -76,19 +76,19 @@ iTuneos currently tested on x86_64 on ubuntu 16.04.
 
 
 ## Installation via Docker
-Docker image of iTuneos is at https://cloud.docker.com/u/bm2lab/repository/docker/bm2lab/ituneos.
+Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docker/bm2lab/ituneos.
 
 1. Install Docker on your computer and make sure it works.
 
-2. Call docker `pull bm2lab/iTuneos` which will download the Docker image.
+2. Call docker `pull bm2lab/pTuneos` which will download the Docker image.
 
 3. Run the image in interactive mode with your dataset:
         
 		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/ituneos /bin/bash
 
-4. Change directory into /home/bioworker/project/iTuneos:
+4. Change directory into /home/bioworker/project/pTuneos:
 
-		cd /home/bioworker/project/iTuneos
+		cd /home/bioworker/project/pTuneos
 
 5. Download reference data:
 
@@ -98,11 +98,11 @@ Docker image of iTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
 
 7. Run the program with follow commands:
 
-		python iTuneos.py WES -i config_WES.yaml
+		python pTuneos.py WES -i config_WES.yaml
 
 	or
 
-		python iTuneos.py VCF -i config_VCF.yaml
+		python pTuneos.py VCF -i config_VCF.yaml
 
 
 ## Installation from source
@@ -123,9 +123,9 @@ Docker image of iTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
         install.package('squash')
         install.package('sequenza')
  
-4. Download or clone the iTuneos repository to your local system:
+4. Download or clone the pTuneos repository to your local system:
 
-        git clone https://github.com/bm2-lab/iTuneos.git
+        git clone https://github.com/bm2-lab/pTuneos.git
 
 5. Reference data includes genome fasta, cDNA, peptide(GRCh38 build) could be downloaded and processed through:
 
@@ -161,7 +161,7 @@ Docker image of iTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
 
 ## Usage
 
-iTuneos has two modes: `WES` mode and `VCF` mode.
+pTuneos has two modes: `WES` mode and `VCF` mode.
 
 `WES` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutation calling, hla typing, expression profiling and neoepitope prediction, filtering, annotation.
 
@@ -169,13 +169,13 @@ iTuneos has two modes: `WES` mode and `VCF` mode.
 
 You can use these two modes by:
 
-        python iTuneos.py WES -i config_WES.yaml
-        python iTuneos.py VCF -i config_VCF.yaml
+        python pTuneos.py WES -i config_WES.yaml
+        python pTuneos.py VCF -i config_VCF.yaml
 
 ## Input Files
 
 ### Input Files (WES mode) 
-Pair-end matched tumor-normal whole exome sequencing file should be provided for basic neoepitopes identification, expression profile file or raw RNA sequencing file is optional if you want to get expressed neoepitope. iTuneos accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
+Pair-end matched tumor-normal whole exome sequencing file should be provided for basic neoepitopes identification, expression profile file or raw RNA sequencing file is optional if you want to get expressed neoepitope. pTuneos accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
 You should specify the right path to the sequencing file in `config_WES.yaml` like:
 
     #your path to first tumor fastq file
@@ -202,7 +202,7 @@ Input file for `VCF` mode contains:
 We give the example data of these files in fold `VCF_example_data/`.
 
 ### References 
-The following references are required for iTuneos to run:
+The following references are required for pTuneos to run:
 * Reference DNA sequence and its annotation file. These files are used in somatic variant calling process.
 
         [Genome reference]
@@ -235,7 +235,7 @@ User should set all the parameters in the configuration file `config_WES.yaml` o
 * Software excutable path of opitype, vep, netMHCpan, PyClone and strelka.
 
 ## Output Files 
-iTuneos output four result files contain information of identified neoepitopes corresponding to nonsynonymous point mutation and INDEL mutation.
+pTuneos output four result files contain information of identified neoepitopes corresponding to nonsynonymous point mutation and INDEL mutation.
 
 The output files are the following: 
 1.  snv_neo_model.tsv 
@@ -289,4 +289,4 @@ Tongji University
 
 ## Algorithmic Flow Chart
 
-![](iTuneos_flow_chart.jpg)
+![](pTuneos_flow_chart.jpg)
