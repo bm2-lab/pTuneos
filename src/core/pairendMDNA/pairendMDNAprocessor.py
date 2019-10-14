@@ -102,7 +102,7 @@ def mapping_qc_gatk_preprocess(fastq_1_path,fastq_2_path,fastq_type,CPU,BWA_INDE
 	#print cmd_PrintReads
 	os.system(cmd_PrintReads)
 
-def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,iTuneos_bin_path,human_peptide_path,logfile_fold):
+def GATK_mutect2(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,pTuneos_bin_path,human_peptide_path,logfile_fold):
 	str_proc_gatk=r'''
 set -e
 GATK_path=%s
@@ -141,7 +141,7 @@ rm -rf {alignment}/*.vcf
 	#print cmd_vcftools_indel
 	os.system(cmd_vcftools_snv)
 	os.system(cmd_vcftools_indel)
-	cmd_snv_filter="python " + iTuneos_bin_path + "/snv_filter.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'SNVs_only.recode.vcf' + " -d " + str(tumor_depth_cutoff) + " -v " + str(tumor_vaf_cutoff) + " -n " + str(normal_vaf_cutoff) + " -o " + somatic_out_fold + " -s " + prefix
+	cmd_snv_filter="python " + pTuneos_bin_path + "/snv_filter.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'SNVs_only.recode.vcf' + " -d " + str(tumor_depth_cutoff) + " -v " + str(tumor_vaf_cutoff) + " -n " + str(normal_vaf_cutoff) + " -o " + somatic_out_fold + " -s " + prefix
 	#print cmd_snv_filter
 	os.system(cmd_snv_filter)
 	cmd_vep=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'SNVs_filter.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"CANONICAL is YES and Consequence is missense_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'snv_vep_ann.txt' + " --force_overwrite"
@@ -153,7 +153,7 @@ rm -rf {alignment}/*.vcf
 	cmd_vep_indel=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'INDELs_only.recode.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"Consequence is missense_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'mutect_indel_vep_ann.txt' + " --force_overwrite"
 	#print cmd_vep_indel
 	os.system(cmd_vep_indel)
-	cmd_snv="python " + iTuneos_bin_path + "/snv2fasta.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'snv_vep_ann.txt' + " -o " + netmhc_out_path + " -s " + prefix + " -p " + human_peptide_path
+	cmd_snv="python " + pTuneos_bin_path + "/snv2fasta.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'snv_vep_ann.txt' + " -o " + netmhc_out_path + " -s " + prefix + " -p " + human_peptide_path
 	#print cmd_snv
 	os.system(cmd_snv)
 
@@ -253,7 +253,7 @@ cd ..
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 
 
-def varscan_neo(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,iTuneos_bin_path,peptide_length,netchop_path):
+def varscan_neo(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,pTuneos_bin_path,peptide_length,netchop_path):
 	netMHCpan(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_snv',peptide_length)
 	str_proc1=r'''
 set -e
@@ -266,15 +266,15 @@ Fpkm_Cutoff=%d
 hla_str=%s
 driver_gene_path=%s
 netctl_fold=%s
-iTuneos_bin_path=%s
+pTuneos_bin_path=%s
 netchop_path=%s
-python ${iTuneos_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_snv_netmhc.tsv -g ${netmhc_out}/${PREFIX}_snv.fasta -o ${netmhc_out} -s ${PREFIX}_snv -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
-python ${iTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_snv_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_snv -n ${netchop_path}
-'''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,netctl_fold,iTuneos_bin_path,netchop_path)
+python ${pTuneos_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_snv_netmhc.tsv -g ${netmhc_out}/${PREFIX}_snv.fasta -o ${netmhc_out} -s ${PREFIX}_snv -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
+python ${pTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_snv_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_snv -n ${netchop_path}
+'''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,netctl_fold,pTuneos_bin_path,netchop_path)
 	#print str_proc1
 	subprocess.call(str_proc1, shell=True, executable='/bin/bash')
 
-def indel_calling_drift(strelka_out_fold,strelka_path,alignment_out_fold,PREFIX,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,iTuneos_bin_path,logfile_fold,human_peptide_path):
+def indel_calling_drift(strelka_out_fold,strelka_path,alignment_out_fold,PREFIX,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,pTuneos_bin_path,logfile_fold,human_peptide_path):
 	str_proc2=r'''
 set -e
 strelka_fold=%s
@@ -286,7 +286,7 @@ vep_cache=%s
 netmhc_out=%s
 cpu=%s
 vep=%s
-iTuneos_bin_path=%s
+pTuneos_bin_path=%s
 logfile_fold=%s
 human_peptide_path=%s
 if [ -d ${strelka_fold} ];then
@@ -296,13 +296,13 @@ python ${strelka_path}/configureStrelkaSomaticWorkflow.py --tumorBam=${alignment
 python ${strelka_fold}/runWorkflow.py -m local -j $cpu -q ${PREFIX}_strelka -g 32 --quiet
 gunzip ${strelka_fold}/results/variants/somatic.indels.vcf.gz
 $vep -i ${strelka_fold}/results/variants/somatic.indels.vcf --cache --dir ${vep_cache} --dir_cache ${vep_cache} --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter "CANONICAL is YES and Consequence is coding_sequence_variant" -o ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt --force_overwrite
-python ${iTuneos_bin_path}/varscandel2fasta.py -i ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt -o ${netmhc_out} -s ${PREFIX}_strelka -r ${REFERENCE} -p ${human_peptide_path}
-python ${iTuneos_bin_path}/varscanins2fasta.py -i ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt  -o ${netmhc_out} -s ${PREFIX}_strelka -r ${REFERENCE} -p ${human_peptide_path}
-'''%(strelka_out_fold,strelka_path,alignment_out_fold,PREFIX,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,iTuneos_bin_path,logfile_fold,human_peptide_path)
+python ${pTuneos_bin_path}/varscandel2fasta.py -i ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt -o ${netmhc_out} -s ${PREFIX}_strelka -r ${REFERENCE} -p ${human_peptide_path}
+python ${pTuneos_bin_path}/varscanins2fasta.py -i ${strelka_fold}/${PREFIX}_strelka_indel_vep_ann.txt  -o ${netmhc_out} -s ${PREFIX}_strelka -r ${REFERENCE} -p ${human_peptide_path}
+'''%(strelka_out_fold,strelka_path,alignment_out_fold,PREFIX,REFERENCE,vep_cache,netmhc_out_fold,CPU,vep_path,pTuneos_bin_path,logfile_fold,human_peptide_path)
 	#print str_proc2
 	subprocess.call(str_proc2, shell=True, executable='/bin/bash')
 	
-def indel_neo(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,iTuneos_bin_path,peptide_length,netchop_path,REFERENCE,human_peptide_path):
+def indel_neo(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_fold,netMHCpan_path,pTuneos_bin_path,peptide_length,netchop_path,REFERENCE,human_peptide_path):
 	str_proc1=r'''
 set -e
 somatic_mutation=%s
@@ -310,14 +310,14 @@ PREFIX=%s
 vep_cache=%s
 netmhc_out=%s
 vep=%s
-iTuneos_bin_path=%s
+pTuneos_bin_path=%s
 REFERENCE=%s
 human_peptide_path=%s
-python ${iTuneos_bin_path}/varscan_indel_preprocess.py -i ${somatic_mutation}/${PREFIX}.indel -o ${somatic_mutation} -s ${PREFIX}
+python ${pTuneos_bin_path}/varscan_indel_preprocess.py -i ${somatic_mutation}/${PREFIX}.indel -o ${somatic_mutation} -s ${PREFIX}
 $vep -i ${somatic_mutation}/${PREFIX}_varscan_indel.vcf --cache --dir $vep_cache --dir_cache $vep_cache --force_overwrite  --symbol -o STDOUT --offline | filter_vep --ontology --filter "Consequence is coding_sequence_variant" -o ${somatic_mutation}/${PREFIX}_varscan_indel_vep_ann.txt --force_overwrite
-python ${iTuneos_bin_path}/varscandel2fasta.py -i ${somatic_mutation}/${PREFIX}_varscan_indel_vep_ann.txt -o ${netmhc_out} -s ${PREFIX}_varscan -r ${REFERENCE} -p ${human_peptide_path}
-python ${iTuneos_bin_path}/varscanins2fasta.py -i ${somatic_mutation}/${PREFIX}_varscan_indel_vep_ann.txt  -o ${netmhc_out} -s ${PREFIX}_varscan -r ${REFERENCE} -p ${human_peptide_path}
-'''%(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,iTuneos_bin_path,REFERENCE,human_peptide_path)
+python ${pTuneos_bin_path}/varscandel2fasta.py -i ${somatic_mutation}/${PREFIX}_varscan_indel_vep_ann.txt -o ${netmhc_out} -s ${PREFIX}_varscan -r ${REFERENCE} -p ${human_peptide_path}
+python ${pTuneos_bin_path}/varscanins2fasta.py -i ${somatic_mutation}/${PREFIX}_varscan_indel_vep_ann.txt  -o ${netmhc_out} -s ${PREFIX}_varscan -r ${REFERENCE} -p ${human_peptide_path}
+'''%(somatic_mutation_fold,PREFIX,vep_cache,netmhc_out_fold,vep_path,pTuneos_bin_path,REFERENCE,human_peptide_path)
 	#print str_proc1
 	subprocess.call(str_proc1, shell=True, executable='/bin/bash')	
 	str_proc3=r'''
@@ -341,11 +341,11 @@ Fpkm_Cutoff=%s
 hla_str=%s
 driver_gene_path=%s
 netctl_fold=%s
-iTuneos_bin_path=%s
+pTuneos_bin_path=%s
 netchop_path=%s
-python ${iTuneos_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_indel_netmhc.tsv -g ${netmhc_out}/${PREFIX}_indel.fasta -o ${netmhc_out} -s ${PREFIX}_indel -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
-python ${iTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_indel -n ${netchop_path}
-'''%(PREFIX,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,netctl_fold,iTuneos_bin_path,netchop_path)
+python ${pTuneos_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_indel_netmhc.tsv -g ${netmhc_out}/${PREFIX}_indel.fasta -o ${netmhc_out} -s ${PREFIX}_indel -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
+python ${pTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_indel -n ${netchop_path}
+'''%(PREFIX,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,netctl_fold,pTuneos_bin_path,netchop_path)
 	subprocess.call(str_proc4, shell=True, executable='/bin/bash')
 	
 	
@@ -375,7 +375,7 @@ cd ..
 '''%(varscan_copynumber_fold,prefix,alignment_out_fold,REFERENCE,samtools_path,varscan_path,logfile_fold)
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 
-def pyclone_annotation(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_fold,pyclone_path,logfile_fold,iTuneos_bin_path):
+def pyclone_annotation(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_fold,pyclone_path,logfile_fold,pTuneos_bin_path):
 	str_proc=r'''
 somatic_mutation=%s
 copynumber_profile=%s
@@ -384,15 +384,15 @@ pyclone=%s
 netctl=%s
 Pyclone=%s
 logfile_fold=%s
-iTuneos_bin_path=%s
-Rscript ${iTuneos_bin_path}/sequenza_test.R ${somatic_mutation}/${PREFIX}_filter.snp ${copynumber_profile}/${PREFIX}_filter.copynumber ${copynumber_profile}/ ${PREFIX} > ${logfile_fold}/${PREFIX}_sequenza.log 2>&1
-python ${iTuneos_bin_path}/pyclone_input.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${somatic_mutation}/${PREFIX}_SNVs_only.recode.vcf -c ${copynumber_profile}/${PREFIX}_seg_copynumber.txt -o ${pyclone} -S ${PREFIX}
+pTuneos_bin_path=%s
+Rscript ${pTuneos_bin_path}/sequenza_test.R ${somatic_mutation}/${PREFIX}_filter.snp ${copynumber_profile}/${PREFIX}_filter.copynumber ${copynumber_profile}/ ${PREFIX} > ${logfile_fold}/${PREFIX}_sequenza.log 2>&1
+python ${pTuneos_bin_path}/pyclone_input.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${somatic_mutation}/${PREFIX}_SNVs_only.recode.vcf -c ${copynumber_profile}/${PREFIX}_seg_copynumber.txt -o ${pyclone} -S ${PREFIX}
 TUMOR_CONTENT=`cat ${copynumber_profile}/${PREFIX}_cellularity.txt`
 $Pyclone setup_analysis --in_files ${pyclone}/${PREFIX}_pyclone_input.tsv --tumour_contents $TUMOR_CONTENT --prior major_copy_number --working_dir ${pyclone}
 $Pyclone run_analysis --config_file ${pyclone}/config.yaml > ${logfile_fold}/${PREFIX}_pyclone.log 2>&1
 $Pyclone build_table --config_file ${pyclone}/config.yaml --out_file ${pyclone}/loci.tsv --table_type loci
-python ${iTuneos_bin_path}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
-'''%(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_fold,pyclone_path,logfile_fold,iTuneos_bin_path)
+python ${pTuneos_bin_path}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
+'''%(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_fold,pyclone_path,logfile_fold,pTuneos_bin_path)
 	#print str_proc
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 

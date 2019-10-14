@@ -15,7 +15,7 @@ thread_number: 64
 # Set hla allele for neoantigen identification, separated by comma and up to six hla type eg:HLA-A02:01,HLA-A24:02,HLA-B44:02,HLA-B15:01,HLA-C05:01,HLA-C07:02
 # If set to None, hla typing process would be run automatically.
 hla_str: None
-# Expression profile, format described in mannual, if your provide tumor RNA-seq sequencing data, iTunes would do it using Kallisto automatically.
+# Expression profile, format described in mannual, if your provide tumor RNA-seq sequencing data, pTuneos would do it using Kallisto automatically.
 expression_file: None
 # Set neoantigen peptide length, separatd by comma, eg: 9,10,11.
 peptide_length: 8,9,10
