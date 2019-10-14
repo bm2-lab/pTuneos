@@ -1,12 +1,12 @@
-# iTuneos: identification of personalized Tumor neoantigens from next-generation sequencing data #
+# pTuneos: prioritizing Tumor neoantigen from next-generation sequencing data #
 
-iTuneos is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, iTuneos calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (RefinedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
+pTuneos is the state-of-the-art computational pipeline for identifying personalized tumor neoantigens from next-generation sequencing data. With raw whole-exome sequencing data and/or RNA-seq data, pTuneos calculates five important immunogenicity features to construct a machine learning-based classifier (Pre&RecNeo) to predict and prioritize neoantigens recognized by T cell, followed by an efficient score scheme (RefinedNeo) to ealuate naturally processed, MHC presented and T cell recognized probability of a predicted neoepitope.
 
 #### Authors:
 Chi Zhou and Qi Liu
 
 #### Citation:
-iTuneos: identification of personalized Tumor neoantigens from next-generation sequencing data, Submitted, 2019.
+pTuneos: identification of personalized Tumor neoantigens from next-generation sequencing data, Submitted, 2019.
 
 #### Web sever:
 TBD
@@ -14,7 +14,7 @@ TBD
 ## Dependencies
 
 #### Hardware:
-iTuneos currently test on x86_64 on ubuntu 16.04.
+pTuneos currently test on x86_64 on ubuntu 16.04.
 
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
@@ -65,21 +65,21 @@ iTuneos currently test on x86_64 on ubuntu 16.04.
 ## Installation
 
 ### Install via Docker
-Docker image of iTuneos is at https://cloud.docker.com/u/bm2lab/repository/docker/bm2lab/ituneos.
-See the [user manual](/doc/iTuneos_User_Manual.md) for a detailed description usage.
+Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docker/bm2lab/ptuneos.
+See the [user manual](/doc/pTuneos_User_Manual.md) for a detailed description usage.
 
 ### Install from source
 1. Install all software listed above.
 
-2. Download or clone the iTuneos repository to your local system:
+2. Download or clone the pTuneos repository to your local system:
 
-        git clone https://github.com/bm2-lab/iTuneos.git
+        git clone https://github.com/bm2-lab/pTuneos.git
 
-3. Obtain the reference files from GRCh38. These include cDNA, peptide; please refer to [user manual](/doc/iTuneos_User_Manual.md) for a detailed description.
+3. Obtain the reference files from GRCh38. These include cDNA, peptide; please refer to [user manual](/doc/pTuneos_User_Manual.md) for a detailed description.
 
 
 ## Usage
-iTuneos has two modes, `WES` mode and `VCF` mode.
+pTuneos has two modes, `WES` mode and `VCF` mode.
 
 `PairMatchDna` mode accepts WES and RNA-seq sequencing data as input, it conduct sequencing quality control, mutation calling, hla typing, expression profiling and neoantigen prediction, filtering, annotation.
 
@@ -87,15 +87,15 @@ iTuneos has two modes, `WES` mode and `VCF` mode.
 
 You can use these two mode by:
 
-        python iTuneos.py WES -i config_WES.yaml
+        python pTuneos.py WES -i config_WES.yaml
 
 or
 
-        python iTuneos.py VCF -i config_VCF.yaml
+        python pTuneos.py VCF -i config_VCF.yaml
         
 ## User Manual 
 For detailed information about usage, input and output files, test examples and data
-preparation please refer to the [iTuneos User Manual](/doc/iTuneos_User_Manual.md)
+preparation please refer to the [pTuneos User Manual](/doc/pTuneos_User_Manual.md)
 
 
 ## Contact   
