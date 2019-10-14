@@ -76,7 +76,7 @@ pTuneos currently tested on x86_64 on ubuntu 16.04.
 
 
 ## Installation via Docker
-Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docker/bm2lab/ituneos.
+Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docker/bm2lab/ptuneos.
 
 1. Install Docker on your computer and make sure it works.
 
@@ -84,7 +84,7 @@ Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
 
 3. Run the image in interactive mode with your dataset:
         
-		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/ituneos /bin/bash
+		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/ptuneos /bin/bash
 
 4. Change directory into /home/bioworker/project/pTuneos:
 
