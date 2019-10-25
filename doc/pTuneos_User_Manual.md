@@ -190,7 +190,7 @@ You should specify the right path to the sequencing file in `config_WES.yaml` li
     tumor_rna_fastq_1: ~/ncbi/dbGaP-14145/sra/SRR2673065_1.fastq.gz
     #your path to second RNA-seq fastq file
     tumor_rna_fastq_2: ~/ncbi/dbGaP-14145/sra/SRR2673065_2.fastq.gz
-    
+We give the downloading script of WES+RNA-seq testing data in fold `WES_example_data/`. You can use `bash test_data_download.sh` to download these data for testing.   
 
 ### Input Files (VCF mode)
 Input file for `VCF` mode contains:
