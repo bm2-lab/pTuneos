@@ -6,8 +6,7 @@ pTuneos is the state-of-the-art computational pipeline for identifying personali
 Chi Zhou and Qi Liu
 
 #### Citation:
-pTuneos: prioritizing Tumor neoantigen from next-generation sequencing data, Genome Medicine, 2019. https://doi.org/10.1186/s13073-019-0679-x
-
+Zhou, C., Wei, Z., Zhang, Z. et al. pTuneos: prioritizing tumor neoantigens from next-generation sequencing data. Genome Med 11, 67 (2019) doi:10.1186/s13073-019-0679-x
 #### Web sever:
 TBD
 
