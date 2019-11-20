@@ -104,6 +104,8 @@ def PEMD(opts):
 	indel_netMHCpan_ml_out_tmp_file=netctl_out_fold + '/' + prefix + '_indel_netMHCpan_ml_out_tmp.tsv'
 	blast_db_path="database/Protein/peptide_database/peptide"
 	keep_tmp=int(config_list["tmp"])
+	fragment_length=config_list["fragment_length"]
+	fragment_SD=config_list["fragment_SD"]
 	time.sleep(5)
 	print "Read and parse parameters...  OK"
 	print "Check reference file path and input file path..."
@@ -112,7 +114,7 @@ def PEMD(opts):
 	else:
 		exp_file=config_list["expression_file"]
 	#####check input file,tool path and reference file#####
-	if os.path.exists(normal_fastq_path_first) and os.path.exists(normal_fastq_path_second) and os.path.exists(tumor_fastq_path_first) and os.path.exists(tumor_fastq_path_second) and os.path.exists(rna_fastq_1_path) and os.path.exists(rna_fastq_2_path):
+	if os.path.exists(normal_fastq_path_first) and os.path.exists(normal_fastq_path_second) and os.path.exists(tumor_fastq_path_first) and os.path.exists(tumor_fastq_path_second) and os.path.exists(rna_fastq_1_path):
 		print "Check all fastq file...  OK"
 	else:
 		print "Please check your input fastq file!"
@@ -217,25 +219,25 @@ def PEMD(opts):
 	processes_0.append(q1)
 	q2=multiprocessing.Process(target=read_trimmomatic,args=(normal_fastq_path_first,normal_fastq_path_second,trimmomatic_path,adapter_path,normal_fastq_prefix,logfile_out_fold,"normal",CPU,))
 	processes_0.append(q2)
-	for p in processes_0:
-		p.daemon = True
-		p.start()
-	for p in processes_0:
-		p.join()
+	#for p in processes_0:
+	#	p.daemon = True
+	#	p.start()
+	#for p in processes_0:
+	#	p.join()
 	print "Stage 0 finished!"
 	print "Start stage 1: hla typing, sequence mapping and expression profiling!"
 	processes_1=[]
 	if hla_str=="None":
 		d1=multiprocessing.Process(target=hlatyping,args=(tumor_fastq_path_first,tumor_fastq_path_second,opitype_fold,opitype_out_fold,opitype_ext,prefix,logfile_out_fold,))
- 		processes_1.append(d1)
+ 		#processes_1.append(d1)
  	else:
  		print "hla type provided!"
  	d2=multiprocessing.Process(target=mapping_qc_gatk_preprocess,args=(normal_fastq_clean_first,normal_fastq_clean_second,'normal',CPU,BWA_INDEX,alignment_out_fold,prefix,REFERENCE,bwa_path,samtools_path,java_picard_path,GATK_path,dbsnp138_path,OneKG_path,mills_path,logfile_out_fold,bamstat_out_fold,))
- 	processes_1.append(d2)
+ 	#processes_1.append(d2)
  	d3=multiprocessing.Process(target=mapping_qc_gatk_preprocess,args=(tumor_fastq_path_first,tumor_fastq_path_second,'tumor',CPU,BWA_INDEX,alignment_out_fold,prefix,REFERENCE,bwa_path,samtools_path,java_picard_path,GATK_path,dbsnp138_path,OneKG_path,mills_path,logfile_out_fold,bamstat_out_fold,))
- 	processes_1.append(d3)
+ 	#processes_1.append(d3)
  	if os.path.exists(rna_fastq_1_path):
- 		d4=multiprocessing.Process(target=kallisto_expression,args=(rna_fastq_1_path,rna_fastq_2_path,kallisto_path,kallisto_out_fold,prefix,kallisto_cdna_path,logfile_out_fold,))
+ 		d4=multiprocessing.Process(target=kallisto_expression,args=(rna_fastq_1_path,rna_fastq_2_path,kallisto_path,kallisto_out_fold,prefix,kallisto_cdna_path,logfile_out_fold,CPU,fragment_length,fragment_SD,))
  		processes_1.append(d4)
  	else:
  		print "RNA sequence not found, the kallisto will not be run!"
@@ -255,13 +257,13 @@ def PEMD(opts):
 	processes_2.append(h2)
 	h3=multiprocessing.Process(target=varscan_copynumber_calling,args=(varscan_copynumber_fold,prefix,alignment_out_fold,REFERENCE,samtools_path,varscan_path,logfile_out_fold))
 	processes_2.append(h3)
-	for p in processes_2:
-		p.daemon = True
-		p.start()
-	for p in processes_2:
-		p.join()
-	if hla_str=="None":
- 		hla_str=open(opitype_out_fold+'/'+prefix+"_optitype_hla_type").readlines()[0]
+	#for p in processes_2:
+	#	p.daemon = True
+	#	p.start()
+	#for p in processes_2:
+	#	p.join()
+	#if hla_str=="None":
+ 	#	hla_str=open(opitype_out_fold+'/'+prefix+"_optitype_hla_type").readlines()[0]
 	print 'Stage 2 finished!'
 	print 'Start stage 3: neoantigens identification.'
 	processes_3=[]
@@ -269,21 +271,21 @@ def PEMD(opts):
 	processes_3.append(t2)
 	t3=multiprocessing.Process(target=indel_neo,args=(somatic_mutation_fold,prefix,vep_cache,netmhc_out_fold,vep_path,indel_fasta_file,hla_str,driver_gene_path,indel_netmhc_out_file,split_num,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,pTuneos_bin_path,peptide_length,netchop_path,REFERENCE,human_peptide_path,))
 	processes_3.append(t3)
-	for p in processes_3:
-		p.daemon = True
-		p.start()
-	for p in processes_3:
-		p.join()
+	#for p in processes_3:
+	#	p.daemon = True
+	#	p.start()
+	#for p in processes_3:
+	#	p.join()
 	print "Stage 3 finished."
 	print 'Start stage 4: mutation clonal cellularity calculation.'
 	processes_4=[]
 	l1=multiprocessing.Process(target=pyclone_annotation,args=(somatic_mutation_fold,varscan_copynumber_fold,prefix,pyclone_fold,netctl_out_fold,pyclone_path,logfile_out_fold,pTuneos_bin_path,))
 	processes_4.append(l1)	
-	for p in processes_4:
-		p.daemon = True
-		p.start()
-	for p in processes_4:
-		p.join()
+	#for p in processes_4:
+	#	p.daemon = True
+	#	p.start()
+	#for p in processes_4:
+	#	p.join()
 	print 'Stage 4 finished.'
 	print 'Start stage 5: neoantigen filtering using Pre&RecNeo model and refined immunogenicity score scheme.'
 	processes_5=[]
@@ -291,12 +293,13 @@ def PEMD(opts):
 	processes_5.append(r1)
 	r2=multiprocessing.Process(target=InVivoModelAndScoreINDEL,args=(indel_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,indel_neo_model_file,indel_blastp_tmp_file,indel_blastp_out_tmp_file,indel_netMHCpan_pep_tmp_file,indel_netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
 	processes_5.append(r2)
-	for p in processes_5:
-		p.daemon = True
-		p.start()
-	for p in processes_5:
-		p.join()		
+	#for p in processes_5:
+	#	p.daemon = True
+	#	p.start()
+	#for p in processes_5:
+	#	p.join()		
 	print 'Stage 5 finished.'
+'''
 	if keep_tmp==0:
 		if os.path.exists(snv_blastp_tmp_file):
 			os.remove(snv_blastp_tmp_file)
@@ -329,3 +332,4 @@ def PEMD(opts):
 	else:
 		print "Keep all tmporal files!"
 	print "ALL finished! Please check result files 'snv_neo_model.tsv' and 'indel_neo_model.tsv' in netctl fold"
+'''

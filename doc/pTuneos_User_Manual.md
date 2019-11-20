@@ -175,7 +175,7 @@ You can use these two modes by:
 ## Input Files
 
 ### Input Files (WES mode) 
-Pair-end matched tumor-normal whole exome sequencing file should be provided for basic neoepitopes identification, expression profile file or raw RNA sequencing file is optional if you want to get expressed neoepitope. pTuneos accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
+Pair-end matched tumor-normal whole exome sequencing file should be provided for basic neoepitopes identification, expression profile file or raw RNA sequencing file (pairend or single-end) is optional if you want to get expressed neoepitope. pTuneos accepts pair-end matched tumor-normal whole exome sequencing as input. It could be in `.fastq.gz` or `.fastq` format. 
 You should specify the right path to the sequencing file in `config_WES.yaml` like:
 
     #your path to first tumor fastq file
@@ -190,7 +190,7 @@ You should specify the right path to the sequencing file in `config_WES.yaml` li
     tumor_rna_fastq_1: ~/ncbi/dbGaP-14145/sra/SRR2673065_1.fastq.gz
     #your path to second RNA-seq fastq file
     tumor_rna_fastq_2: ~/ncbi/dbGaP-14145/sra/SRR2673065_2.fastq.gz
-We give the downloading script of WES+RNA-seq testing data in fold `WES_example_data/`. You can use `bash test_data_download.sh` to download these data for testing.   
+We give the downloading script of WES+RNA-seq testing data in fold `WES_example_data/`. You can use `bash test_data_download.sh` to download these data for testing. (Note: If your RNA-seq data was single-end, just set `tumor_rna_fastq_2` to `None`. In addition, if you know the `fragment length` and `Standard deviation of fragment length` of your single end RNA-seq, replace it with your values, otherwise, just leave them unchanged.)
 
 ### Input Files (VCF mode)
 Input file for `VCF` mode contains:
@@ -229,7 +229,7 @@ match in release version (e.g. release-89)).
 User should set all the parameters in the configuration file `config_WES.yaml` or `config_VCF.yaml`. The configuration file contains three parts of parameters:
 
 
-* Input data parameters, including path of DNA/RNA sequencing data, output fold, run name, hla alleles, expression file and thread number (for WES mode).
+* Input data parameters, including path of DNA/RNA sequencing data, output fold, run name, hla alleles, expression file and thread number (for WES mode). If your RNA-seq data was single-end, just set `tumor_rna_fastq_2` to `None`. In addition, if you know the `fragment length` and `Standard deviation of fragment length` of your single end RNA-seq, replace it with your values, otherwise, just leave them unchanged.
 (Note: user could specific hla allele throught `hla_str`, otherwise set it to `None`, the pipeline will make the prediction utilizing sequencing data. If RNA sequencing data is provided, please also set expression file to `None`.)
 * Some filter parameter including mutation sequence depth, mutation variant allele fraction(vaf), binding affinity rank and expression FPKM.
 * Software excutable path of opitype, vep, netMHCpan, PyClone and strelka.

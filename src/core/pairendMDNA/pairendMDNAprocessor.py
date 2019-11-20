@@ -397,14 +397,20 @@ python ${pTuneos_bin_path}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 
 
-def kallisto_expression(raw_fastq_path_first,raw_fastq_path_second,kallisto_path,kallisto_out_fold,prefix,kallisto_cdna_path,logfile_fold):
+def kallisto_expression(raw_fastq_path_first,raw_fastq_path_second,kallisto_path,kallisto_out_fold,prefix,kallisto_cdna_path,logfile_fold,threads,fragment_length,fragment_SD):
 	cdna_path_dir = os.path.dirname(kallisto_cdna_path)
 	cnd_file_prefix = os.path.splitext(os.path.basename(kallisto_cdna_path))[0]
 	kallisto_index_path = cdna_path_dir + '/' + cnd_file_prefix + '.idx'
-	cmd_kallisto_index = kallisto_path + " index -i " + kallisto_index_path + ' ' + kallisto_cdna_path + ' > ' +  logfile_fold + '/' + prefix + '_kallisto_index.log' + ' 2>&1'
-	cmd_kallisto_quant = kallisto_path + " quant -i " + kallisto_index_path + " -o " + kallisto_out_fold + " " + raw_fastq_path_first + " " + raw_fastq_path_second + ' > ' +  logfile_fold + '/' + prefix + '_kallisto.log' + ' 2>&1'
+	if not os.path.exists(kallisto_index_path):
+		cmd_kallisto_index = kallisto_path + " index -i " + kallisto_index_path + ' ' + kallisto_cdna_path + ' > ' +  logfile_fold + '/' + prefix + '_kallisto_index.log' + ' 2>&1'
+		os.system(cmd_kallisto_index)
+	else:
+		print "kallisto index already exists. Continue..."
+	if os.path.exists(raw_fastq_path_second):
+		cmd_kallisto_quant = kallisto_path + " quant -i " + kallisto_index_path + " -t " + str(threads) + " -b 100 -o " + kallisto_out_fold + " " + raw_fastq_path_first + " " + raw_fastq_path_second + ' > ' +  logfile_fold + '/' + prefix + '_kallisto.log' + ' 2>&1'
+	else:
+		cmd_kallisto_quant = kallisto_path + " quant -i " + kallisto_index_path + " -t " + str(threads) + " -b 100 --single -l " + str(fragment_length) + " -s " + str(fragment_SD) + " -o " + kallisto_out_fold + " " + raw_fastq_path_first +  ' > ' +  logfile_fold + '/' + prefix + '_kallisto.log' + ' 2>&1'
 	#print cmd_kallisto_index
-	os.system(cmd_kallisto_index)
 	#print cmd_kallisto_quant
 	os.system(cmd_kallisto_quant)
 

@@ -21,6 +21,10 @@ expression_file: None
 peptide_length: 8,9,10
 # Keep temporal file (0 means no and 1 means yes, default: 0).
 tmp: 0
+# Fragment length of RNA-seq data (not read length), typical value for RNA-seq is 200. (This parameter is for single-end RNA-seq)
+fragment_length: 200
+# Standard deviation of fragment length of RNA-seq data (not read length), typical value for RNA-seq is 30. (This parameter is for single-end RNA-seq)
+fragment_SD: 30
 
 ##### Some filters parameter
 #Minimal read depth for altenative allele
