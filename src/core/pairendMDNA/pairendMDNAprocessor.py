@@ -490,7 +490,7 @@ def get_homolog_info(mut_seq,hla_type,blastp_tmp_file,blastp_out_tmp_file,netMHC
 				continue
 		else:
 			continue
-	if len(human_pep)<pep_len:
+	if len(human_pep)<pep_len or ('-' in human_pep):
 		human_homolog_pep=mut_seq
 	#print human_homolog_pep
 	f=open(netMHCpan_pep_tmp_file,'w')
