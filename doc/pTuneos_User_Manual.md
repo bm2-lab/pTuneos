@@ -28,6 +28,7 @@ pTuneos is the state-of-the-art computational pipeline for identifying personali
 
 #### Hardware:
 pTuneos currently tested on x86_64 on ubuntu 16.04.
+Note: if you want to call neoantigen from raw sequence data (WES mode), please ensure that you server have enough CPU core and RAM (We tested on machine with 2 CPU, 88 core and 256 GB RAM). 
 
 #### Required software:
 * [Python 2.7](https://www.python.org/downloads/release/python-2712/)
