@@ -82,7 +82,7 @@ Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
 
 1. Install Docker on your computer and make sure it works.
 
-2. Call docker `pull bm2lab/pTuneos` which will download the Docker image.
+2. Call docker `pull bm2lab/ptuneos` which will download the Docker image.
 
 3. Run the image in interactive mode with your dataset:
         
