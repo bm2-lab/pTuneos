@@ -122,8 +122,8 @@ Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
 
    Install R package `squash` and `sequenza`:
    
-        install.package('squash')
-        install.package('sequenza')
+        install.packages('squash')
+        install.packages('sequenza')
  
 4. Download or clone the pTuneos repository to your local system:
 
