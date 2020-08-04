@@ -50,6 +50,9 @@ def get_iedb_seq(iedb_file):
 		else:
 			iedb_seq.append(line.strip())
 	return iedb_seq
+
+
+
 def VCF_process(prefix,vcf_file,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,pTuneos_bin_path,human_peptide_path,logfile_fold):
 	cmd_mutation_filter='grep ' + "\'^#\|chr[1-9]\{0,1\}[0-9XY]\\{0,1\\}\\b\'" + ' ' + vcf_file + ' > ' + somatic_out_fold + '/' + prefix + '_' + 'mutect2_filter.vcf'
 	#print cmd_mutation_filter
@@ -69,12 +72,48 @@ def VCF_process(prefix,vcf_file,somatic_out_fold,vcftools_path,vep_path,vep_cach
 	cmd_vep_snv_all=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'SNVs_filter.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"Consequence is missense_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'snv_vep_ann_all.txt' + " --force_overwrite"
 	#print cmd_vep_snv_all
 	os.system(cmd_vep_snv_all)
-	cmd_vep_indel=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'INDELs_only.recode.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"Consequence is missense_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'mutect_indel_vep_ann.txt' + " --force_overwrite"
+	cmd_vep_indel=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'INDELs_only.recode.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"CANONICAL is YES and Consequence is coding_sequence_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'mutect_indel_vep_ann.txt' + " --force_overwrite"
 	#print cmd_vep_indel
 	os.system(cmd_vep_indel)
+	cmd_vep_indel_all=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'INDELs_only.recode.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"Consequence is coding_sequence_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'mutect_indel_vep_ann_all.txt' + " --force_overwrite"
+	#print cmd_vep_indel_all
+	os.system(cmd_vep_indel_all)
 	cmd_snv="python " + pTuneos_bin_path + "/snv2fasta.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'snv_vep_ann.txt' + " -o " + netmhc_out_path + " -s " + prefix + " -p " + human_peptide_path
 	#print cmd_snv
 	os.system(cmd_snv)
+
+
+def VCF_process_new(prefix,vcf_file,somatic_out_fold,vcftools_path,vep_path,vep_cache_path,netmhc_out_path,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,pTuneos_bin_path,human_peptide_path,logfile_fold,REFERENCE):
+	cmd_mutation_filter='grep ' + "\'^#\|chr[1-9]\{0,1\}[0-9XY]\\{0,1\\}\\b\'" + ' ' + vcf_file + ' > ' + somatic_out_fold + '/' + prefix + '_' + 'mutect2_filter.vcf'
+	#print cmd_mutation_filter
+	os.system(cmd_mutation_filter)
+	cmd_vcftools_pass=vcftools_path + " --vcf " + somatic_out_fold + '/' + prefix + '_' + 'mutect2_filter.vcf' + " --remove-filtered-all --recode --recode-INFO-all --out " + somatic_out_fold + '/' + prefix + '_'+ 'mutect2_pass > ' + logfile_fold + '/' + prefix + '_vcftools_snv.log 2>&1'
+	os.system(cmd_vcftools_pass)
+	cmd_filter="python " + pTuneos_bin_path + "/snv_filter.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'mutect2_pass.recode.vcf' + " -d " + str(tumor_depth_cutoff) + " -v " + str(tumor_vaf_cutoff) + " -n " + str(normal_vaf_cutoff) + " -o " + somatic_out_fold + " -s " + prefix
+	#print cmd_filter
+	os.system(cmd_filter)
+	cmd_vep_snv_all=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'filter.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"Consequence is coding_sequence_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'vep_ann_all.txt' + " --force_overwrite"
+	#print cmd_vep_snv_all
+	os.system(cmd_vep_snv_all)
+	cmd_snv_peptide="python " + pTuneos_bin_path + "/snv2fasta.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'vep_ann_all.txt' + ' -o ' + somatic_out_fold + ' -s ' + prefix + ' -p ' + human_peptide_path
+	#print cmd_snv_peptide
+	os.system(cmd_snv_peptide)
+	cmd_insetion_peptide="python " + pTuneos_bin_path + "/varscanins2fasta.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'vep_ann_all.txt' + ' -o ' + somatic_out_fold + ' -s ' + prefix + ' -r ' + REFERENCE +' -p ' + human_peptide_path
+	#print cmd_insetion_peptide
+	os.system(cmd_insetion_peptide)
+	cmd_deletion_peptide="python " + pTuneos_bin_path + "/varscandel2fasta.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'vep_ann_all.txt' + ' -o ' + somatic_out_fold + ' -s ' + prefix + ' -r ' + REFERENCE +' -p ' + human_peptide_path
+	#print cmd_deletion_peptide
+	os.system(cmd_deletion_peptide)
+	cmd_cat_snv="cat " + somatic_out_fold + '/' + prefix + '_'+ 'snv.fasta > ' + netmhc_out_path + '/' +  prefix + '_'+ 'all.fasta'
+	#print cmd_cat_snv
+	os.system(cmd_cat_snv)
+	cmd_cat_ins="cat " + somatic_out_fold + '/' + prefix + '_'+ 'ins.fasta >> ' + netmhc_out_path + '/' +  prefix + '_'+ 'all.fasta'
+	#print cmd_cat_ins
+	os.system(cmd_cat_ins)
+	cmd_cat_del="cat " + somatic_out_fold + '/' + prefix + '_'+ 'del.fasta >> ' + netmhc_out_path + '/' +  prefix + '_'+ 'all.fasta'
+	#print cmd_cat_del
+	os.system(cmd_cat_del)
+
 
 def netMHCpan(fasta_file,hla_str,netmhc_out_file,out_dir,split_num,netMHCpan_path,tmp_dir,peptide_length):
 	str_proc=r'''
@@ -134,6 +173,41 @@ rm -rf 	${out_dir}/${tmp}
 
 
 
+
+def neo_cal(all_fasta_file,hla_str,driver_gene_path,netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,peptide_length,pTuneos_bin_path,netchop_path):
+	netMHCpan(all_fasta_file,hla_str,netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_neo',peptide_length)
+	str_proc1=r'''
+PREFIX=%s
+netmhc_out=%s
+Exp_file=%s
+Binding_Aff_Fc_Cutoff=%d
+Binding_Aff_Cutoff=%d
+Fpkm_Cutoff=%d
+hla_str=%s
+driver_gene_path=%s
+pTuneos_bin_path=%s
+netctl_fold=%s
+netchop_path=%s
+python ${pTuneos_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_all_netmhc.tsv -g ${netmhc_out}/${PREFIX}_all.fasta -o ${netmhc_out} -s ${PREFIX}_all -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
+python ${pTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_all_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_all -n ${netchop_path}
+'''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,pTuneos_bin_path,netctl_out_fold,netchop_path)
+	#print str_proc1
+	subprocess.call(str_proc1, shell=True, executable='/bin/bash')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def snv_neo(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,peptide_length,pTuneos_bin_path,netchop_path):
 	netMHCpan(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_snv',peptide_length)
 	str_proc1=r'''
@@ -188,13 +262,13 @@ def indel_neo(indel_fasta_file,somatic_out_fold,hla_str,driver_gene_path,netmhc_
 	pTuneos_bin_path=%s
 	netctl_fold=%s
 	netchop_path=%s
-	python ${pTuneos_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_indel_netmhc.tsv -g ${netmhc_out}/${PREFIX}_indel.fasta -o ${netmhc_out} -s ${PREFIX} -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff}
-	python ${pTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX} -n ${netchop_path}
+	python ${pTuneos_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_indel_netmhc.tsv -g ${netmhc_out}/${PREFIX}_indel.fasta -o ${netmhc_out} -s ${PREFIX}_indel -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
+	python ${pTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_indel -n ${netchop_path}
 	'''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,pTuneos_bin_path,netctl_out_fold,netchop_path)	
 		subprocess.call(str_proc2, shell=True, executable='/bin/bash')
 
 
-def pyclone_annotation(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,pyclone_path,pTuneos_bin_path,logfile_fold):
+def pyclone_annotation(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,pyclone_path,pTuneos_bin_path,logfile_fold,netmhc_out_fold):
 	str_proc=r'''
 somatic_mutation=%s
 copynumber_profile=%s
@@ -205,12 +279,15 @@ pTuneos_bin_path=%s
 netctl=%s
 Pyclone=%s
 logfile_fold=%s
-python ${pTuneos_bin_path}/pyclone_input.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${somatic_mutation}/${PREFIX}_SNVs_only.recode.vcf -c ${copynumber_profile} -o ${pyclone} -S ${PREFIX}
-$Pyclone setup_analysis --in_files ${pyclone}/${PREFIX}_pyclone_input.tsv --tumour_contents $TUMOR_CONTENT --prior major_copy_number --working_dir ${pyclone}
+netmhc_out=%s
+python ${pTuneos_bin_path}/sequenza2pyclone.py ${netmhc_out}/${PREFIX}_all_final_neo_candidate.tsv ${somatic_mutation}/${PREFIX}_filter.vcf ${copynumber_profile} ${PREFIX} ${pyclone}
+#python ${pTuneos_bin_path}/pyclone_input.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${somatic_mutation}/${PREFIX}_SNVs_only.recode.vcf -c ${copynumber_profile} -o ${pyclone} -S ${PREFIX}
+$Pyclone setup_analysis --in_files ${pyclone}/${PREFIX}_sequenza2pyclone.txt --tumour_contents $TUMOR_CONTENT --prior major_copy_number --working_dir ${pyclone}
 $Pyclone run_analysis --config_file ${pyclone}/config.yaml > ${logfile_fold}/${PREFIX}_pyclone.log 2>&1
 $Pyclone build_table --config_file ${pyclone}/config.yaml --out_file ${pyclone}/loci.tsv --table_type loci
-python ${pTuneos_bin_path}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
-'''%(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,pTuneos_bin_path,netctl_out_fold,pyclone_path,logfile_fold)
+python ${pTuneos_bin_path}/neo_pyclone_annotation_vcf.py -n ${netctl}/${PREFIX}_all_netctl_concact.tsv -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
+#python ${pTuneos_bin_path}/neo_pyclone_annotation.py -n ${netctl}/${PREFIX}_snv_netctl_concact.tsv -i ${somatic_mutation}/${PREFIX}_snv_vep_ann_all.txt -s ${pyclone}/loci.tsv -o ${netctl} -S ${PREFIX}
+'''%(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,pTuneos_bin_path,netctl_out_fold,pyclone_path,logfile_fold,netmhc_out_fold)
 	#print str_proc
 	subprocess.call(str_proc, shell=True, executable='/bin/bash')
 
@@ -320,7 +397,7 @@ def get_EL_info(seq,hla_type,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file):
 			pep_el_rank=ml_record[12]
 	return pep_el_rank
 #read in data 
-def InVivoModelAndScoreSNV(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
+def InVivoModelAndScore(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
 	iedb_seq=get_iedb_seq(iedb_file)
 	hy_xgb_9=joblib.load(cf_hy_model_9)
 	hy_xgb_10=joblib.load(cf_hy_model_10)
@@ -409,90 +486,7 @@ def InVivoModelAndScoreSNV(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,
 	data_neo_out_sort=data_neo.sort_values(['model_pro',"immuno_effect_score"],ascending=[0,0])
 	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)
 	del data_neo_out_sort["contain_X"]
-def InVivoModelAndScoreINDEL(neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_mode,neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path):
-	iedb_seq=get_iedb_seq(iedb_file)
-	hy_xgb_9=joblib.load(cf_hy_model_9)
-	hy_xgb_10=joblib.load(cf_hy_model_10)
-	hy_xgb_11=joblib.load(cf_hy_model_11)	
-	data_neo=pd.read_table(neo_file,header=0,sep='\t')
-	MT_peptide=data_neo.MT_pep
-	HLA=data_neo.HLA_type
-	WT_peptide=data_neo.WT_pep
-	hydrophobicity_score=[]
-	Recognition_score=[]
-	Homolog_pep=[]
-	Homolog_EL=[]
-	MT_peptide_EL=[]
-	WT_peptide_EL=[]
-	for i in range(len(MT_peptide)):
-		line=MT_peptide[i]
-		H_p,H_E=get_homolog_info(line,HLA[i],blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,blast_db_path)
-		mt_el=get_EL_info(MT_peptide[i],HLA[i],netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file)
-		wt_el=get_EL_info(WT_peptide[i],HLA[i],netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file)
-		MT_peptide_EL.append(mt_el)
-		WT_peptide_EL.append(wt_el)
-		Homolog_pep.append(H_p)
-		Homolog_EL.append(H_E)
-		if len(line)==9:
-			h_score=hy_xgb_9.predict_proba(np.array(hydro_vector(line)).reshape((1,9)))[:,1][0]
-			hydrophobicity_score.append(h_score)
-			R=calculate_R(line,iedb_seq)
-			Recognition_score.append(R)
-		elif len(line)==10:
-			h_score=hy_xgb_10.predict_proba(np.array(hydro_vector(line)).reshape((1,10)))[:,1][0]
-			hydrophobicity_score.append(h_score)
-			R=calculate_R(line,iedb_seq)
-			Recognition_score.append(R)
-		elif len(line)==11:
-			h_score=hy_xgb_11.predict_proba(np.array(hydro_vector(line)).reshape((1,11)))[:,1][0]
-			hydrophobicity_score.append(h_score)
-			R=calculate_R(line,iedb_seq)
-			Recognition_score.append(R)
-		else:
-			print "Oh no!!"
-			hydrophobicity_score.append(0.5)
-			R=calculate_R(line,iedb_seq)	
-			Recognition_score.append(R)
-	paired_similarity_score=[]
-	homolog_similaity_score=[]
-	#####paired similarity and homolog similarity########
-	for M_P,N_P,H_P in zip(data_neo.MT_pep,data_neo.WT_pep,Homolog_pep):
-		paired_s=cal_similarity_per(M_P,N_P)
-		homolog_s=cal_similarity_per(M_P,H_P)
-		paired_similarity_score.append(paired_s)
-		homolog_similaity_score.append(homolog_s)
-	self_sequence_similarity=[]
-	for i in range(len(paired_similarity_score)):
-		if paired_similarity_score[i] >= homolog_similaity_score[i]:
-			sss=paired_similarity_score[i]
-		else:
-			sss=homolog_similaity_score[i]
-		self_sequence_similarity.append(sss)
-	data_neo["Homolog_pep"]=Homolog_pep
-	data_neo["Homolog_Binding_EL"]=Homolog_EL
-	data_neo["Recognition_score"]=Recognition_score
-	data_neo["Hydrophobicity_score"]=hydrophobicity_score
-	data_neo["Self_sequence_similarity"]=self_sequence_similarity
-	data_neo["MT_Binding_EL"]=MT_peptide_EL
-	data_neo["WT_Binding_EL"]=WT_peptide_EL
-	df_neo=data_neo.loc[:,['Hydrophobicity_score','Recognition_score','Self_sequence_similarity','MT_Binding_EL','WT_Binding_EL']]
-	cf_RF=joblib.load(RF_model)
-	dneo_predprob = cf_RF.predict_proba(df_neo.values)[:,1]
-	data_neo["model_pro"]=dneo_predprob
-	f_EL_rank_wt=lambda x:1-(1/(1+math.pow(math.e,5*(float(x)-2))))/2
-	f_EL_rank_mt=lambda x:1/(1+math.pow(math.e,5*(float(x)-2)))
-	EL_mt_rank_score=data_neo.MT_Binding_EL.apply(f_EL_rank_mt)
-	EL_wt_rank_score=data_neo.WT_Binding_EL.apply(f_EL_rank_wt)
-	k=1
-	f_TPM=lambda x:math.tanh(x/k)
-	allele_frequency_score=data_neo.variant_allele_frequency
-	netchop_score=data_neo.combined_prediction_score
-	tpm_score=data_neo.tpm.apply(f_TPM)
-	immuno_effect_score=[tpm_score[i]*allele_frequency_score[i]*netchop_score[i]*cellular_prevalence_score[i]*data_neo.Hydrophobicity_score[i]*data_neo.Recognition_score[i]*data_neo.Self_sequence_similarity[i]*EL_mt_rank_score[i]*EL_wt_rank_score[i] for i in range(len(data_neo.MT_Binding_EL))]
-	data_neo["immuno_effect_score"]=immuno_effect_score
-	data_neo_out_sort=data_neo.sort_values(['model_pro',"immuno_effect_score"],ascending=[0,0])
-	data_neo_out_sort.to_csv(neo_model_file,sep='\t',header=1,index=0)
-	del data_neo_out_sort["contain_X"]	
+
 
 
 

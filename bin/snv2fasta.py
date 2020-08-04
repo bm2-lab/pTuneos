@@ -52,12 +52,15 @@ alt_animo_acid=[]
 ref_nucleotide=[]
 alt_nucleotide=[]
 chrom_pos=[]
-f_vep=open(input_snv_vep_file,'r')
-for line in f_vep.readlines():
+
+for line in open(input_snv_vep_file):
 	if line.startswith('#'):
-		pass
+		continue
+	elif line.strip().split('\t')[6]!="missense_variant":
+		continue
 	else:
 		record=line.strip().split('\t')
+		#print record
 		chr_p=record[1]
 		tran_n=record[4]
 		pro_pos=record[9]
@@ -77,7 +80,7 @@ for line in f_vep.readlines():
 		ref_nucleotide.append(ref_n)
 		alt_nucleotide.append(alt_n)
 		chrom_pos.append(chr_p)
-f_vep.close()
+
 
 gene_symbol=[]
 

@@ -1,5 +1,6 @@
 #!/bin/bash
 # download and process databse file 
+VEP_release="release-89"
 echo "download reference file"
 mkdir database && cd database
 mkdir Fasta && cd Fasta
@@ -22,9 +23,9 @@ wget ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/dbsnp_138.hg38
 cd ..
 
 mkdir Protein && cd Protein
-wget ftp://ftp.ensembl.org/pub/release-89/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz && gunzip Homo_sapiens.GRCh38.cdna.all.fa.gz
+wget ftp://ftp.ensembl.org/pub/${VEP_release}/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz && gunzip Homo_sapiens.GRCh38.cdna.all.fa.gz
 mv Homo_sapiens.GRCh38.cdna.all.fa human.cdna.all.fa
-wget ftp://ftp.ensembl.org/pub/release-89/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz && gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
+wget ftp://ftp.ensembl.org/pub/${VEP_release}/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz && gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 mv Homo_sapiens.GRCh38.pep.all.fa human.pep.all.fa
 makeblastdb -in human.pep.all.fa -dbtype prot -out peptide_database/peptide -parse_seqids
 cd ..

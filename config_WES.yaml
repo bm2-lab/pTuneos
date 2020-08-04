@@ -47,4 +47,4 @@ vep_cache_path: your/path/to/vep_cache_data/
 vep_path: your/path/to/vep
 netMHCpan_path: your/path/to/netMHCpan
 pyclone_path: your/path/to/PyClone
-strelka_path: your/path/to/strelka/bin
+sequenza_path: your/path/to/sequenza-utils

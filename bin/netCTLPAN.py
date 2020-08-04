@@ -40,7 +40,7 @@ if (input_neo_file =="" or out_dir =="" or driver_gene_path=="" or sample_id==""
 	sys.exit(2)
 
 
-data_neo_fil = pd.read_table(input_neo_file,header=0,sep='\t')
+data_neo_fil = pd.read_csv(input_neo_file,header=0,sep='\t')
 if data_neo_fil.empty:
 	print "NetMHC filtering result is empty!!"
 	sys.exit()

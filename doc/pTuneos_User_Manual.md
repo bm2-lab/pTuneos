@@ -38,13 +38,11 @@ Note: if you want to call neoantigen from raw sequence data (WES mode), please e
 * [Variant Effect Predictor (VEP)](https://github.com/Ensembl/ensembl-vep)
 * [BWA](https://github.com/lh3/bwa)
 * [samtools](https://github.com/samtools)
-* [strelka](https://github.com/Illumina/strelka)
 * [Optitype](https://github.com/FRED-2/OptiType)
 * [Pyclone](https://bitbucket.org/aroth85/pyclone/wiki/Tutorial)
 * [GATK 3.8](https://software.broadinstitute.org/gatk/best-practices/)
 * [Picard tools](https://broadinstitute.github.io/picard/)
 * [Java 8](https://java.com/en/download/help/linux_x64rpm_install.xml)
-* [Varscan2](http://varscan.sourceforge.net/)
 * [kallisto](http://pachterlab.github.io/kallisto/)
 * [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 * [vcftools](http://vcftools.sourceforge.net/)
@@ -129,7 +127,7 @@ Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
 
         git clone https://github.com/bm2-lab/pTuneos.git
 
-5. Reference data includes genome fasta, cDNA, peptide(GRCh38 build) could be downloaded and processed through:
+5. Reference data includes genome fasta, cDNA, peptide(GRCh38 build) could be downloaded and processed through our script.(you should be aware that the version of VEP library you use should match the references used (peptide and cDNA). E.g. if you install VEP release-89, then you should set the `VEP_release` to `release-89`), then you can run:
 
         bash data_download.sh
         
@@ -234,26 +232,22 @@ User should set all the parameters in the configuration file `config_WES.yaml` o
 * Input data parameters, including path of DNA/RNA sequencing data, output fold, run name, hla alleles, expression file and thread number (for WES mode). If your RNA-seq data was single-end, just set `tumor_rna_fastq_2` to `None`. In addition, if you know the `fragment length` and `Standard deviation of fragment length` of your single end RNA-seq, replace it with your values, otherwise, just leave them unchanged.
 (Note: user could specific hla allele throught `hla_str`, otherwise set it to `None`, the pipeline will make the prediction utilizing sequencing data. If RNA sequencing data is provided, please also set expression file to `None`.)
 * Some filter parameter including mutation sequence depth, mutation variant allele fraction(vaf), binding affinity rank and expression FPKM.
-* Software excutable path of opitype, vep, netMHCpan, PyClone and strelka.
+* Software excutable path of opitype, vep, netMHCpan and PyClone.
 
 ## Output Files 
 pTuneos output four result files contain information of identified neoepitopes corresponding to nonsynonymous point mutation and INDEL mutation.
 
 The output files are the following: 
-1.  snv_neo_model.tsv 
+final_neo_model.tsv 
 
-    The file is a TSV file with the extracted mutated peptides derived from nonsynonymous point mutation with a model-based
+    The file is a TSV file with the extracted mutated peptides derived from nonsynonymous point mutation and INDEL mutation with a model-based
     score measures the immunity of neoepitopes.
-    
-2.  indel_neo_model.tsv
 
-    The file is a TSV file with the extracted mutated peptides derived from INDEL mutation with a model-based score measures
-    the immunity of neoepitopes.
 
 
 ### Column explanation
 
-The prediction output (snv_neo_model.tsv/indel_neo_model.tsv) for each peptide pair consists of the following columns:
+The prediction output (final_neo_model.tsv) for each peptide pair consists of the following columns:
 
 | Column Name           | Description |
 | -----------           | ----------- |

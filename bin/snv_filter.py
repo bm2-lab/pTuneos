@@ -44,7 +44,7 @@ if (input_vcf_file =="" or out_dir =="" or sample_id==""):
 	sys.exit(2)
 
 
-f_filter=open(out_dir+'/'+sample_id+"_SNVs_filter.vcf",'w')
+f_filter=open(out_dir+'/'+sample_id+"_filter.vcf",'w')
 
 for line in open(input_vcf_file):
 	if line.startswith("#"):

@@ -173,13 +173,13 @@ f=lambda x: x.split('.')[0]
 
 ######neoantigens filtering#####
 ##including Binding affinity ,localized peptide, multiple length peptide screen, differential AI> ##, neoantigens stability, gene FPKM>1 #####
-data=pd.read_table(out_dir+'/'+sample_id+"_tmp_neo_candidate.tsv",header=0,sep='\t')
+data=pd.read_csv(out_dir+'/'+sample_id+"_tmp_neo_candidate.tsv",header=0,sep='\t')
 if expression_fpkm_file=='no_exp':
 	print "You did not provide expression file, the expression filter will not be done."
 	final_filter_data=data[(data.MT_Binding_Aff<int(binding_affinity_cutoff))] 
 elif os.path.exists(expression_fpkm_file):
 	first_filter_data=data[(data.MT_Binding_Aff<int(binding_affinity_cutoff))]
-	exp = pd.read_table(expression_fpkm_file,header=0,sep='\t')
+	exp = pd.read_csv(expression_fpkm_file,header=0,sep='\t')
 	gene_exp = exp.loc[:,['target_id','tpm']]
 	gene_exp["target_id"]=gene_exp.target_id.apply(f)
 	neo_merge_exp = pd.merge(first_filter_data,gene_exp,left_on='Transcript_name',right_on='target_id',how='left')

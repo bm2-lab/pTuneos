@@ -78,33 +78,36 @@ extra=[]
 cdna_position=[]
 animo_acid_change=[]
 cdna_change=[]
-f_vep=open(input_del_vep_file,'r')
-for line in f_vep.readlines():
+for line in open(input_del_vep_file):
 	if line.startswith('#'):
-		pass
+		continue
 	else:
 		record=line.strip().split('\t')
-		loc=record[1]
-		alle=record[2]
-		tran_n=record[4]
-		cons=record[6].split(',')[0]
-		pro_pos=record[9]
-		cds_pos=record[8]
-		ext=record[13]
-		cdna_change_p=record[7]
-		cdna_c=record[11]
-		animo_acid_c=record[10]
-		location.append(loc)
-		allele.append(alle)
-		transcript_name.append(tran_n)
-		consequence.append(cons)
-		protein_position.append(pro_pos)
-		cds_position.append(cds_pos)
-		extra.append(ext)
-		animo_acid_change.append(animo_acid_c)
-		cdna_position.append(cdna_change_p)
-		cdna_change.append(cdna_c)
-f_vep.close()
+		consequence_str=record[6].split(",")[0]
+		if (consequence_str=="frameshift_variant" and record[0].split("_")[-1].split("/")[1]=="-") or (consequence_str=="inframe_deletion"):
+			loc=record[1]
+			alle=record[2]
+			tran_n=record[4]
+			cons=record[6].split(',')[0]
+			pro_pos=record[9]
+			cds_pos=record[8]
+			ext=record[13]
+			cdna_change_p=record[7]
+			cdna_c=record[11]
+			animo_acid_c=record[10]
+			location.append(loc)
+			allele.append(alle)
+			transcript_name.append(tran_n)
+			consequence.append(cons)
+			protein_position.append(pro_pos)
+			cds_position.append(cds_pos)
+			extra.append(ext)
+			animo_acid_change.append(animo_acid_c)
+			cdna_position.append(cdna_change_p)
+			cdna_change.append(cdna_c)
+		else:
+			continue
+
 gene_symbol=[]
 strand=[]
 for line in extra:
