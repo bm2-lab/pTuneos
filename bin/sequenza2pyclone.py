@@ -44,6 +44,7 @@ for ele in f_mutation:
 		line=ele.strip().split('\t')
 		chro_pos_0=line[0]+':'+line[1]
 		chro_pos_1=line[0]+':'+str(long(line[1])-1)
+		chro_pos_2=line[0]+':'+str(long(line[1])+1)
 		if line[0]!="chrMT" and (chro_pos_0 in chr_pos_list):
 			chro_pos=line[0]+':'+line[1]
 			chr_name=line[0]
@@ -66,6 +67,26 @@ for ele in f_mutation:
 			VAF.append(vaf)
 		elif line[0]!="chrMT" and (chro_pos_1 in chr_pos_list):
 			chro_pos=line[0]+':'+str(long(line[1])-1)
+			chr_name=line[0]
+			pos_loc=line[1]
+			ref_n=line[2]
+			alt_n=line[3]
+			mut_id=sample_name+":"+chro_pos
+			tumor_read_info=line[9].split(':')[1].split(',')
+			alt_count=int(tumor_read_info[1])
+			ref_count=int(tumor_read_info[0])
+			vaf=float(line[9].split(':')[2])
+			chr_list.append(chr_name)
+			pos_list.append(pos_loc)
+			ref_allele.append(ref_n)
+			var_allele.append(alt_n)
+			ref_reads.append(ref_count)
+			alt_reads.append(alt_count)
+			snp_chr_pos.append(chro_pos)
+			mutation_list.append(mut_id)
+			VAF.append(vaf)
+		elif line[0]!="chrMT" and (chro_pos_2 in chr_pos_list):
+			chro_pos=line[0]+':'+str(long(line[1])+1)
 			chr_name=line[0]
 			pos_loc=line[1]
 			ref_n=line[2]
