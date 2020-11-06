@@ -4,7 +4,6 @@ import shutil
 import subprocess
 import pandas as pd
 import math
-from pyper import *
 import numpy as np
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
@@ -13,7 +12,6 @@ from sklearn.semi_supervised import label_propagation
 import matplotlib as mpl
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
-from imblearn.metrics import classification_report_imbalanced
 from Bio.Blast import NCBIXML
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
@@ -27,7 +25,6 @@ from sklearn.model_selection import GridSearchCV
 import matplotlib.pylab as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier  
-from imblearn.over_sampling import SMOTE
 from collections import Counter
 from sklearn.model_selection import cross_val_score
 from sklearn.externals import joblib
@@ -195,77 +192,6 @@ python ${pTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_all_final_neo
 	subprocess.call(str_proc1, shell=True, executable='/bin/bash')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-def snv_neo(snv_fasta_file,hla_str,driver_gene_path,snv_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,peptide_length,pTuneos_bin_path,netchop_path):
-	netMHCpan(snv_fasta_file,hla_str,snv_netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,'tmp_snv',peptide_length)
-	str_proc1=r'''
-PREFIX=%s
-netmhc_out=%s
-Exp_file=%s
-Binding_Aff_Fc_Cutoff=%d
-Binding_Aff_Cutoff=%d
-Fpkm_Cutoff=%d
-hla_str=%s
-driver_gene_path=%s
-pTuneos_bin_path=%s
-netctl_fold=%s
-netchop_path=%s
-python ${pTuneos_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_snv_netmhc.tsv -g ${netmhc_out}/${PREFIX}_snv.fasta -o ${netmhc_out} -s ${PREFIX}_snv -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
-python ${pTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_snv_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_snv -n ${netchop_path}
-'''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,pTuneos_bin_path,netctl_out_fold,netchop_path)
-	#print str_proc1
-	subprocess.call(str_proc1, shell=True, executable='/bin/bash')
-
-
-def indel_neo(indel_fasta_file,somatic_out_fold,hla_str,driver_gene_path,netmhc_out_file,split_num,netMHCpan_path,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netmhc_out_fold,peptide_length,pTuneos_bin_path,netchop_path,REFERENCE,human_peptide_path):
-	count = 0
-	for index, line in enumerate(open(somatic_out_fold + "/" + prefix + "_mutect_indel_vep_ann.txt",'r')):
-		count += 1
-	if count == 45:
-		print "No indel sites were detected as coding mutation through VEP, so no neoantigen would be identified!"
-	else:
-		str_proc1=r'''
-	PREFIX=%s
-	somatic_fold=%s
-	netmhc_out=%s
-	pTuneos_bin_path=%s
-	REFERENCE=%s
-	human_peptide_path=%s
-	python ${pTuneos_bin_path}/varscandel2fasta.py -i ${somatic_fold}/${PREFIX}_indel_vep_ann.txt -o ${netmhc_out} -s ${PREFIX} -r ${REFERENCE} -p ${human_peptide_path}
-	python ${pTuneos_bin_path}/varscanins2fasta.py -i ${somatic_fold}/${PREFIX}_indel_vep_ann.txt -o ${netmhc_out} -s ${PREFIX} -r ${REFERENCE} -p ${human_peptide_path}
-	cat ${netmhc_out}/${PREFIX}_del.fasta > ${netmhc_out}/${PREFIX}_indel.fasta
-	cat ${netmhc_out}/${PREFIX}_ins.fasta >> ${netmhc_out}/${PREFIX}_indel.fasta
-	'''%(prefix,somatic_out_fold,netmhc_out_fold,pTuneos_bin_path,REFERENCE,human_peptide_path)
-		subprocess.call(str_proc1, shell=True, executable='/bin/bash')
-		netMHCpan(indel_fasta_file,hla_str,netmhc_out_file,netmhc_out_fold,split_num,netMHCpan_path,"tmp_indel",peptide_length)
-		str_proc2=r'''
-	PREFIX=%s
-	netmhc_out=%s
-	Exp_file=%s
-	Binding_Aff_Fc_Cutoff=%d
-	Binding_Aff_Cutoff=%d
-	Fpkm_Cutoff=%d
-	hla_str=%s
-	driver_gene_path=%s
-	pTuneos_bin_path=%s
-	netctl_fold=%s
-	netchop_path=%s
-	python ${pTuneos_bin_path}/sm_netMHC_result_parse.py -i ${netmhc_out}/${PREFIX}_indel_netmhc.tsv -g ${netmhc_out}/${PREFIX}_indel.fasta -o ${netmhc_out} -s ${PREFIX}_indel -e ${Exp_file} -a ${Binding_Aff_Fc_Cutoff} -b ${Binding_Aff_Cutoff} -f ${Fpkm_Cutoff} -l ${hla_str}
-	python ${pTuneos_bin_path}/netCTLPAN.py -i ${netmhc_out}/${PREFIX}_indel_final_neo_candidate.tsv -d ${driver_gene_path} -o ${netctl_fold} -s ${PREFIX}_indel -n ${netchop_path}
-	'''%(prefix,netmhc_out_fold,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,hla_str,driver_gene_path,pTuneos_bin_path,netctl_out_fold,netchop_path)	
-		subprocess.call(str_proc2, shell=True, executable='/bin/bash')
 
 
 def pyclone_annotation(somatic_out_fold,copynumber_profile,tumor_cellularity,prefix,pyclone_fold,netctl_out_fold,pyclone_path,pTuneos_bin_path,logfile_fold,netmhc_out_fold):

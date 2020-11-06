@@ -31,6 +31,15 @@ makeblastdb -in human.pep.all.fa -dbtype prot -out peptide_database/peptide -par
 cd ..
 cd ..
 
+cd database && mkdir vep_data && cd vep_data
+wget ftp://ftp.ensembl.org/pub/${VEP_release}/variation/vep/homo_sapiens_vep_89_GRCh38.tar.gz && tar xvzf homo_sapiens_vep_89_GRCh38.tar.gz
+
+
+
+
+
+
+
 
 
 
