@@ -3,7 +3,7 @@ import multiprocessing
 import subprocess
 import pandas as pd
 import math
-from pyper import *
+#from pyper import *
 import numpy as np
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
@@ -13,7 +13,7 @@ import itertools
 import matplotlib as mpl
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
-from imblearn.metrics import classification_report_imbalanced
+#from imblearn.metrics import classification_report_imbalanced
 from Bio.Blast import NCBIXML
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
@@ -27,7 +27,7 @@ from sklearn.model_selection import GridSearchCV
 import matplotlib.pylab as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier  
-from imblearn.over_sampling import SMOTE
+#from imblearn.over_sampling import SMOTE
 from collections import Counter
 from sklearn.model_selection import cross_val_score
 from sklearn.externals import joblib
