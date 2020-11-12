@@ -89,7 +89,7 @@ def VCF_process_new(prefix,vcf_file,somatic_out_fold,vcftools_path,vep_path,vep_
 	cmd_filter="python " + pTuneos_bin_path + "/snv_filter.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'mutect2_pass.recode.vcf' + " -d " + str(tumor_depth_cutoff) + " -v " + str(tumor_vaf_cutoff) + " -n " + str(normal_vaf_cutoff) + " -o " + somatic_out_fold + " -s " + prefix
 	#print cmd_filter
 	os.system(cmd_filter)
-	cmd_vep_snv_all=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'filter.vcf' + " --database" + " --force_overwrite --canonical --symbol -o STDOUT | filter_vep --ontology --filter \"Consequence is coding_sequence_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'vep_ann_all.txt' + " --force_overwrite"
+	cmd_vep_snv_all=vep_path + " -i " + somatic_out_fold + '/' + prefix + '_'+ 'filter.vcf' + " --cache --dir " + vep_cache_path + " --dir_cache " + vep_cache_path + " --force_overwrite --canonical --symbol -o STDOUT --offline | filter_vep --ontology --filter \"Consequence is coding_sequence_variant\" -o " + somatic_out_fold + '/' + prefix + '_'+ 'vep_ann_all.txt' + " --force_overwrite"
 	#print cmd_vep_snv_all
 	os.system(cmd_vep_snv_all)
 	cmd_snv_peptide="python " + pTuneos_bin_path + "/snv2fasta.py -i " + somatic_out_fold + '/' + prefix + '_'+ 'vep_ann_all.txt' + ' -o ' + somatic_out_fold + ' -s ' + prefix + ' -p ' + human_peptide_path
