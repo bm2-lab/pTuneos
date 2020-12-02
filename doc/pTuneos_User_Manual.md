@@ -80,15 +80,15 @@ Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
 
 1. Install Docker on your computer and make sure it works.
 
-2. Call docker `pull bm2lab/ptuneos` which will download the Docker image.
+2. Call docker `pull bm2lab/ptuneos:v2` which will download the Docker image.
 
 3. Run the image in interactive mode with your dataset:
         
-		docker run -it -v /your/path/to/dataset/:/home/bioworker/dataset bm2lab/ptuneos /bin/bash
+		docker run -it -v /your/path/to/dataset/:/root/data bm2lab/ptuneos:v2 /bin/bash
 
 4. Change directory into /home/bioworker/project/pTuneos:
 
-		cd /home/bioworker/project/pTuneos
+		cd /root/pTuneos
 
 5. Download reference data:
 
