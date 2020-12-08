@@ -35,9 +35,18 @@ def PEMD(opts):
 	samtools_path=base_dir + '/' + "software/samtools"
 	java_picard_path="software/picard.jar"
 	GATK_path="software/GenomeAnalysisTK.jar"
-	dbsnp138_path="database/VCF_annotation/dbsnp_138.hg38.vcf.gz"
-	OneKG_path="database/VCF_annotation/1000G_phase1.snps.high_confidence.hg38.vcf.gz"
-	mills_path="database/VCF_annotation/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+	genome_version=config_list["genome_version"]
+	if genome_version=="hg38":
+		dbsnp138_path="database/VCF_annotation/dbsnp_138.hg38.vcf.gz"
+		OneKG_path="database/VCF_annotation/1000G_phase1.snps.high_confidence.hg38.vcf.gz"
+		mills_path="database/VCF_annotation/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+	elif genome_version=="hg19":
+		dbsnp138_path="database/VCF_annotation/dbsnp_138.hg19.vcf.gz"
+		OneKG_path="database/VCF_annotation/1000G_phase1.snps.high_confidence.hg19.sites.vcf.gz"
+		mills_path="database/VCF_annotation/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz"
+	else:
+		print "Please provide right genome version!"
+		os._exit(1)
 	#cosmic_path="database/VCF_annotation/CosmicCodingMuts_chr_M_sorted.vcf.gz"
 	somatic_mutation_fold=output_fold + '/' + 'somatic_mutation'
 	vep_cache=config_list["vep_cache_path"]
@@ -96,7 +105,10 @@ def PEMD(opts):
 	fragment_length=config_list["fragment_length"]
 	fragment_SD=config_list["fragment_SD"]
 	sequenza_path=config_list["sequenza_path"]
-	gc_file_path="database/Fasta/hg38.gc50Base.wig.gz"
+	if genome_version=="hg38":
+		gc_file_path="database/Fasta/hg38.gc50Base.wig.gz"
+	else:
+		gc_file_path="database/Fasta/hg19.gc50Base.wig.gz"
 	time.sleep(5)
 	print "Read and parse parameters...  OK"
 	print "Check reference file path and input file path..."
@@ -207,9 +219,11 @@ def PEMD(opts):
 	print "Start stage 0: sequence quality control."
 	processes_0=[]
 	q1=multiprocessing.Process(target=read_trimmomatic,args=(tumor_fastq_path_first,tumor_fastq_path_second,trimmomatic_path,adapter_path,tumor_fastq_prefix,logfile_out_fold,"tumor",CPU,))
-	processes_0.append(q1)
+	if not (os.path.exists(tumor_fastq_clean_first) and os.path.exists(tumor_fastq_clean_second)):
+		processes_0.append(q1)
 	q2=multiprocessing.Process(target=read_trimmomatic,args=(normal_fastq_path_first,normal_fastq_path_second,trimmomatic_path,adapter_path,normal_fastq_prefix,logfile_out_fold,"normal",CPU,))
-	processes_0.append(q2)
+	if not (os.path.exists(normal_fastq_clean_first) and os.path.exists(normal_fastq_clean_second)):
+		processes_0.append(q2)
 	for p in processes_0:
 		p.daemon = True
 		p.start()
@@ -220,16 +234,20 @@ def PEMD(opts):
 	processes_1=[]
 	if hla_str=="None":
 		d1=multiprocessing.Process(target=hlatyping,args=(tumor_fastq_path_first,tumor_fastq_path_second,opitype_fold,opitype_out_fold,opitype_ext,prefix,logfile_out_fold,))
- 		processes_1.append(d1)
+ 		if not os.path.exists(opitype_out_fold+'/'+prefix+"_optitype_hla_type"):
+ 			processes_1.append(d1)
  	else:
  		print "hla type provided!"
  	d2=multiprocessing.Process(target=mapping_qc_gatk_preprocess,args=(normal_fastq_clean_first,normal_fastq_clean_second,'normal',CPU,BWA_INDEX,alignment_out_fold,prefix,REFERENCE,bwa_path,samtools_path,java_picard_path,GATK_path,dbsnp138_path,OneKG_path,mills_path,logfile_out_fold,bamstat_out_fold,))
- 	processes_1.append(d2)
+ 	if not os.path.exists(alignment_out_fold+'/'+prefix+"_normal_recal.bam"):
+ 		processes_1.append(d2)
  	d3=multiprocessing.Process(target=mapping_qc_gatk_preprocess,args=(tumor_fastq_path_first,tumor_fastq_path_second,'tumor',CPU,BWA_INDEX,alignment_out_fold,prefix,REFERENCE,bwa_path,samtools_path,java_picard_path,GATK_path,dbsnp138_path,OneKG_path,mills_path,logfile_out_fold,bamstat_out_fold,))
- 	processes_1.append(d3)
+ 	if not os.path.exists(alignment_out_fold+'/'+prefix+"_tumor_recal.bam"):
+ 		processes_1.append(d3)
  	if os.path.exists(rna_fastq_1_path):
  		d4=multiprocessing.Process(target=kallisto_expression,args=(rna_fastq_1_path,rna_fastq_2_path,kallisto_path,kallisto_out_fold,prefix,kallisto_cdna_path,logfile_out_fold,CPU,fragment_length,fragment_SD,))
- 		processes_1.append(d4)
+ 		if not os.path.exists(exp_file):
+ 			processes_1.append(d4)
  	else:
  		print "RNA sequence not found, the kallisto will not be run!"
  	for p in processes_1:
@@ -241,9 +259,11 @@ def PEMD(opts):
 	print 'Start stage 2: mutation calling using Mutect2,tumor purity and copynumber calculation using sequenza.'
 	processes_2=[]
 	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,pTuneos_bin_path,human_peptide_path,logfile_out_fold))
-	processes_2.append(h0)
+	if not os.path.exists(netmhc_out_fold+'/'+prefix+"_all.fasta"):
+		processes_2.append(h0)
 	h1=multiprocessing.Process(target=sequenza_cal,args=(alignment_out_fold,sequenza_path,REFERENCE,gc_file_path,copynumber_fold,prefix,pTuneos_bin_path,))
-	processes_2.append(h1)
+	if not os.path.exists(copynumber_fold+'/'+prefix+"_cellularity.txt"):	
+		processes_2.append(h1)
 	for p in processes_2:
 		p.daemon = True
 		p.start()
@@ -292,8 +312,8 @@ def PEMD(opts):
 			os.remove(netMHCpan_pep_tmp_file)
 		if os.path.exists(netMHCpan_ml_out_tmp_file):
 			os.remove(netMHCpan_ml_out_tmp_file)
-		if os.path.exists(snv_neo_model_file):
-			if os.path.getsize(snv_neo_model_file):
+		if os.path.exists(final_neo_model_file):
+			if os.path.getsize(final_neo_model_file):
 				shutil.rmtree(alignment_out_fold)
 				shutil.rmtree(clean_fastq_fold)
 				shutil.rmtree(somatic_mutation_fold)

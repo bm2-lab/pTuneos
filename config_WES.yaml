@@ -1,11 +1,11 @@
 ##### Set path for input data, output fold, run name, thread number, 
 # The input sequencing file could be in .fastq or fastq.gz(compressed file)
-tumor_fastq_path_first: ~/raw_data/phs001005/fastq/SRR2673015/SRR2673015_1.fastq
-tumor_fastq_path_second: ~/raw_data/phs001005/fastq/SRR2673015/SRR2673015_2.fastq
-normal_fastq_path_first: ~/raw_data/phs001005/fastq/SRR2672887/SRR2672887_1.fastq
-normal_fastq_path_second: ~/raw_data/phs001005/fastq/SRR2672887/SRR2672887_2.fastq
-tumor_rna_fastq_1: ~/raw_data/phs001005/fastq/SRR2673065/SRR2673065_1.fastq
-tumor_rna_fastq_2: ~/raw_data/phs001005/fastq/SRR2673065/SRR2673065_2.fastq
+tumor_fastq_path_first: /home/zhouchi/test/SRR2602447_1.fastq.gz
+tumor_fastq_path_second: /home/zhouchi/test/SRR2602447_2.fastq.gz
+normal_fastq_path_first: /home/zhouchi/test/SRR2602449_1.fastq.gz
+normal_fastq_path_second: /home/zhouchi/test/SRR2602449_2.fastq.gz
+tumor_rna_fastq_1: /home/zhouchi/test/SRR2603944_1.fastq.gz
+tumor_rna_fastq_2: /home/zhouchi/test/SRR2603944_2.fastq.gz
 # Output directory, it could be in absolute path (eg: /home/test)or relative path(eg: test/).
 output_fold: WES_test
 # Sample name for your run
@@ -20,7 +20,9 @@ expression_file: None
 # Set neoantigen peptide length, separatd by comma, eg: 9,10,11.
 peptide_length: 8,9,10
 # Keep temporal file (0 means no and 1 means yes, default: 0).
-tmp: 0
+tmp: 1
+# Specify genome version, could be hg38 or hg19.
+genome_version: hg19
 # Fragment length of RNA-seq data (not read length), typical value for RNA-seq is 200. (This parameter is for single-end RNA-seq)
 fragment_length: 200
 # Standard deviation of fragment length of RNA-seq data (not read length), typical value for RNA-seq is 30. (This parameter is for single-end RNA-seq)
@@ -42,9 +44,9 @@ fpkm_cutoff: 0
 
 
 ##### specify other software excutable path in your system as you have installed them, make sure each tools could run.
-opitype_fold: your/path/to/OptiType/OptiTypePipeline.py
-vep_cache_path: your/path/to/vep_cache_data/
-vep_path: your/path/to/vep
-netMHCpan_path: your/path/to/netMHCpan
-pyclone_path: your/path/to/PyClone
-sequenza_path: your/path/to/sequenza-utils
+opitype_fold: /home/zhouchi/software/OptiType/OptiTypePipeline.py
+vep_cache_path: /home/zhouchi/test_data/pTuneos/vep_data
+vep_path: /home/zhouchi/software/ensembl-vep/vep
+netMHCpan_path: /home/zhouchi/software/netMHCpan-4.0/netMHCpan
+pyclone_path: /usr/local/bin/PyClone
+sequenza_path: /usr/local/bin/sequenza-utils

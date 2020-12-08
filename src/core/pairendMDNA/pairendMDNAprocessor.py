@@ -131,7 +131,8 @@ rm -rf {alignment}/*.idx
 rm -rf {alignment}/*.vcf
 	'''%(GATK_path,REFERENCE,alignment_out_fold,logfile_fold,somatic_out_fold,prefix,dbsnp138)
 	print str_proc_gatk
-	subprocess.call(str_proc_gatk, shell=True, executable='/bin/bash')
+	if not os.path.exists(somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf'):
+		subprocess.call(str_proc_gatk, shell=True, executable='/bin/bash')
 	cmd_mutation_filter='grep ' + "\'^#\|chr[1-9]\{0,1\}[0-9XY]\\{0,1\\}\\b\'" + ' ' + somatic_out_fold + '/' + prefix + '_'+ 'mutect2.vcf' + ' > ' + somatic_out_fold + '/' + prefix + '_' + 'mutect2_filter.vcf'
 	#print cmd_mutation_filter
 	os.system(cmd_mutation_filter)

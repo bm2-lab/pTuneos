@@ -1,6 +1,6 @@
 #!/bin/bash
 # download and process databse file 
-VEP_release="release-89"
+VEP_release="release-97"
 echo "download reference file"
 mkdir database && cd database
 mkdir Fasta && cd Fasta
@@ -10,6 +10,7 @@ bwa index human.fasta
 java -jar ../../software/picard.jar CreateSequenceDictionary R=human.fasta O=human.dict
 samtools faidx human.fasta
 python ../../bin/pyfasta_index.py 
+sequenza-utils gc_wiggle -w 50 --fasta human.fasta -o hg38.gc50Base.wig.gz
 rm Homo_sapiens_assembly38.fasta
 cd ..
 
@@ -32,7 +33,7 @@ cd ..
 cd ..
 
 cd database && mkdir vep_data && cd vep_data
-wget ftp://ftp.ensembl.org/pub/${VEP_release}/variation/vep/homo_sapiens_vep_89_GRCh38.tar.gz && tar xvzf homo_sapiens_vep_89_GRCh38.tar.gz
+wget ftp://ftp.ensembl.org/pub/${VEP_release}/variation/vep/homo_sapiens_vep_97_GRCh38.tar.gz && tar xvzf homo_sapiens_vep_97_GRCh38.tar.gz
 
 
 
