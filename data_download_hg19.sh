@@ -24,7 +24,7 @@ tabix dbsnp_138.hg19.vcf.gz
 cd ..
 
 mkdir Protein && cd Protein
-wget ftp://ftp.ensembl.org/pub/grch37/${VEP_release}/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh37.cdna.all.fa.gz && Homo_sapiens.GRCh37.cdna.all.fa.gz
+wget ftp://ftp.ensembl.org/pub/grch37/${VEP_release}/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh37.cdna.all.fa.gz && gunzip Homo_sapiens.GRCh37.cdna.all.fa.gz
 mv Homo_sapiens.GRCh37.cdna.all.fa human.cdna.all.fa
 wget ftp://ftp.ensembl.org/pub/grch37/${VEP_release}/fasta/homo_sapiens/pep/Homo_sapiens.GRCh37.pep.all.fa.gz && gunzip Homo_sapiens.GRCh37.pep.all.fa.gz
 mv Homo_sapiens.GRCh37.pep.all.fa human.pep.all.fa
