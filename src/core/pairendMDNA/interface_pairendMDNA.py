@@ -261,6 +261,8 @@ def PEMD(opts):
 	h0=multiprocessing.Process(target=GATK_mutect2,args=(GATK_path,REFERENCE,alignment_out_fold,prefix,CPU,dbsnp138_path,somatic_mutation_fold,vcftools_path,vep_path,vep_cache,netmhc_out_fold,tumor_depth_cutoff,tumor_vaf_cutoff,normal_vaf_cutoff,pTuneos_bin_path,human_peptide_path,logfile_out_fold))
 	if not os.path.exists(netmhc_out_fold+'/'+prefix+"_all.fasta"):
 		processes_2.append(h0)
+	elif os.path.exists(netmhc_out_fold+'/'+prefix+"_all.fasta") and os.path.getsize(netmhc_out_fold+'/'+prefix+"_all.fasta")==0:
+		processes_2.append(h0)
 	h1=multiprocessing.Process(target=sequenza_cal,args=(alignment_out_fold,sequenza_path,REFERENCE,gc_file_path,copynumber_fold,prefix,pTuneos_bin_path,))
 	if not os.path.exists(copynumber_fold+'/'+prefix+"_cellularity.txt"):	
 		processes_2.append(h1)
@@ -275,7 +277,10 @@ def PEMD(opts):
 	print 'Start stage 3: neoantigens identification.'
 	processes_3=[]
 	t1=multiprocessing.Process(target=neo_cal,args=(all_fasta_file,hla_str,driver_gene_path,all_netmhc_out_file,netmhc_out_fold,split_num,prefix,exp_file,binding_fc_aff_cutoff,binding_aff_cutoff,fpkm_cutoff,netctl_out_fold,netMHCpan_path,peptide_length,pTuneos_bin_path,netchop_path,))
-	processes_3.append(t1)
+	if not os.path.exists(netmhc_out_fold+'/'+prefix+"_all_final_neo_candidate.tsv"):
+		processes_3.append(t1)
+	elif os.path.exists(netmhc_out_fold+'/'+prefix+"_all_final_neo_candidate.tsv") and os.path.getsize(netmhc_out_fold+'/'+prefix+"_all_final_neo_candidate.tsv")==0:
+		processes_3.append(t1)
 	for p in processes_3:
 		p.daemon = True
 		p.start()
@@ -285,7 +290,8 @@ def PEMD(opts):
 	print 'Start stage 4: mutation clonal cellularity calculation.'
 	processes_4=[]
 	l1=multiprocessing.Process(target=pyclone_annotation,args=(copynumber_fold,somatic_mutation_fold,prefix,pyclone_fold,netctl_out_fold,pyclone_path,pTuneos_bin_path,logfile_out_fold,netmhc_out_fold,))
-	processes_4.append(l1)	
+	if not os.path.exists(netctl_out_fold+'/'+prefix+"_pyclone_neo.tsv"):
+		processes_4.append(l1)	
 	for p in processes_4:
 		p.daemon = True
 		p.start()
@@ -295,7 +301,8 @@ def PEMD(opts):
 	print 'Start stage 5: neoantigen filtering using Pre&RecNeo model and refined immunogenicity score scheme.'
 	processes_5=[]
 	r1=multiprocessing.Process(target=InVivoModelAndScore,args=(all_final_neo_file,cf_hy_model_9,cf_hy_model_10,cf_hy_model_11,RF_model,final_neo_model_file,blastp_tmp_file,blastp_out_tmp_file,netMHCpan_pep_tmp_file,netMHCpan_ml_out_tmp_file,iedb_file,blast_db_path,))
-	processes_5.append(r1)
+	if not os.path.exists(netctl_out_fold+'/'+prefix+"_final_neo_model.tsv"):
+		processes_5.append(r1)
 	for p in processes_5:
 		p.daemon = True
 		p.start()
