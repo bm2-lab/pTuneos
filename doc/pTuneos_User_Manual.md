@@ -80,19 +80,24 @@ Docker image of pTuneos is at https://cloud.docker.com/u/bm2lab/repository/docke
 
 1. Install Docker on your computer and make sure it works.
 
-2. Call docker `pull bm2lab/ptuneos:v2` which will download the Docker image.
+2. Call docker `pull bm2lab/ptuneos:v2.1` which will download the Docker image.
 
 3. Run the image in interactive mode with your dataset:
         
-		docker run -it -v /your/path/to/dataset/:/root/data bm2lab/ptuneos:v2 /bin/bash
+		docker run -it -v /your/path/to/dataset/:/root/data bm2lab/ptuneos:v2.1 /bin/bash
 
 4. Change directory into /home/bioworker/project/pTuneos:
 
 		cd /root/pTuneos
 
-5. Download reference data:
+5. Download reference data for different genome version(hg19 or hg38):
 
-		bash data_download.sh
+		bash data_download_hg19.sh
+		
+	or
+	
+		bash data_download_hg38.sh
+		
 
 6. Edit `config_WES.yaml` or `config_VCF.yaml` and fill the proper path of input files.
 
