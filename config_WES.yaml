@@ -18,7 +18,7 @@ hla_str: None
 # Expression profile, format described in mannual, if your provide tumor RNA-seq sequencing data, pTuneos would do it using Kallisto automatically.
 expression_file: None
 # Set neoantigen peptide length, separatd by comma, eg: 9,10,11.
-peptide_length: 8,9,10
+peptide_length: 9,10,11
 # Keep temporal file (0 means no and 1 means yes, default: 0).
 tmp: 1
 # Specify genome version, could be hg38 or hg19.
